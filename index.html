@@ -1,648 +1,667 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="bl-waug">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>몽골 공식 조인·견적·투어 허브 | 부럽트래블(BOOLUB) × MOKTA(몽골한국관광협회)</title>
-  <meta name="description" content="몽골한국관광협회(MOKTA) 30+ 공식 회원사가 직접 제안하는 맞춤 비교견적, 출발확정 동행·조인, 현장 숏폼·실사 쇼케이스까지 한 곳에서 만나보세요." />
+  <title>몽골 공식 조인·견적 허브 | 부럽(BOOLUB) - 여행은 언제나 부럽다</title>
+  <meta name="description" content="몽골한국관광협회(MOKTA) 32개 공식 회원사가 직접 제안하는 맞춤 비교견적, 출발확정 동행·조인, 현장 실사 쇼케이스를 부럽에서 만나보세요." />
 
-  <!-- 카카오톡·메신저 링크 공유용 오픈그래프(OG) 메타태그 -->
+  <!-- 카카오톡·메신저 링크 공유용 오픈그래프 -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="[BOOLUB × MOKTA] 몽골 공식 올인원 플랫폼 라이브 데모" />
-  <meta property="og:description" content="고객 맞춤일정 역경매 컨택 · 출발확정 N분의1 동행조인 · 30+ 회원사 차량/게르 실사 쇼케이스 구현 데모" />
+  <meta property="og:title" content="부럽 × MOKTA 몽골 공식 조인·견적 플랫폼" />
+  <meta property="og:description" content="일정만 올리면 MOKTA 32개 검증 회원사가 실제 차량·게르 사진과 비교견적을 제안합니다." />
   <meta property="og:image" content="https://hbjeong900601.github.io/boolub-mokta-demo/images/hero_steppe_sunset.jpg" />
   <meta property="og:url" content="https://hbjeong900601.github.io/boolub-mokta-demo/" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <!-- 부럽 메인 페이지 동일 폰트 & XEIcon 아이콘 셋 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
+<body id="top">
 
-  <!-- 최상단 MOKTA 공식 파트너십 인증 바 & 고객/업체 화면 전환 스위치 -->
-  <div class="top-utility-bar">
-    <div class="container top-utility-inner">
-      <div class="top-cert-msg">
-        <span class="cert-pill">OFFICIAL MOKTA × BOOLUB</span>
-        <span>몽골한국관광협회(MOKTA) 소속 32개 검증 회원사 공식 직결 플랫폼 · 모객 미확정 시 100% 환불 보증</span>
+  <!-- 최상단 공식 파트너십 슬림 바 -->
+  <div class="bl-top-notice">
+    <div class="bl-container bl-top-notice-inner">
+      <div class="bl-notice-left">
+        <span class="bl-mokta-tag"><i class="xi-shield-checked"></i> MOKTA 공식인증</span>
+        <span>몽골한국관광협회(MOKTA) 32개 정회원사 직결 플랫폼 · 모객 미확정 시 100% 환불 보장</span>
       </div>
-
-      <div class="role-switch-group" role="tablist" aria-label="화면 모드 전환">
-        <button class="role-btn active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
-          👤 여행자(고객) 화면 보기
-        </button>
-        <button class="role-btn" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
-          🏢 MOKTA 입점업체(파트너센터) 전환 <span class="notif-dot" id="headerBidBadge">4</span>
-        </button>
+      <div class="bl-notice-right">
+        <span>고객센터 <strong>1660-3980</strong></span>
+        <span>·</span>
+        <span>부럽 안심결제(1/N 분할결제 지원)</span>
       </div>
     </div>
   </div>
 
-  <!-- 실제 부럽트래블(boolub.com) 스타일 GNB 헤더 -->
-  <header class="site-header">
-    <div class="container header-main">
-      <a href="#top" class="brand-area" onclick="switchSiteRole('customer')">
-        <img src="./images/boolub_logo.png" alt="부럽트래블 BOOLUB" />
-        <span class="brand-divider"></span>
-        <div class="mokta-collab-badge">
-          <strong>🇲🇳 MOKTA 공식 몽골 허브</strong>
-          <span>몽골한국관광협회 인증 전용관</span>
-        </div>
+  <!-- 부럽 메인 페이지 동일 헤더 (.sc_Header) -->
+  <header class="sc_Header">
+    <div class="bl-container top_wrap">
+      <a href="#top" class="logo_area" onclick="switchSiteRole('customer')">
+        <img src="./images/boolub_logo.png" alt="부럽트래블" />
+        <span class="logo_hub_badge"><b>MOKTA</b> 몽골허브</span>
       </a>
 
-      <div class="header-search">
-        <input type="text" id="globalSearchInput" placeholder="남고비 은하수, 홉스골, 온수샤워 게르, 신형 스타렉스 검색..." oninput="handleGlobalSearch(this.value)" />
-        <button class="header-search-btn" aria-label="검색">🔍</button>
+      <!-- 와그×부럽 스타일 알약 검색바 -->
+      <div class="bl-search-box">
+        <i class="xi-search"></i>
+        <input
+          type="search"
+          id="globalSearchInput"
+          class="bl-search-input"
+          placeholder="남고비 은하수, 홉스골, 온수 게르, 스타렉스 검색해보세요"
+          oninput="handleGlobalSearch(this.value)"
+        />
       </div>
 
-      <nav class="header-nav-links">
-        <a class="gnb-link" onclick="scrollToSection('sec-showcase')">현장 LIVE 쇼케이스</a>
-        <a class="gnb-link current" onclick="scrollToSection('sec-rfq')">맞춤견적 역경매</a>
-        <a class="gnb-link" onclick="scrollToSection('sec-join')">동행·조인 캘린더</a>
-        <a class="gnb-link" onclick="scrollToSection('sec-partners')">MOKTA 32개 회원사</a>
-      </nav>
+      <div class="header-actions">
+        <div class="role-switch-pill" role="tablist" aria-label="고객 및 입점업체 화면 전환">
+          <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
+            여행자 화면
+          </button>
+          <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
+            입점업체 센터 <span class="role-count" id="headerBidBadge">4</span>
+          </button>
+        </div>
 
-      <div class="header-cta-group">
-        <button class="btn btn-blue" onclick="openModal('rfqWizardModal')">
-          ✏️ 30초 일정 올리기
+        <button type="button" class="bl-btn bl-btn-point" onclick="openModal('rfqWizardModal')">
+          <i class="xi-pen-o"></i> 일정 등록
         </button>
       </div>
     </div>
+
+    <!-- 부럽 서브페이지 동일 2단 밑줄 카테고리 네비게이션 -->
+    <nav class="bl-sub-gnb" id="customerSubNav">
+      <div class="bl-container bl-sub-gnb-list">
+        <button type="button" class="bl-gnb-item active" onclick="filterPageView('all', this)">전체 홈</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-rfq', this)">
+          맞춤견적 역경매 <span class="gnb-dot" id="tabRfqCount">4</span>
+        </button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-join', this)">실시간 동행·조인</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-showcase', this)">현장 LIVE 쇼케이스</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-store', this)">부럽×MOKTA 인증투어</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-partners', this)">MOKTA 32개 회원사</button>
+      </div>
+    </nav>
   </header>
 
   <!-- =========================================================================
-       [1] 고객용 실제 구현 사이트 화면 (Customer Marketplace View)
+       [1] 여행자(고객) 메인 화면 — 부럽 메인(bl-waug) 톤앤매너 완벽 적용
   ========================================================================= -->
-  <main class="customer-mode-wrap" id="top">
+  <main class="customer-view-wrap">
 
-    <!-- 풀블리드 실사 히어로 배너 -->
-    <section class="hero-banner">
-      <img src="./images/hero_steppe_sunset.jpg" alt="몽골 대초원 노을과 게르 캠프" class="hero-bg-img" id="heroMainImg" />
-      <div class="hero-scrim"></div>
+    <!-- 1. 부럽 메인 동일 3단 세로형 비주얼 배너 슬라이더 + 4단 퀵 아이콘 박스 -->
+    <section class="bl-hero-section">
+      <div class="bl-container">
+        <div class="bl-hero-slider-wrap">
+          <button type="button" class="bl-slider-arrow prev" onclick="slideHero(-1)" aria-label="이전 배너">
+            <i class="xi-angle-left"></i>
+          </button>
 
-      <div class="container hero-content">
-        <div class="live-match-pill">
-          <img src="./images/gobi_camp_vans.jpg" alt="매칭 알림" />
-          <span class="pulse-green"></span>
-          <span id="heroTickerMsg"><strong>실시간 컨택</strong> · 방금 박*연님 외 3명 <strong>[8/14 남고비+중부 5박6일]</strong> 일정에 MOKTA 정회원사 4곳이 차량·숙소 실사 견적을 제안했습니다!</span>
+          <div class="bl-hero-grid" id="heroBannerGrid"></div>
+
+          <button type="button" class="bl-slider-arrow next" onclick="slideHero(1)" aria-label="다음 배너">
+            <i class="xi-angle-right"></i>
+          </button>
+
+          <div class="bl-hero-counter" id="heroCounterText">1 / 2</div>
         </div>
 
-        <div class="hero-top-grid">
-          <div class="hero-headline">
-            <h1>
-              내 일정만 올리면 <em>MOKTA 30+ 공식 업체</em>가<br />
-              실제 차량·게르 사진과 맞춤 견적을 제안합니다
-            </h1>
-            <p>
-              러브몽골식 맞춤 비교견적부터 몽.자.가식 인원 비례 자동할인 동행·조인, 32개 협회 정회원사가 직접 올리는 현장 숏폼·화보까지. 총무 송금 걱정 없는 부럽 1/N 카드 안심결제로 완벽한 몽골 여행을 시작하세요.
+        <!-- 부럽 메인 .m_iconbox_new4 동일 4개 퀵 액션 박스 -->
+        <div class="bl-quick-4box">
+          <button type="button" class="bl-qbox-item" onclick="openModal('rfqWizardModal')">
+            <div class="bl-qbox-icon"><i class="xi-paper-o"></i></div>
+            <div class="bl-qbox-txt">
+              <strong>30초 맞춤견적 요청</strong>
+              <span>일정 올리고 최대 6개사 실사 비교</span>
+            </div>
+          </button>
+
+          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-join')">
+            <div class="bl-qbox-icon"><i class="xi-users-o"></i></div>
+            <div class="bl-qbox-txt">
+              <strong>출발확정 동행·조인</strong>
+              <span>모일수록 내려가는 1/N 자동할인</span>
+            </div>
+          </button>
+
+          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-showcase')">
+            <div class="bl-qbox-icon"><i class="xi-play-circle-o"></i></div>
+            <div class="bl-qbox-txt">
+              <strong>현장 LIVE 쇼케이스</strong>
+              <span>온수 게르·차량·은하수 직접 확인</span>
+            </div>
+          </button>
+
+          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-partners')">
+            <div class="bl-qbox-icon"><i class="xi-award"></i></div>
+            <div class="bl-qbox-txt">
+              <strong>MOKTA 32개 회원사관</strong>
+              <span>몽골한국관광협회 보증 정회원</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- 깔끔한 실시간 매칭 티커 -->
+        <div class="bl-live-strip">
+          <div class="bl-live-left">
+            <span class="bl-live-badge"><i class="bl-live-dot"></i> 실시간 매칭</span>
+            <span id="heroTickerMsg">방금 박*연님 외 3명 <strong>[8/14 남고비+중부 5박6일]</strong> 일정에 MOKTA 정회원사 3곳이 차량·숙소 실사 견적을 제안했습니다.</span>
+          </div>
+          <a class="bl-more-link" onclick="scrollToSection('sec-rfq')">견적 현황 보기 <i class="xi-angle-right-min"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 고객 맞춤 일정 & MOKTA 역경매 보드 (러브몽골 진화형) -->
+    <section class="bl-section page-sec" id="sec-rfq">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3>실시간 맞춤 일정 &amp; 업체 역제안</h3>
+            <p>내 여행 일정을 올리면 MOKTA 공식 회원사가 실제 배정할 차량·숙소 사진과 함께 견적을 제안합니다</p>
+          </div>
+          <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openModal('rfqWizardModal')">
+            <i class="xi-plus-min"></i> 내 여행 일정 올리기
+          </button>
+        </div>
+
+        <div class="bl-chip-row">
+          <button type="button" class="bl-chip active" onclick="filterRfq('all', this)">전체</button>
+          <button type="button" class="bl-chip" onclick="filterRfq('단독투어', this)">단독투어 희망</button>
+          <button type="button" class="bl-chip" onclick="filterRfq('동행조인', this)">추가 동행·조인 희망</button>
+          <button type="button" class="bl-chip" onclick="filterRfq('남고비', this)">남고비 사막</button>
+          <button type="button" class="bl-chip" onclick="filterRfq('홉스골', this)">홉스골·중부</button>
+        </div>
+
+        <div class="bl-rfq-grid" id="rfqBoardGrid"></div>
+      </div>
+    </section>
+
+    <!-- 3. 실시간 출발확정 동행·오픈조인 & N분의 1 슬라이딩 요금 (몽.자.가 진화형) -->
+    <section class="bl-section page-sec" id="sec-join">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3>출발확정 실시간 동행·조인</h3>
+            <p>최소 출발인원(4인)이 충족되어 혼자 신청해도 100% 출발하며, 인원이 모일수록 전원 자동 할인됩니다</p>
+          </div>
+        </div>
+
+        <div class="bl-join-top-bar">
+          <!-- 좌측: 화이트 캘린더 -->
+          <div class="bl-clean-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <strong style="font-size:15px; color:var(--bl-gray-900);">출발일별 조인 현황</strong>
+                <span style="font-size:12px; color:var(--bl-gray-500); margin-left:8px;">날짜를 선택해 가능한 팀을 확인하세요</span>
+              </div>
+              <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="filterJoinByDate('all')">전체 날짜</button>
+            </div>
+            <div class="bl-cal-strip" id="joinCalGrid"></div>
+          </div>
+
+          <!-- 우측: 부럽 연하늘 톤 N분의 1 공동할인 계산기 -->
+          <div class="bl-clean-box soft-sky">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:15px; color:var(--bl-gray-900);">인원별 1/N 자동할인 계산기</strong>
+              <span class="bl-mokta-tag">차액 자동환급</span>
+            </div>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-top:3px;">
+              남고비+중부 5박6일 (신형 스타렉스 · 온수 게르 포함 기준)
             </p>
-          </div>
 
-          <div>
-            <div style="font-size:12px; color:rgba(255,255,255,0.75); text-align:right; margin-bottom:7px; font-weight:700;">
-              📷 실제 현지 테마 풍경 미리보기 (클릭)
+            <div class="bl-pax-tabs">
+              <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3인 모임</button>
+              <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4인 확정</button>
+              <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5인 합류</button>
+              <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6인 풀방</button>
             </div>
-            <div class="hero-scene-thumbs">
-              <div class="scene-thumb active" onclick="changeHeroScene('./images/hero_steppe_sunset.jpg', this)">
-                <img src="./images/hero_steppe_sunset.jpg" alt="대초원 노을" />
-                <span>대초원 노을</span>
+
+            <div class="bl-sim-result">
+              <div>
+                <div style="font-size:11.5px; font-weight:700; color:var(--bl-point-text);" id="simDescLabel">5/6석 합류 시 전원 적용 단가</div>
+                <strong style="font-size:20px; font-weight:800; color:var(--bl-gray-900);" id="simKrwText">1인 820,000원</strong>
+                <span style="font-size:12px; color:var(--bl-gray-500); margin-left:6px;" id="simUsdText">(USD 595)</span>
               </div>
-              <div class="scene-thumb" onclick="changeHeroScene('./images/milkyway_gobi.jpg', this)">
-                <img src="./images/milkyway_gobi.jpg" alt="고비 은하수" />
-                <span>고비 은하수</span>
-              </div>
-              <div class="scene-thumb" onclick="changeHeroScene('./images/khuvsgul_island.jpg', this)">
-                <img src="./images/khuvsgul_island.jpg" alt="홉스골 호수" />
-                <span>홉스골 호수</span>
-              </div>
-              <div class="scene-thumb" onclick="changeHeroScene('./images/vehicle_fleet.jpg', this)">
-                <img src="./images/vehicle_fleet.jpg" alt="푸르공·스타렉스" />
-                <span>직영 차량</span>
-              </div>
+              <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openJoinDetailModal('j1')">
+                1/N 결제 시연
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- 히어로 3대 실사 비주얼 액션 카드 (기존 mj 히어로 3카드 고도화) -->
-        <div class="hero-action-cards">
-          <div class="hero-acard" onclick="openModal('rfqWizardModal')">
-            <img src="./images/gobi_camp_vans.jpg" alt="맞춤견적 역경매" />
-            <div class="hero-acard-scrim"></div>
-            <div class="hero-acard-body">
-              <span class="hero-acard-tag">REVERSE BIDDING · 러브몽골 진화형</span>
-              <div>
-                <h3>📝 내 일정 올리고 비교견적 받기</h3>
-                <p>최대 6개 MOKTA 인증사가 실제 배정 차량·게르 사진 첨부 제안 ➔</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-acard" onclick="scrollToSection('sec-join')">
-            <img src="./images/companion_team_hands.jpg" alt="실시간 동행 조인" />
-            <div class="hero-acard-scrim"></div>
-            <div class="hero-acard-body">
-              <span class="hero-acard-tag">AUTO JOIN &amp; 1/N SPLIT · 몽.자.가 진화형</span>
-              <div>
-                <h3>📅 출발확정 동행·오픈조인 합류</h3>
-                <p>혼자서도 즉시 출발! 인원이 모일수록 전원 자동 할인 &amp; 1/N 카드결제 ➔</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-acard" onclick="scrollToSection('sec-showcase')">
-            <img src="./images/ger_interior.jpg" alt="현장 쇼케이스" />
-            <div class="hero-acard-scrim"></div>
-            <div class="hero-acard-body">
-              <span class="hero-acard-tag">LIVE REELS &amp; SHOWCASE · 미디어 커머스</span>
-              <div>
-                <h3>🎬 게르 샤워실·차량·은하수 실사 보기</h3>
-                <p>32개 회원사가 직접 찍어 올린 현장 영상 보고 그 업체에 바로 문의 ➔</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="bl-join-grid" id="joinCardsGrid"></div>
       </div>
     </section>
 
-    <!-- 스티키 섹션 네비게이션 -->
-    <div class="section-tabs-bar">
-      <div class="container section-tabs-inner">
-        <div class="tab-pills">
-          <button class="nav-pill active" onclick="filterPageView('all', this)">✨ 전체 한눈에 보기</button>
-          <button class="nav-pill" onclick="filterPageView('sec-showcase', this)">🎬 현장 LIVE 쇼케이스 (8)</button>
-          <button class="nav-pill" onclick="filterPageView('sec-rfq', this)">📝 고객 일정 &amp; 업체 역컨택 (<span id="tabRfqCount">4</span>)</button>
-          <button class="nav-pill" onclick="filterPageView('sec-join', this)">📅 실시간 동행·조인 캘린더</button>
-          <button class="nav-pill" onclick="filterPageView('sec-partners', this)">🏅 MOKTA 32개 회원사 &amp; 상품관</button>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="badge badge-emerald">🛡️ MOKTA 협회 공동 차량백업 보증</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== 섹션 1: 몽골 LIVE 쇼케이스 (숏폼·현장 실사 피드) ==================== -->
-    <section class="hub-block page-sec" id="sec-showcase">
-      <div class="container">
-        <div class="section-head">
+    <!-- 4. 현장 LIVE 쇼케이스 (부럽 메인 .bl-explore 3:4 카드 동일 스타일) -->
+    <section class="bl-section page-sec" id="sec-showcase">
+      <div class="bl-container">
+        <div class="bl-sec-head">
           <div>
-            <span class="badge badge-gold" style="margin-bottom:6px;">MOKTA PARTNER LIVE FEED</span>
-            <h2>🎬 회원사가 직접 찍어 올린 몽골 현장 LIVE 쇼케이스</h2>
-            <p>말로만 듣던 "신형 차량, 온수 게르"를 실제 사진·영상으로 직접 확인하고, 마음에 드는 업체에 바로 견적을 요청하세요.</p>
+            <h3>MOKTA 회원사 현장 LIVE 쇼케이스</h3>
+            <p>32개 회원사가 현지에서 직접 촬영한 온수 샤워 게르, 배정 차량, 은하수 스냅 실사를 확인해보세요</p>
           </div>
-          <button class="btn btn-line" onclick="switchSiteRole('partner')">
-            📷 (업체 체험) 내 업체 사진·영상 직접 올려보기 ➔
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="switchSiteRole('partner')">
+            <i class="xi-camera-o"></i> 업체 사진 등록 체험
           </button>
         </div>
 
-        <div class="filter-chips">
-          <button class="chip-btn active" onclick="filterShowcase('all', this)">전체 현장 미디어</button>
-          <button class="chip-btn" onclick="filterShowcase('은하수·스냅', this)">🌌 은하수·인생스냅</button>
-          <button class="chip-btn" onclick="filterShowcase('게르·샤워실', this)">🏕️ 온수 게르·글램핑 내부</button>
-          <button class="chip-btn" onclick="filterShowcase('푸르공·스타렉스', this)">🚐 푸르공·스타렉스 차량</button>
-          <button class="chip-btn" onclick="filterShowcase('음식·불멍파티', this)">🥩 허르헉 특식·불멍파티</button>
+        <div class="bl-chip-row">
+          <button type="button" class="bl-chip active" onclick="filterShowcase('all', this)">전체 미디어</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('은하수·스냅', this)">은하수·인생스냅</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('게르·샤워실', this)">온수 게르·숙소 내부</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('푸르공·스타렉스', this)">푸르공·스타렉스 차량</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('음식·불멍파티', this)">허르헉 특식·불멍</button>
         </div>
 
-        <div class="showcase-grid" id="showcaseGrid"></div>
+        <div class="bl-explore-grid" id="showcaseGrid"></div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 2: 고객 맞춤 일정 & 업체 역컨택 보드 ==================== -->
-    <section class="hub-block page-sec" id="sec-rfq">
-      <div class="container">
-        <div class="section-head">
+    <!-- 5. 부럽×MOKTA 인증 대표 투어 스토어 (부럽 메인 .item_box 1:1 정방형 카드 완벽 동일!) -->
+    <section class="bl-section page-sec" id="sec-store">
+      <div class="bl-container">
+        <div class="bl-sec-head">
           <div>
-            <span class="badge badge-blue" style="margin-bottom:6px;">CUSTOM ITINERARY &amp; REVERSE BIDDING</span>
-            <h2>📝 실시간 고객 여행 일정 &amp; MOKTA 업체 컨택 현황</h2>
-            <p>고객이 희망 일정을 올리면 최대 6개 MOKTA 회원사가 실제 배정 차량·게르 실사와 함께 표준 비교견적을 제안합니다.</p>
+            <h3>부럽 × MOKTA 인증 베스트 투어</h3>
+            <p>노팁·노옵션 표준 약관과 부럽 에스크로 안심결제가 보장되는 공식 회원사 직판 상품입니다</p>
           </div>
-          <button class="btn btn-blue" onclick="openModal('rfqWizardModal')">
-            ✏️ + 내 여행 일정 올리고 비교견적 받기
-          </button>
         </div>
 
-        <div class="filter-chips">
-          <button class="chip-btn active" onclick="filterRfq('all', this)">전체 일정 요청</button>
-          <button class="chip-btn" onclick="filterRfq('단독투어', this)">단독투어 (우리 일행끼리)</button>
-          <button class="chip-btn" onclick="filterRfq('동행조인', this)">추가 동행·조인 희망</button>
-          <button class="chip-btn" onclick="filterRfq('남고비', this)">남고비 사막 코스</button>
-          <button class="chip-btn" onclick="filterRfq('홉스골', this)">홉스골·중부 코스</button>
-        </div>
-
-        <div class="rfq-board-grid" id="rfqBoardGrid"></div>
+        <div class="bl-waug-item-grid" id="productStoreGrid"></div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 3: 실시간 동행·조인 캘린더 & N분의 1 슬라이딩 요금 ==================== -->
-    <section class="hub-block page-sec" id="sec-join">
-      <div class="container">
-        <div class="section-head">
+    <!-- 6. MOKTA 32개 공식 회원사 브랜드관 -->
+    <section class="bl-section page-sec" id="sec-partners">
+      <div class="bl-container">
+        <div class="bl-sec-head">
           <div>
-            <span class="badge badge-rose" style="margin-bottom:6px;">REAL-TIME COMPANION &amp; OPEN JOIN</span>
-            <h2>📅 실시간 출발확정 동행·조인 캘린더 (N분의 1 자동할인)</h2>
-            <p>혼자 예약해도 최소인원(4인)이 충족된 방은 100% 출발 보장! 개인 동행방에도 MOKTA 회원사가 전담 투어사로 스폰서 입찰합니다.</p>
+            <h3>몽골한국관광협회(MOKTA) 공식 파트너스</h3>
+            <p>보증보험·직영 차량·현지 캠프 검증을 마친 32개 정회원사의 미니홈을 둘러보고 1:1 지정 견적을 요청하세요</p>
           </div>
         </div>
 
-        <div class="join-Interactive-top">
-          <!-- 좌측: 업그레이드 인터랙티브 조인 캘린더 -->
-          <div class="calendar-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-              <div>
-                <h3 style="font-size:17px; font-weight:900;">2026 성수기 주요 출발일 현황 (날짜 클릭 필터)</h3>
-                <div style="display:flex; gap:12px; font-size:12px; color:var(--text-500); margin-top:4px; font-weight:700;">
-                  <span>🔵 출발확정(즉시합류)</span>
-                  <span>🔴 동행모집중</span>
-                  <span>🟡 투어사 스폰서입찰중</span>
-                </div>
-              </div>
-              <button class="btn btn-line btn-sm" onclick="filterJoinByDate('all')">전체 날짜 보기</button>
+        <div class="bl-chip-row">
+          <button type="button" class="bl-chip active" onclick="filterAgencies('all', this)">전체 회원사 (32)</button>
+          <button type="button" class="bl-chip" onclick="filterAgencies('남고비특화', this)">남고비·사막 전문</button>
+          <button type="button" class="bl-chip" onclick="filterAgencies('럭셔리캠프', this)">직영 온수·글램핑 보유</button>
+          <button type="button" class="bl-chip" onclick="filterAgencies('스냅·2030', this)">2030 드론·스냅 특화</button>
+          <button type="button" class="bl-chip" onclick="filterAgencies('가족·VIP', this)">가족·효도 단독투어</button>
+        </div>
+
+        <div class="bl-partner-grid" id="agencyCardsGrid"></div>
+
+        <!-- 부럽 메인 하단 3색 서비스 안내 배너 (waug.css 3-8 동일) -->
+        <div class="bl-service-banners">
+          <div class="bl-service-card is-sky">
+            <div>
+              <span class="bl-service-badge" style="background:#1565C0;">협회 공동 보증</span>
+              <div style="font-size:16px; font-weight:800;">MOKTA 안심 백업 시스템</div>
+              <p style="font-size:12.5px; margin-top:2px;">현지 차량 돌발상황 시 32개 회원사 공동 대체배차 보장</p>
             </div>
-
-            <div class="cal-week-grid" id="joinCalGrid"></div>
+            <div class="bl-service-icon-circle"><i class="xi-shield-checked"></i></div>
           </div>
 
-          <!-- 우측: 실사 배경 N분의 1 슬라이딩 요금 계산기 -->
-          <div class="sliding-Banner-panel">
-            <img src="./images/sand_dunes_camp.jpg" alt="슬라이딩 할인 배경" class="bg" />
-            <div class="sliding-Banner-inner">
-              <span class="badge badge-gold">몽.자.가 스타일 공동할인 시뮬레이터</span>
-              <h3 style="font-size:20px; font-weight:900; margin-top:10px;">팀원이 모일수록 전원 투어비가 내려갑니다!</h3>
-              <p style="font-size:13px; color:rgba(255,255,255,0.82); margin-top:4px;">
-                남고비+중부 5박6일 (신형 스타렉스 + 온수 샤워 게르 포함) 인원별 자동 인하 단가
-              </p>
-
-              <div class="pax-selector">
-                <button class="pax-pill-btn" onclick="setSimPax(3, this)">3인 출발</button>
-                <button class="pax-pill-btn" onclick="setSimPax(4, this)">4인 확정</button>
-                <button class="pax-pill-btn active" onclick="setSimPax(5, this)">5인 합류</button>
-                <button class="pax-pill-btn" onclick="setSimPax(6, this)">6인 풀방!</button>
-              </div>
-
-              <div style="background:rgba(6,13,29,0.75); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.18); border-radius:14px; padding:15px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-                <div>
-                  <div style="font-size:12px; color:#7dd3fc; font-weight:800;" id="simDescLabel">🔥 5/6석 합류 시 전원 적용가 (차액 자동환급)</div>
-                  <div style="font-size:26px; font-weight:900; color:#fcd34d;" id="simKrwText">1인 820,000원</div>
-                  <div style="font-size:12px; color:rgba(255,255,255,0.75);" id="simUsdText">기준 USD 595 · 3인 대비 1인당 29만 원 절약</div>
-                </div>
-                <button class="btn btn-emerald btn-sm" onclick="openJoinDetailModal('j1')">💳 1/N 더치페이 시연</button>
-              </div>
+          <div class="bl-service-card is-kakao">
+            <div>
+              <span class="bl-service-badge" style="background:#FF5722;">스팸 걱정 ZERO</span>
+              <div style="font-size:16px; font-weight:800;">카톡 알림톡 표준견적 수신</div>
+              <p style="font-size:12.5px; margin-top:2px; color:#5c3c00;">개인 연락처 노출 없이 최대 6개사 실사 견적 깔끔 비교</p>
             </div>
+            <div class="bl-service-icon-circle"><i class="xi-message-o"></i></div>
+          </div>
+
+          <div class="bl-service-card is-pink">
+            <div>
+              <span class="bl-service-badge" style="background:#C62828;">총무 수금 불필요</span>
+              <div style="font-size:16px; font-weight:800;">동행 팀원 1/N 카드 분할결제</div>
+              <p style="font-size:12.5px; margin-top:2px; color:#E53935;">모르는 동행끼리도 각자 본인 카드로 안전하게 무이자 결제</p>
+            </div>
+            <div class="bl-service-icon-circle"><i class="xi-credit-card"></i></div>
           </div>
         </div>
-
-        <!-- 실사 조인 카드 그리드 -->
-        <div class="join-photo-grid" id="joinCardsGrid"></div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 4: MOKTA 32개 공식 회원사 브랜드관 & 대표 상품 스토어 ==================== -->
-    <section class="hub-block page-sec" id="sec-partners" style="padding-bottom:40px;">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="badge badge-emerald" style="margin-bottom:6px;">VERIFIED MOKTA MEMBERS (32 AGENCIES)</span>
-            <h2>🏅 몽골한국관광협회(MOKTA) 공식 회원사 브랜드 라운지</h2>
-            <p>사업자 등록·보험·직영 차량·캠프 실사를 통과한 공식 회원사 미니홈에서 보유 인프라를 확인하고 직접 소통하세요.</p>
-          </div>
-        </div>
-
-        <div class="filter-chips">
-          <button class="chip-btn active" onclick="filterAgencies('all', this)">전체 정회원사 (32)</button>
-          <button class="chip-btn" onclick="filterAgencies('남고비특화', this)">🏜️ 남고비·사막 전문</button>
-          <button class="chip-btn" onclick="filterAgencies('럭셔리캠프', this)">✨ 직영 글램핑·온수캠프 보유</button>
-          <button class="chip-btn" onclick="filterAgencies('스냅·2030', this)">📸 2030 드론·별밤스냅 특화</button>
-          <button class="chip-btn" onclick="filterAgencies('가족·VIP', this)">👨‍👩‍👧‍👦 가족·효도·VIP 단독</button>
-        </div>
-
-        <div class="agency-cards-grid" id="agencyCardsGrid"></div>
-
-        <!-- 회원사 직판 대표 투어 스토어 -->
-        <div class="section-head" style="margin-top:48px;">
-          <div>
-            <span class="badge badge-blue" style="margin-bottom:6px;">MOKTA DIRECT TOUR STORE</span>
-            <h2>🎒 MOKTA 회원사 직판 베스트 기획 투어 (단독·조인 즉시예약)</h2>
-            <p>부럽 인증 마크가 부여된 인기 대표 코스입니다. 모든 상품은 노팁·노옵션 표준 약관과 에스크로 안심결제가 적용됩니다.</p>
-          </div>
-        </div>
-
-        <div class="product-store-grid" id="productStoreGrid"></div>
-      </div>
-    </section>
-
+    <!-- 우측 하단 플로팅 일정등록 버튼 -->
+    <button type="button" class="bl-fab-write" onclick="openModal('rfqWizardModal')">
+      <i class="xi-pen"></i> 맞춤 일정 올리기
+    </button>
   </main>
 
   <!-- =========================================================================
-       [2] MOKTA 입점 회원사 전용 파트너 센터 (Supplier Admin View)
+       [2] MOKTA 입점업체 전용 파트너 센터 (부럽 화이트 디자인 일체화)
   ========================================================================= -->
-  <section class="partner-mode-wrap" id="partnerWorkspace">
-    <div class="container">
-      <div class="partner-hero-strip">
+  <section class="partner-view-wrap" id="partnerWorkspace">
+    <div class="bl-container">
+      <div class="partner-top-banner">
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-            <span class="cert-pill">MOKTA PARTNER CENTER</span>
-            <span style="font-size:12.5px; color:#93c5fd; font-weight:700;">인증번호: MOKTA-2026-014 · 어드벤처 몽골 투어</span>
+            <span class="bl-mokta-tag">MOKTA PARTNER CENTER</span>
+            <span style="font-size:12.5px; color:var(--bl-gray-500); font-weight:600;">정회원 MOKTA-2026-014 · 어드벤처 몽골 투어</span>
           </div>
-          <h2 style="font-size:22px; font-weight:900;">
-            🏢 고객 일정 실시간 컨택 &amp; 내 업체 미디어·상품 관리 센터
-            <span class="mn-txt" style="color:#fde68a; font-size:15px;">/ Түншийн удирдлагын төв</span>
+          <h2 style="font-size:21px; font-weight:800; color:var(--bl-gray-900);">
+            고객 일정 실시간 컨택 &amp; 쇼케이스 관리
+            <span class="mn-txt">/ Түншийн удирдлагын төв</span>
           </h2>
-          <p style="font-size:13.5px; color:rgba(255,255,255,0.8); margin-top:4px;">
-            여기서 견적을 발송하거나 내 스마트폰/PC 사진을 업로드하면 <strong>고객 화면에 즉시 실제 카드 형태로 반영</strong>됩니다!
+          <p style="font-size:13px; color:var(--bl-gray-500); margin-top:3px;">
+            여기서 견적을 보내거나 내 기기 사진을 등록하면 여행자 화면에 즉시 반영됩니다.
           </p>
         </div>
 
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn btn-line btn-sm" id="mnToggleBtn" onclick="toggleMongolianMode()">
-            🇲🇳 한·몽 병기 모드 켜기 (현지 직원용)
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" id="mnToggleBtn" onclick="toggleMongolianMode()">
+            <i class="xi-globus"></i> 한·몽 병기 켜기 (현지 직원용)
           </button>
-          <button class="btn btn-line btn-sm" id="mobSimBtn" onclick="togglePartnerMobile()">
-            📱 현지 매니저 스마트폰 뷰 전환
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" id="mobSimBtn" onclick="togglePartnerMobile()">
+            <i class="xi-mobile"></i> 스마트폰 뷰 전환
           </button>
-          <button class="btn btn-gold btn-sm" onclick="switchSiteRole('customer')">
-            👤 고객 사이트 화면으로 돌아가기 ➔
+          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="switchSiteRole('customer')">
+            여행자 화면 보기 <i class="xi-angle-right-min"></i>
           </button>
         </div>
       </div>
 
-      <div class="partner-workspace-grid">
-        <!-- 좌측: 실사 첨부 1분 표준견적 발송기 -->
+      <div class="partner-grid-2col">
+        <!-- 좌측: 실사 첨부 1분 표준견적 발송 -->
         <div>
-          <div class="p-card">
-            <span class="badge badge-blue">기능 1 · 고객 일정 역컨택 (실사 첨부 입찰)</span>
-            <h3 style="font-size:19px; font-weight:900; margin:8px 0 4px;">
-              ⚡ 1분 템플릿 표준 비교견적서 발송
-              <span class="mn-txt">/ 1 минутын үнийн санал илгээх</span>
+          <div class="partner-box">
+            <span class="bl-mokta-tag" style="margin-bottom:8px;">실시간 역경매 입찰</span>
+            <h3 style="font-size:18px; font-weight:700; margin-bottom:4px;">
+              1분 템플릿 실사 비교견적 발송
+              <span class="mn-txt">/ 1 минутын үнийн санал</span>
             </h3>
-            <p style="font-size:13px; color:var(--text-500); margin-bottom:16px;">
-              자사 보유 차량과 게르 실사 사진을 선택해 발송하면 고객의 비교견적 창 최상단에 사진과 함께 노출됩니다.
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
+              보유 차량·숙소 실사 조합과 대표 코스 템플릿을 선택해 1분 만에 깔끔한 견적 카드를 발송합니다.
             </p>
 
-            <div class="field">
-              <label>1. 컨택할 고객 일정 선택 <span class="mn-txt">/ Аялагчийн хуваарь сонгох</span></label>
-              <select id="pTargetRfq"></select>
+            <div class="bl-field">
+              <label>1. 컨택할 고객 일정 선택 <span class="mn-txt">/ Аялагчийн хуваарь</span></label>
+              <select class="bl-select" id="pTargetRfq"></select>
             </div>
 
-            <div class="field">
-              <label>2. 저장된 코스 템플릿 원클릭 불러오기 <span class="mn-txt">/ Бэлэн загвар</span></label>
+            <div class="bl-field">
+              <label>2. 저장된 코스 템플릿 불러오기 <span class="mn-txt">/ Бэлэн загвар</span></label>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn btn-line btn-sm" onclick="loadPartnerPreset('gobi')">🏜️ 남고비+중부 샤워게르안</button>
-                <button type="button" class="btn btn-line btn-sm" onclick="loadPartnerPreset('khuvsgul')">🌊 홉스골 레이크뷰 글램핑안</button>
-                <button type="button" class="btn btn-line btn-sm" onclick="loadPartnerPreset('terelj')">🐎 테를지+미니사막 실속안</button>
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('gobi')">남고비+중부 온수캠프안</button>
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('khuvsgul')">홉스골 레이크뷰 글램핑안</button>
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('terelj')">테를지+미니사막 실속안</button>
               </div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="field">
+              <div class="bl-field">
                 <label>4인 기준 1인 단가 (USD) <span class="mn-txt">/ 4 хүний үнэ</span></label>
-                <input type="number" id="pUsd4" value="710" />
+                <input type="number" class="bl-input" id="pUsd4" value="710" />
               </div>
-              <div class="field">
-                <label>6인 풀방 시 1인 단가 (USD) <span class="mn-txt">/ 6 хүний үнэ</span></label>
-                <input type="number" id="pUsd6" value="550" />
+              <div class="bl-field">
+                <label>6인 풀방 단가 (USD) <span class="mn-txt">/ 6 хүний үнэ</span></label>
+                <input type="number" class="bl-input" id="pUsd6" value="550" />
               </div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="field">
+              <div class="bl-field">
                 <label>배정 차량명 <span class="mn-txt">/ Автомашин</span></label>
-                <input type="text" id="pVehName" value="2025 신형 스타렉스 4WD 리무진" />
+                <input type="text" class="bl-input" id="pVehName" value="2025 신형 스타렉스 4WD 리무진" />
               </div>
-              <div class="field">
-                <label>숙소·샤워실 스펙 <span class="mn-txt">/ Гэр бааз</span></label>
-                <input type="text" id="pGerName" value="전 일정 개인 온수샤워 투어리스트 게르" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label>첨부할 자사 차량 &amp; 게르 실사 조합 선택 <span class="mn-txt">/ Бодит зураг сонгох</span></label>
-              <div class="photo-picker-grid" id="bidPhotoPicker">
-                <div class="pick-thumb selected" data-veh="./images/vehicle_fleet.jpg" data-ger="./images/ger_interior.jpg" onclick="selectBidPhotoPair(this)">
-                  <img src="./images/vehicle_fleet.jpg" alt="차량1" />
-                </div>
-                <div class="pick-thumb" data-veh="./images/gobi_camp_vans.jpg" data-ger="./images/sand_dunes_camp.jpg" onclick="selectBidPhotoPair(this)">
-                  <img src="./images/gobi_camp_vans.jpg" alt="차량2" />
-                </div>
-                <div class="pick-thumb" data-veh="./images/steppe_ger_suvs.jpg" data-ger="./images/terelj_resort_camp.jpg" onclick="selectBidPhotoPair(this)">
-                  <img src="./images/steppe_ger_suvs.jpg" alt="차량3" />
-                </div>
-                <div class="pick-thumb" data-veh="./images/baga_gazriin_sunset.jpg" data-ger="./images/glamping_dome_friends.jpg" onclick="selectBidPhotoPair(this)">
-                  <img src="./images/baga_gazriin_sunset.jpg" alt="차량4" />
-                </div>
+              <div class="bl-field">
+                <label>숙소·샤워실 등급 <span class="mn-txt">/ Гэр бааз</span></label>
+                <input type="text" class="bl-input" id="pGerName" value="전 일정 개인 온수샤워 투어리스트 게르" />
               </div>
             </div>
 
-            <div class="field">
-              <label>고객에게 전할 특전 &amp; 맞춤 코멘트 <span class="mn-txt">/ Нэмэлт тайлбар</span></label>
-              <textarea id="pComment" rows="2">노팁·노옵션 100% 서약! 홍고르엘스 드론 영상 + 은하수 스냅 원본 무료 촬영 및 한국어 7년차 에이스 가이드를 배정해 드립니다.</textarea>
+            <div class="bl-field">
+              <label>첨부할 자사 차량·숙소 실사 선택 <span class="mn-txt">/ Бодит зураг</span></label>
+              <div class="bl-photo-choices" id="bidPhotoPicker">
+                <div class="bl-photo-pick selected" data-veh="./images/vehicle_fleet.jpg" data-ger="./images/ger_interior.jpg" onclick="selectBidPhotoPair(this)">
+                  <img src="./images/vehicle_fleet.jpg" alt="차량실사1" />
+                </div>
+                <div class="bl-photo-pick" data-veh="./images/gobi_camp_vans.jpg" data-ger="./images/sand_dunes_camp.jpg" onclick="selectBidPhotoPair(this)">
+                  <img src="./images/gobi_camp_vans.jpg" alt="차량실사2" />
+                </div>
+                <div class="bl-photo-pick" data-veh="./images/steppe_ger_suvs.jpg" data-ger="./images/terelj_resort_camp.jpg" onclick="selectBidPhotoPair(this)">
+                  <img src="./images/steppe_ger_suvs.jpg" alt="차량실사3" />
+                </div>
+                <div class="bl-photo-pick" data-veh="./images/baga_gazriin_sunset.jpg" data-ger="./images/glamping_dome_friends.jpg" onclick="selectBidPhotoPair(this)">
+                  <img src="./images/baga_gazriin_sunset.jpg" alt="차량실사4" />
+                </div>
+              </div>
             </div>
 
-            <button type="button" class="btn btn-blue" style="width:100%; padding:13px;" onclick="sendPartnerQuoteLive()">
-              🚀 실사 첨부 비교견적서 발송하기 (고객 화면 즉시 확인)
+            <div class="bl-field">
+              <label>무료 특전 &amp; 전담 매니저 인사말 <span class="mn-txt">/ Нэмэлт тайлбар</span></label>
+              <textarea class="bl-textarea" id="pComment" rows="2">노팁·노옵션 100% 서약! 홍고르엘스 드론 촬영 + 은하수 스냅 원본 무료 제공 및 한국어 7년차 에이스 가이드를 배정합니다.</textarea>
+            </div>
+
+            <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="sendPartnerQuoteLive()">
+              고객에게 실사 비교견적 발송하기
             </button>
           </div>
         </div>
 
-        <!-- 우측: 내 업체 사진/영상 쇼케이스 직접 업로드 체험 -->
+        <!-- 우측: 쇼케이스 업로드 -->
         <div>
-          <div class="p-card">
-            <span class="badge badge-gold">기능 2 · 내 PC/스마트폰 실사 업로드 지원</span>
-            <h3 style="font-size:19px; font-weight:900; margin:8px 0 4px;">
-              🎬 현장 쇼케이스 사진·영상 피드 등록
+          <div class="partner-box">
+            <span class="bl-mokta-tag" style="margin-bottom:8px;">미디어 커머스 노출</span>
+            <h3 style="font-size:18px; font-weight:700; margin-bottom:4px;">
+              내 업체 현장 사진·숏폼 쇼케이스 등록
               <span class="mn-txt">/ Зураг болон бичлэг оруулах</span>
             </h3>
-            <p style="font-size:13px; color:var(--text-500); margin-bottom:14px;">
-              기본 제공되는 실사 샘플을 고르거나, <strong>직접 보유하신 투어 사진을 첨부</strong>해 고객 메인 쇼케이스에 노출해보세요!
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
+              보유하신 투어 사진을 직접 첨부하거나 프리셋을 선택해 메인 쇼케이스 첫 자리에 노출해보세요.
             </p>
 
-            <div class="field">
-              <label>내 기기에서 직접 사진 선택 (선택사항) <span class="mn-txt">/ Зураг хуулах</span></label>
-              <input type="file" accept="image/*" onchange="handleLocalPhotoUpload(event)" />
+            <div class="bl-field">
+              <label>내 스마트폰·PC 사진 직접 첨부 (선택) <span class="mn-txt">/ Зураг хуулах</span></label>
+              <input type="file" class="bl-input" accept="image/*" onchange="handleLocalPhotoUpload(event)" />
             </div>
 
-            <div class="field">
+            <div class="bl-field">
               <label>또는 현지 촬영 실사 프리셋 선택</label>
-              <div class="photo-picker-grid" id="showcasePresetPicker">
-                <div class="pick-thumb selected" data-img="./images/khorkhog_feast.jpg" onclick="selectShowcasePreset(this)">
+              <div class="bl-photo-choices" id="showcasePresetPicker">
+                <div class="bl-photo-pick selected" data-img="./images/khorkhog_feast.jpg" onclick="selectShowcasePreset(this)">
                   <img src="./images/khorkhog_feast.jpg" alt="허르헉" />
                 </div>
-                <div class="pick-thumb" data-img="./images/milkyway_gobi.jpg" onclick="selectShowcasePreset(this)">
+                <div class="bl-photo-pick" data-img="./images/milkyway_gobi.jpg" onclick="selectShowcasePreset(this)">
                   <img src="./images/milkyway_gobi.jpg" alt="은하수" />
                 </div>
-                <div class="pick-thumb" data-img="./images/ger_interior.jpg" onclick="selectShowcasePreset(this)">
-                  <img src="./images/ger_interior.jpg" alt="게르내부" />
+                <div class="bl-photo-pick" data-img="./images/ger_interior.jpg" onclick="selectShowcasePreset(this)">
+                  <img src="./images/ger_interior.jpg" alt="온수게르" />
                 </div>
-                <div class="pick-thumb" data-img="./images/khuvsgul_boat_sunset.jpg" onclick="selectShowcasePreset(this)">
+                <div class="bl-photo-pick" data-img="./images/khuvsgul_boat_sunset.jpg" onclick="selectShowcasePreset(this)">
                   <img src="./images/khuvsgul_boat_sunset.jpg" alt="홉스골" />
                 </div>
               </div>
             </div>
 
-            <div class="field">
-              <label>쇼케이스 어필 제목 <span class="mn-txt">/ Гарчиг</span></label>
-              <input type="text" id="pShowTitle" value="방금 구운 전통 양갈비 허르헉 한상차림! 잡내 없이 야들야들해요" />
+            <div class="bl-field">
+              <label>쇼케이스 제목 <span class="mn-txt">/ Гарчиг</span></label>
+              <input type="text" class="bl-input" id="pShowTitle" value="방금 구운 정통 양갈비 허르헉 한상차림! 노을 보며 즐기는 초원 저녁" />
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div class="field">
+              <div class="bl-field">
                 <label>카테고리 <span class="mn-txt">/ Ангилал</span></label>
-                <select id="pShowCat">
-                  <option value="음식·불멍파티">🥩 허르헉 특식·불멍파티</option>
-                  <option value="은하수·스냅">🌌 은하수·인생스냅</option>
-                  <option value="게르·샤워실">🏕️ 온수 게르·글램핑 내부</option>
-                  <option value="푸르공·스타렉스">🚐 푸르공·스타렉스 차량</option>
+                <select class="bl-select" id="pShowCat">
+                  <option value="음식·불멍파티">허르헉 특식·불멍</option>
+                  <option value="은하수·스냅">은하수·인생스냅</option>
+                  <option value="게르·샤워실">온수 게르·숙소 내부</option>
+                  <option value="푸르공·스타렉스">푸르공·스타렉스 차량</option>
                 </select>
               </div>
-              <div class="field">
-                <label>연결할 자사 대표 상품 <span class="mn-txt">/ Холбох аялал</span></label>
-                <input type="text" id="pShowProd" value="[노팁/특식포함] 남고비+중부 5박6일" />
+              <div class="bl-field">
+                <label>연결할 자사 투어 상품 <span class="mn-txt">/ Холбох аялал</span></label>
+                <input type="text" class="bl-input" id="pShowProd" value="[노팁/특식포함] 남고비+중부 5박6일" />
               </div>
             </div>
 
-            <button type="button" class="btn btn-gold" style="width:100%; padding:13px;" onclick="publishPartnerShowcase()">
-              ✨ 고객 메인 쇼케이스 첫 번째 자리에 즉시 노출하기
+            <button type="button" class="bl-btn bl-btn-dark bl-btn-lg" style="width:100%;" onclick="publishPartnerShowcase()">
+              메인 쇼케이스 첫 번째 자리에 노출하기
             </button>
-          </div>
-
-          <div class="p-card" style="background:#f8fafc;">
-            <span class="badge badge-emerald">MOKTA × BOOLUB 정산 및 보호 정책</span>
-            <h4 style="font-size:16px; font-weight:900; margin:8px 0 6px;">부럽 안심결제 &amp; 공정 입찰 시스템</h4>
-            <ul style="font-size:13px; color:var(--text-700); padding-left:18px; display:grid; gap:6px;">
-              <li>일정당 최대 6개 회원사까지만 입찰 가능하여 무분별한 출혈 경쟁을 방지합니다.</li>
-              <li>동행 팀원 6명이 각자 카드로 1/N 결제하므로 수금 미납·노쇼 리스크가 없습니다.</li>
-              <li>예약금 결제 전 외부 연락처(전화번호·카톡ID)는 자동 마스킹 보호됩니다.</li>
-            </ul>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 실제 사이트 스타일 푸터 -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
+  <!-- 부럽 메인 페이지 동일 화이트 푸터 (.sc_Footer) -->
+  <footer class="sc_Footer">
+    <div class="footer-app-strip">
+      <div class="bl-container footer-app-inner">
         <div>
-          <img src="./images/boolub_logo.png" alt="부럽트래블" style="height:28px; filter:brightness(0) invert(1); margin-bottom:12px;" />
-          <p style="max-width:520px; line-height:1.7;">
-            <strong>부럽트래블 주식회사 (BOOLUB TRAVEL) × 몽골한국관광협회 (MOKTA) 공식 협력 플랫폼 데모</strong><br />
-            본 페이지는 MOKTA 소속 회원사 공유 및 기능 시연을 위해 실제 서비스 구현 사양으로 별도 구축된 독립 데모 환경이며, 현재 운영 중인 본 사이트에는 영향을 주지 않습니다.
-          </p>
+          <strong style="font-size:16px; color:var(--bl-gray-900);">여행의 시작, 부럽 × MOKTA 공식 몽골 플랫폼에서!</strong>
+          <p style="font-size:13px; color:var(--bl-gray-500); margin-top:2px;">검증된 32개 협회 정회원사와 안전하고 투명한 몽골 자유여행을 준비하세요</p>
         </div>
-        <div style="display:grid; gap:6px;">
-          <strong style="color:#fff; font-size:14px;">안심 보증 프로그램</strong>
-          <span>• MOKTA 32개 정회원사 자격 및 보증보험 검증</span>
-          <span>• 출발 미확정 시 100% 전액 자동 환불 보장</span>
-          <span>• 부럽 에스크로 결제 대금 보호 &amp; 1/N 더치페이 지원</span>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="openModal('rfqWizardModal')">맞춤견적 요청하기</button>
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="switchSiteRole('partner')">MOKTA 파트너 입점안내</button>
         </div>
       </div>
-      <div style="padding-top:20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; color:rgba(255,255,255,0.5);">
-        <span>© BOOLUB TRAVEL Inc. × MOKTA Mongolia Hub Demo. All rights reserved.</span>
-        <span>모바일·태블릿·PC 반응형 완벽 지원</span>
+    </div>
+
+    <div class="footer-links-bar">
+      <div class="bl-container footer-links-list">
+        <a>회사소개</a>
+        <a>이용안내</a>
+        <a style="font-weight:700; color:var(--bl-gray-900);">개인정보처리방침</a>
+        <a>이용약관</a>
+        <a>MOKTA 공식 파트너십 안내</a>
+        <span style="color:var(--bl-point-text); font-weight:700;">※ 본 페이지는 MOKTA 공유용 독립 데모 환경입니다 (본 사이트 미영향)</span>
+      </div>
+    </div>
+
+    <div class="bl-container footer-company-area">
+      <div>
+        <div class="company-lines">
+          <span>상호명 : 부럽트래블(주)</span>
+          <span>대표 : 김준현</span>
+          <span>대표전화 : 1660-3980</span>
+          <span>이메일 : boolubtravel@naver.com</span>
+          <span>통신판매업 신고번호 : 제2023-광주광산-1150호</span>
+          <span>사업자 등록번호 : 557-86-03152</span>
+          <span>주소 : 광주광역시 광산구 장신로 253, 3층</span>
+        </div>
+        <p style="margin-top:10px; color:var(--bl-gray-400);">
+          부럽트래블은 통신판매중개자이며, MOKTA(몽골한국관광협회) 공식 정회원사와 함께 안심 에스크로 정산 및 출발 보증 제도를 운영합니다.<br />
+          Copyright © www.boolub.com. All Rights Reserved.
+        </p>
+      </div>
+
+      <div>
+        <strong style="font-size:14px; color:var(--bl-gray-900);">고객센터 운영안내</strong>
+        <div style="font-size:18px; font-weight:800; color:var(--bl-point-text); margin:3px 0;">1660-3980</div>
+        <div>평일 09:00 ~ 18:00 (점심 12:00 ~ 13:00)</div>
       </div>
     </div>
   </footer>
 
-  <!-- ================= 모달 1: 고객 30초 맞춤 일정 등록 위자드 ================= -->
-  <div class="modal-overlay" id="rfqWizardModal" onclick="bgClose(event, 'rfqWizardModal')">
-    <div class="modal-box sm">
-      <div class="modal-head">
-        <h3>📝 30초 일정 올리고 MOKTA 공식 비교견적 받기</h3>
-        <button class="close-x" onclick="closeModal('rfqWizardModal')">&times;</button>
+  <!-- ================= 모달 1: 고객 30초 맞춤 일정 등록 ================= -->
+  <div class="bl-modal-dim" id="rfqWizardModal" onclick="bgClose(event, 'rfqWizardModal')">
+    <div class="bl-modal sm">
+      <div class="bl-modal-head">
+        <h4>30초 맞춤 일정 등록 &amp; MOKTA 비교견적 요청</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('rfqWizardModal')"><i class="xi-close"></i></button>
       </div>
-      <div class="modal-content-pad">
-        <p style="font-size:13.5px; color:var(--text-500); margin-bottom:16px;">
-          희망 조건만 선택하면 <strong>몽골한국관광협회(MOKTA) 정회원사 최대 6곳</strong>이 실제 배정할 차량·게르 사진과 표준 견적서를 보내드립니다.
+      <div class="bl-modal-body">
+        <p style="font-size:13px; color:var(--bl-gray-500); margin-bottom:16px;">
+          일정을 올리시면 몽골한국관광협회(MOKTA) 정회원사 중 <strong>최대 6곳</strong>만 실제 배정 차량·게르 사진과 표준 견적을 제안합니다.
         </p>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="field">
+          <div class="bl-field">
             <label>희망 여행 일정</label>
-            <input type="text" id="wDates" value="9월 12일 ~ 9월 17일 (5박 6일)" />
+            <input type="text" class="bl-input" id="wDates" value="9월 12일 ~ 9월 17일 (5박 6일)" />
           </div>
-          <div class="field">
-            <label>인원 및 투어 형태</label>
-            <select id="wType">
-              <option value="단독투어 · 4명 확정">4명 확정 · 우리끼리 단독투어</option>
-              <option value="동행조인 · 2명 확정 (4명 추가모집 희망)">2명 확정 · 동행조인 희망 (6인 풀방 목표)</option>
-              <option value="동행조인 · 1명 솔로 합류 희망">1명 솔로 · 출발확정 조인방 합류 희망</option>
-              <option value="단독투어 · 6명 가족 프리미엄">6명 가족 · 부모님 효도 단독투어</option>
+          <div class="bl-field">
+            <label>인원 및 진행 방식</label>
+            <select class="bl-select" id="wType">
+              <option value="단독투어 · 4명 확정">4명 확정 · 단독투어 희망</option>
+              <option value="동행조인 · 2명 확정 (추가모집 희망)">2명 확정 · 동행조인 희망</option>
+              <option value="동행조인 · 1명 솔로 합류 희망">1명 솔로 · 출발확정방 합류</option>
+              <option value="단독투어 · 6명 가족 프리미엄">6명 가족 · 효도 단독투어</option>
             </select>
           </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="field">
-            <label>희망 지역 코스</label>
-            <select id="wCourse">
+          <div class="bl-field">
+            <label>희망 코스</label>
+            <select class="bl-select" id="wCourse">
               <option value="남고비 3대 사막 + 중부 온천">남고비 3대 사막 + 중부 온천</option>
               <option value="홉스골 호수 + 테르힝차강노르">홉스골 호수 + 테르힝차강노르</option>
               <option value="테를지 + 바가가즈링촐로 실속코스">테를지 + 바가가즈링촐로 실속코스</option>
             </select>
           </div>
-          <div class="field">
-            <label>선호 차량 &amp; 게르 등급</label>
-            <select id="wInfra">
-              <option value="신형 스타렉스 · 전일정 온수샤워 게르">신형 스타렉스 · 전일정 온수샤워 게르</option>
+          <div class="bl-field">
+            <label>선호 차량 · 숙소 등급</label>
+            <select class="bl-select" id="wInfra">
+              <option value="신형 스타렉스 · 전일정 온수샤워 게르">신형 스타렉스 · 온수샤워 게르</option>
               <option value="감성 푸르공 · 투어리스트 캠프">감성 푸르공 · 투어리스트 캠프</option>
-              <option value="프리미엄 SUV · 럭셔리 글램핑 게르">프리미엄 SUV · 럭셔리 글램핑 게르</option>
+              <option value="프리미엄 SUV · 럭셔리 글램핑">프리미엄 SUV · 럭셔리 글램핑</option>
             </select>
           </div>
         </div>
-        <div class="field">
-          <label>세부 요청사항 (항공편, 스냅 촬영, 식성 등)</label>
-          <textarea id="wMemo" rows="3">울란바토르 오후 2시 도착 항공편입니다! 모래썰매와 밤하늘 은하수 스냅 사진 꼭 남기고 싶고, 추가금 없는 노팁·노옵션 조건 희망합니다.</textarea>
+        <div class="bl-field">
+          <label>세부 요청사항</label>
+          <textarea class="bl-textarea" id="wMemo" rows="3">오후 도착 대한항공 편입니다. 홍고르엘스 모래썰매와 은하수 스냅을 꼭 남기고 싶고, 노팁·노옵션 조건으로 견적 부탁드립니다.</textarea>
         </div>
-        <button class="btn btn-blue" style="width:100%; padding:14px; font-size:14.5px;" onclick="submitCustomerWizard()">
-          🚀 일정 등록하고 MOKTA 회원사 견적 받아보기
+        <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="submitCustomerWizard()">
+          일정 등록하고 MOKTA 견적 받아보기
         </button>
       </div>
     </div>
   </div>
 
-  <!-- ================= 모달 2: 실사 첨부 MOKTA 비교견적 모달 ================= -->
-  <div class="modal-overlay" id="quoteCompareModal" onclick="bgClose(event, 'quoteCompareModal')">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h3 id="qCompTitle">📊 도착한 MOKTA 회원사 실사 첨부 비교견적</h3>
-        <button class="close-x" onclick="closeModal('quoteCompareModal')">&times;</button>
+  <!-- ================= 모달 2: 실사 비교견적 모달 ================= -->
+  <div class="bl-modal-dim" id="quoteCompareModal" onclick="bgClose(event, 'quoteCompareModal')">
+    <div class="bl-modal">
+      <div class="bl-modal-head">
+        <h4 id="qCompTitle">도착한 MOKTA 회원사 실사 비교견적</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('quoteCompareModal')"><i class="xi-close"></i></button>
       </div>
-      <div class="modal-content-pad" id="qCompBody"></div>
+      <div class="bl-modal-body" id="qCompBody"></div>
     </div>
   </div>
 
-  <!-- ================= 모달 3: 숏폼 & 현장 실사 쇼퍼블 플레이어 ================= -->
-  <div class="modal-overlay" id="reelModal" onclick="bgClose(event, 'reelModal')">
-    <div class="modal-box" style="max-width:840px;">
-      <div class="modal-head">
-        <h3>🎬 MOKTA 현장 LIVE 쇼퍼블 뷰어</h3>
-        <button class="close-x" onclick="closeModal('reelModal')">&times;</button>
+  <!-- ================= 모달 3: 쇼케이스 미디어 뷰어 ================= -->
+  <div class="bl-modal-dim" id="reelModal" onclick="bgClose(event, 'reelModal')">
+    <div class="bl-modal" style="max-width:820px;">
+      <div class="bl-modal-head">
+        <h4>MOKTA 현장 LIVE 쇼케이스</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('reelModal')"><i class="xi-close"></i></button>
       </div>
-      <div class="modal-content-pad" id="reelModalBody"></div>
+      <div class="bl-modal-body" id="reelModalBody"></div>
     </div>
   </div>
 
-  <!-- ================= 모달 4: 조인 상세 & 1/N 더치페이 카드결제 ================= -->
-  <div class="modal-overlay" id="joinDetailModal" onclick="bgClose(event, 'joinDetailModal')">
-    <div class="modal-box" style="max-width:780px;">
-      <div class="modal-head">
-        <h3 id="joinModalTitle">📅 실시간 동행·조인 상세 및 1/N 안심결제</h3>
-        <button class="close-x" onclick="closeModal('joinDetailModal')">&times;</button>
+  <!-- ================= 모달 4: 조인 상세 & 1/N 카드결제 ================= -->
+  <div class="bl-modal-dim" id="joinDetailModal" onclick="bgClose(event, 'joinDetailModal')">
+    <div class="bl-modal" style="max-width:740px;">
+      <div class="bl-modal-head">
+        <h4 id="joinModalTitle">실시간 동행·조인 상세 및 1/N 안심결제</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('joinDetailModal')"><i class="xi-close"></i></button>
       </div>
-      <div class="modal-content-pad" id="joinModalBody"></div>
+      <div class="bl-modal-body" id="joinModalBody"></div>
     </div>
   </div>
 
-  <!-- ================= 모달 5: MOKTA 회원사 전용 브랜드 미니홈 ================= -->
-  <div class="modal-overlay" id="agencyHomeModal" onclick="bgClose(event, 'agencyHomeModal')">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h3 id="agencyModalTitle">🏅 MOKTA 공식 파트너 브랜드 미니홈</h3>
-        <button class="close-x" onclick="closeModal('agencyHomeModal')">&times;</button>
+  <!-- ================= 모달 5: MOKTA 회원사 브랜드 미니홈 ================= -->
+  <div class="bl-modal-dim" id="agencyHomeModal" onclick="bgClose(event, 'agencyHomeModal')">
+    <div class="bl-modal">
+      <div class="bl-modal-head">
+        <h4 id="agencyModalTitle">MOKTA 공식 파트너 브랜드 미니홈</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('agencyHomeModal')"><i class="xi-close"></i></button>
       </div>
-      <div class="modal-content-pad" id="agencyModalBody"></div>
+      <div class="bl-modal-body" id="agencyModalBody"></div>
     </div>
   </div>
 
-  <div class="toast-msg" id="toastEl"></div>
+  <div class="bl-toast" id="toastEl"></div>
 
   <script src="./app.js"></script>
 </body>
