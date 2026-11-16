@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
-  <link rel="stylesheet" href="./styles.css?v=bl_waug_2" />
+  <link rel="stylesheet" href="./styles.css?v=bl_waug_3" />
 </head>
 <body id="top">
 
@@ -110,38 +110,62 @@
           <div class="bl-hero-counter" id="heroCounterText">1 / 2</div>
         </div>
 
-        <!-- 부럽 메인 .m_iconbox_new4 동일 4개 퀵 액션 박스 -->
+        <!-- 1번 영역: 부럽 4단 퀵 액션 박스 (실사 이미지 썸네일 적용) -->
         <div class="bl-quick-4box">
           <button type="button" class="bl-qbox-item" onclick="openModal('rfqWizardModal')">
-            <div class="bl-qbox-icon"><i class="xi-paper-o"></i></div>
-            <div class="bl-qbox-txt">
-              <strong>30초 맞춤견적 요청</strong>
-              <span>일정 올리고 최대 6개사 실사 비교</span>
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="./images/vehicle_fleet.jpg" alt="30초 맞춤견적 요청" />
+                <span class="bl-qbox-mini-badge is-point"><i class="xi-pen"></i></span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>30초 맞춤견적 요청</strong>
+                <span>일정 올리고 최대 6개사 실사 비교</span>
+              </div>
             </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
           </button>
 
           <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-join')">
-            <div class="bl-qbox-icon"><i class="xi-users-o"></i></div>
-            <div class="bl-qbox-txt">
-              <strong>출발확정 동행·조인</strong>
-              <span>모일수록 내려가는 1/N 자동할인</span>
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="./images/companion_team_hands.jpg" alt="출발확정 동행·조인" />
+                <span class="bl-qbox-mini-badge">1/N</span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>출발확정 동행·조인</strong>
+                <span>모일수록 내려가는 1/N 자동할인</span>
+              </div>
             </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
           </button>
 
           <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-showcase')">
-            <div class="bl-qbox-icon"><i class="xi-play-circle-o"></i></div>
-            <div class="bl-qbox-txt">
-              <strong>현장 LIVE 쇼케이스</strong>
-              <span>온수 게르·차량·은하수 직접 확인</span>
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="./images/ger_interior.jpg" alt="현장 LIVE 쇼케이스" />
+                <span class="bl-qbox-mini-badge"><i class="xi-play"></i></span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>현장 LIVE 쇼케이스</strong>
+                <span>온수 게르·차량·은하수 직접 확인</span>
+              </div>
             </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
           </button>
 
           <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-partners')">
-            <div class="bl-qbox-icon"><i class="xi-award"></i></div>
-            <div class="bl-qbox-txt">
-              <strong>MOKTA 32개 회원사관</strong>
-              <span>몽골한국관광협회 보증 정회원</span>
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="./images/khuvsgul_island.jpg" alt="MOKTA 공식 파트너스" />
+                <span class="bl-qbox-mini-badge is-point"><i class="xi-crown"></i></span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>MOKTA 공식 파트너관</strong>
+                <span>협회 인증 20+ 회원사 한눈에 비교</span>
+              </div>
             </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
           </button>
         </div>
 
@@ -277,25 +301,54 @@
       </div>
     </section>
 
-    <!-- 6. MOKTA 32개 공식 회원사 브랜드관 -->
+    <!-- 6. MOKTA 20개 공식 회원사 로고 슬라이드 & 프리미엄 브랜드 쇼케이스 -->
     <section class="bl-section page-sec" id="sec-partners">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
             <h3>몽골한국관광협회(MOKTA) 공식 파트너스</h3>
-            <p>보증보험·직영 차량·현지 캠프 검증을 마친 32개 정회원사의 미니홈을 둘러보고 1:1 지정 견적을 요청하세요</p>
+            <p>보증보험·직영 차량·현지 캠프 검증을 마친 20개 핵심 정회원사가 실시간 자동 로테이션으로 소개됩니다</p>
           </div>
         </div>
 
-        <div class="bl-chip-row">
-          <button type="button" class="bl-chip active" onclick="filterAgencies('all', this)">전체 회원사 (32)</button>
-          <button type="button" class="bl-chip" onclick="filterAgencies('남고비특화', this)">남고비·사막 전문</button>
-          <button type="button" class="bl-chip" onclick="filterAgencies('럭셔리캠프', this)">직영 온수·글램핑 보유</button>
-          <button type="button" class="bl-chip" onclick="filterAgencies('스냅·2030', this)">2030 드론·스냅 특화</button>
-          <button type="button" class="bl-chip" onclick="filterAgencies('가족·VIP', this)">가족·효도 단독투어</button>
+        <!-- 필터 칩 + 자동 슬라이드 컨트롤 바 -->
+        <div class="bl-partner-ctrl-bar">
+          <div class="bl-chip-row">
+            <button type="button" class="bl-chip active" onclick="filterAgencies('all', this)">전체 회원사 (20)</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('남고비특화', this)">남고비·사막 전문</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('럭셔리캠프', this)">직영 온수·글램핑 보유</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('스냅·2030', this)">2030 드론·스냅 특화</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('가족·VIP', this)">가족·효도 단독투어</button>
+          </div>
+
+          <div class="bl-carousel-ctrls">
+            <button type="button" class="bl-auto-pill" id="partnerAutoBtn" onclick="togglePartnerAutoSlide()">
+              <i class="xi-pause"></i> 자동 슬라이드 중
+            </button>
+            <button type="button" class="bl-circle-nav" onclick="slidePartnerCards(-1)" aria-label="이전 회원사">
+              <i class="xi-angle-left"></i>
+            </button>
+            <button type="button" class="bl-circle-nav" onclick="slidePartnerCards(1)" aria-label="다음 회원사">
+              <i class="xi-angle-right"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="bl-partner-grid" id="agencyCardsGrid"></div>
+        <!-- 20개 공식 회원사 고유 로고 무한 마키(Marquee) 리본 -->
+        <div class="bl-logo-marquee-wrap" id="logoMarqueeWrap">
+          <div class="bl-logo-marquee-track" id="logoMarqueeTrack"></div>
+        </div>
+
+        <!-- 20개 공식 회원사 프리미엄 가로 슬라이드 캐러셀 -->
+        <div class="bl-partner-slider-viewport" id="partnerSliderViewport">
+          <div class="bl-partner-track" id="agencyCardsGrid"></div>
+          <div class="bl-slider-progress-wrap">
+            <div class="bl-slider-progress-bar">
+              <div class="bl-slider-progress-fill" id="partnerProgressFill"></div>
+            </div>
+            <span class="bl-slider-page-txt" id="partnerPageTxt">1 / 20</span>
+          </div>
+        </div>
 
         <!-- 부럽 메인 하단 3색 서비스 안내 배너 (waug.css 3-8 동일) -->
         <div class="bl-service-banners">
@@ -663,6 +716,6 @@
 
   <div class="bl-toast" id="toastEl"></div>
 
-  <script src="./app.js?v=bl_waug_2"></script>
+  <script src="./app.js?v=bl_waug_3"></script>
 </body>
 </html>

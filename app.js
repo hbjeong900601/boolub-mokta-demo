@@ -412,14 +412,11 @@ const DIRECT_PRODUCTS = [
 
 const MOKTA_AGENCIES = [
   {
-    id: 'ag1',
-    name: '어드벤처 몽골 투어',
-    certNo: 'MOKTA-2026-014',
-    cat: '남고비특화',
-    rating: '4.96',
-    reviews: 183,
-    response: '평균 14분 응답',
-    logo: './images/gobi_camp_vans.jpg',
+    id: 'ag1', name: '어드벤처 몽골 투어', en: 'ADVENTURE MONGOLIA', certNo: 'MOKTA-001',
+    cat: '남고비특화', specLabel: '남고비·드론특화', rating: '4.96', reviews: 183,
+    speed: '14분', fleetCount: '직영 23대', confirmRate: '99.4%',
+    c1: '#0ea5e9', c2: '#0369a1', motif: 'dune',
+    cover: './images/gobi_camp_vans.jpg',
     thumbs: ['./images/milkyway_gobi.jpg', './images/sand_dunes_camp.jpg', './images/khorkhog_feast.jpg'],
     fleet: '2025 스타렉스 9대 · 에어컨 푸르공 14대 직영',
     desc: '남고비 사막 종단 및 드론·은하수 타임랩스 케어 만족도 1위 정회원사',
@@ -429,14 +426,11 @@ const MOKTA_AGENCIES = [
     ]
   },
   {
-    id: 'ag2',
-    name: '고비 스타 글램핑 투어',
-    certNo: 'MOKTA-2026-007',
-    cat: '럭셔리캠프',
-    rating: '4.98',
-    reviews: 128,
-    response: '평균 18분 응답',
-    logo: './images/ger_interior.jpg',
+    id: 'ag2', name: '고비 스타 글램핑', en: 'GOBI STAR GLAMPING', certNo: 'MOKTA-002',
+    cat: '럭셔리캠프', specLabel: '직영 온수글램핑', rating: '4.98', reviews: 128,
+    speed: '18분', fleetCount: '캠프 2곳·15대', confirmRate: '99.8%',
+    c1: '#f59e0b', c2: '#b45309', motif: 'ger',
+    cover: './images/ger_interior.jpg',
     thumbs: ['./images/ger_interior.jpg', './images/glamping_dome_friends.jpg', './images/terelj_resort_camp.jpg'],
     fleet: '스타렉스 리무진 7대 · 직영 럭셔리 글램핑 캠프 2곳',
     desc: '전 일정 호텔식 침구와 개별 타일 온수 샤워실이 보장되는 직영 캠프 운영사',
@@ -446,14 +440,11 @@ const MOKTA_AGENCIES = [
     ]
   },
   {
-    id: 'ag3',
-    name: '홉스골 블루펄 트래블',
-    certNo: 'MOKTA-2026-021',
-    cat: '가족·VIP',
-    rating: '4.95',
-    reviews: 156,
-    response: '평균 20분 응답',
-    logo: './images/khuvsgul_island.jpg',
+    id: 'ag3', name: '홉스골 블루펄 트래블', en: 'KHUVSGUL BLUE PEARL', certNo: 'MOKTA-003',
+    cat: '가족·VIP', specLabel: '홉스골 1열캠프', rating: '4.95', reviews: 156,
+    speed: '20분', fleetCount: '직영 14대', confirmRate: '99.1%',
+    c1: '#14b8a6', c2: '#0f766e', motif: 'wave',
+    cover: './images/khuvsgul_island.jpg',
     thumbs: ['./images/khuvsgul_island.jpg', './images/khuvsgul_boat_sunset.jpg', './images/vehicle_fleet.jpg'],
     fleet: '벤츠 스프린터 4대 · 4WD 스타렉스 10대 보유',
     desc: '홉스골 호수 1열 레이크뷰 캠프 독점 블럭 및 효도·가족 힐링투어 전문',
@@ -463,14 +454,11 @@ const MOKTA_AGENCIES = [
     ]
   },
   {
-    id: 'ag4',
-    name: '노마드 스냅 익스페디션',
-    certNo: 'MOKTA-2026-029',
-    cat: '스냅·2030',
-    rating: '4.94',
-    reviews: 94,
-    response: '평균 11분 응답',
-    logo: './images/tsagaan_suvarga_snap.jpg',
+    id: 'ag4', name: '노마드 스냅 익스페디션', en: 'NOMAD SNAP EXPEDITION', certNo: 'MOKTA-004',
+    cat: '스냅·2030', specLabel: '2030 전문스냅', rating: '4.94', reviews: 94,
+    speed: '11분', fleetCount: '직영 22대', confirmRate: '98.9%',
+    c1: '#8b5cf6', c2: '#6d28d9', motif: 'lens',
+    cover: './images/tsagaan_suvarga_snap.jpg',
     thumbs: ['./images/tsagaan_suvarga_snap.jpg', './images/starlight_ger_snap.jpg', './images/campfire_cheers.jpg'],
     fleet: '루프랙 스냅용 푸르공 16대 · 스타렉스 6대',
     desc: '전 가이드 소니 미러리스 카메라 보유! 2030 또래 동행 조인 추천율 최상위',
@@ -480,14 +468,11 @@ const MOKTA_AGENCIES = [
     ]
   },
   {
-    id: 'ag5',
-    name: '몽골 헤리티지 VIP 투어',
-    certNo: 'MOKTA-2026-002',
-    cat: '가족·VIP',
-    rating: '4.99',
-    reviews: 89,
-    response: '평균 15분 응답',
-    logo: './images/baga_gazriin_sunset.jpg',
+    id: 'ag5', name: '몽골 헤리티지 VIP', en: 'MONGOL HERITAGE VIP', certNo: 'MOKTA-005',
+    cat: '가족·VIP', specLabel: '효도·VIP의전', rating: '4.99', reviews: 89,
+    speed: '15분', fleetCount: 'VIP 17대', confirmRate: '100%',
+    c1: '#1e293b', c2: '#0f172a', motif: 'peak',
+    cover: './images/baga_gazriin_sunset.jpg',
     thumbs: ['./images/baga_gazriin_sunset.jpg', './images/terelj_resort_camp.jpg', './images/ger_interior.jpg'],
     fleet: '도요타 랜드크루저 12대 · 렉서스 LX · 스프린터',
     desc: '칠순 효도 단독투어, 기업 워크샵 의전, 승마 트레킹·몽골 골프 전문 랜드사',
@@ -497,20 +482,198 @@ const MOKTA_AGENCIES = [
     ]
   },
   {
-    id: 'ag6',
-    name: '스텝 오아시스 외 MOKTA 27개 정회원사',
-    certNo: 'MOKTA-OFFICIAL-32',
-    cat: '남고비특화',
-    rating: '4.95',
-    reviews: 640,
-    response: '실시간 알림 연동',
-    logo: './images/steppe_ger_suvs.jpg',
-    thumbs: ['./images/steppe_ger_suvs.jpg', './images/orkhon_canyon_top.jpg', './images/green_steppe_flock.jpg'],
-    fleet: '몽골 전역 300대+ 검증 차량 및 인증 캠프 공동 네트워크',
-    desc: '협회 소속 32개 모든 정회원사가 동일한 품질 보증과 전용 브랜드 미니홈으로 참여합니다',
+    id: 'ag6', name: '어르헝 밸리 투어', en: 'ORKHON VALLEY TOUR', certNo: 'MOKTA-006',
+    cat: '남고비특화', specLabel: '중부폭포·온천', rating: '4.95', reviews: 112,
+    speed: '16분', fleetCount: '직영 18대', confirmRate: '99.2%',
+    c1: '#10b981', c2: '#047857', motif: 'arch',
+    cover: './images/orkhon_waterfall_rainbow.jpg',
+    thumbs: ['./images/orkhon_waterfall_rainbow.jpg', './images/orkhon_canyon_top.jpg', './images/steppe_ger_suvs.jpg'],
+    fleet: '신형 스타렉스 10대 · 오프로드 푸르공 8대',
+    desc: '어르헝 폭포 트레킹과 쳉헤르 노천온천 힐링 루트 직영 캠프 네트워크 보유',
     products: [
-      { name: '[협회표준] 중부 어르헝폭포+하르호린 정복 4박5일', price: '730,000원~' },
-      { name: '[실속출발] 테를지 승마+미니사막 핵심 2박3일', price: '490,000원~' }
+      { name: '[힐링베스트] 어르헝폭포+쳉헤르 노천온천 4박5일', price: '760,000원~' }
+    ]
+  },
+  {
+    id: 'ag7', name: '초원 별밤 원정대', en: 'STEPPE STARLIGHT', certNo: 'MOKTA-007',
+    cat: '스냅·2030', specLabel: '은하수·천체스냅', rating: '4.97', reviews: 147,
+    speed: '12분', fleetCount: '직영 19대', confirmRate: '99.5%',
+    c1: '#3b82f6', c2: '#1d4ed8', motif: 'star',
+    cover: './images/milkyway_gobi.jpg',
+    thumbs: ['./images/milkyway_gobi.jpg', './images/starlight_ger_snap.jpg', './images/sand_dunes_camp.jpg'],
+    fleet: '천체망원경 탑재 투어차량 19대 운영',
+    desc: '전문 천체 사진작가 가이드가 동행하는 고비 은하수 출사 및 랜턴 스냅 전문',
+    products: [
+      { name: '[은하수출사] 홍고르엘스 별밤 타임랩스 5박6일', price: '810,000원~' }
+    ]
+  },
+  {
+    id: 'ag8', name: '테를지 포레스트 캠프', en: 'TERELJ FOREST CAMP', certNo: 'MOKTA-008',
+    cat: '럭셔리캠프', specLabel: '테를지 리조트직영', rating: '4.94', reviews: 203,
+    speed: '19분', fleetCount: '직영캠프 45동', confirmRate: '99.6%',
+    c1: '#22c55e', c2: '#15803d', motif: 'pine',
+    cover: './images/terelj_resort_camp.jpg',
+    thumbs: ['./images/terelj_resort_camp.jpg', './images/ger_interior.jpg', './images/green_steppe_flock.jpg'],
+    fleet: '테를지 국립공원 내 온수 리조트 게르 45동 직영',
+    desc: '짧은 연차로도 편안하게 다녀오는 테를지 국립공원·승마·엉거츠산 트레킹 명가',
+    products: [
+      { name: '[연차없이] 테를지 리조트게르+승마 힐링 2박3일', price: '490,000원~' }
+    ]
+  },
+  {
+    id: 'ag9', name: '울란바토르 로얄라인', en: 'UB ROYAL LINE', certNo: 'MOKTA-009',
+    cat: '가족·VIP', specLabel: '리무진시트 전용', rating: '4.96', reviews: 134,
+    speed: '13분', fleetCount: '리무진 16대', confirmRate: '99.3%',
+    c1: '#0284c7', c2: '#075985', motif: 'wheel',
+    cover: './images/vehicle_fleet.jpg',
+    thumbs: ['./images/vehicle_fleet.jpg', './images/steppe_ger_suvs.jpg', './images/ger_interior.jpg'],
+    fleet: '전 차량 2024~2025년식 스타렉스 리무진 시트 개조',
+    desc: '장거리 초원 이동의 피로를 줄여주는 독립 리무진 시트 & 전 좌석 고속충전 완비',
+    products: [
+      { name: '[리무진확약] 남고비+중부 편안한 이동 5박6일', price: '850,000원~' }
+    ]
+  },
+  {
+    id: 'ag10', name: '카라코룸 익스프레스', en: 'KARAKORUM EXPRESS', certNo: 'MOKTA-010',
+    cat: '남고비특화', specLabel: '역사·중부종단', rating: '4.93', reviews: 98,
+    speed: '17분', fleetCount: '직영 15대', confirmRate: '98.8%',
+    c1: '#d97706', c2: '#92400e', motif: 'stupa',
+    cover: './images/erdene_zuu_monastery.jpg',
+    thumbs: ['./images/erdene_zuu_monastery.jpg', './images/terkhiin_lake_forest.jpg', './images/orkhon_waterfall_rainbow.jpg'],
+    fleet: '스타렉스 8대 · 푸르공 7대 · 역사해설 전문 가이드',
+    desc: '고대 수도 하르호린 에르데네조 사원과 중앙몽골 유네스코 문화유산 심층 투어',
+    products: [
+      { name: '[인문·자연] 하르호린+테르힝차강노르 4박5일', price: '730,000원~' }
+    ]
+  },
+  {
+    id: 'ag11', name: '샌드듄 고비 사파리', en: 'SAND DUNE SAFARI', certNo: 'MOKTA-011',
+    cat: '남고비특화', specLabel: '홍고르엘스 특화', rating: '4.95', reviews: 165,
+    speed: '15분', fleetCount: '4WD 20대', confirmRate: '99.4%',
+    c1: '#ea580c', c2: '#9a3412', motif: 'camel',
+    cover: './images/sand_dunes_camp.jpg',
+    thumbs: ['./images/sand_dunes_camp.jpg', './images/gobi_camp_vans.jpg', './images/milkyway_gobi.jpg'],
+    fleet: '사막 주행 특화 4WD 차량 20대 직영',
+    desc: '홍고르엘스 모래언덕 바로 앞 캠프 우선 배정 및 쌍봉낙타 선셋 트레킹 포함',
+    products: [
+      { name: '[사막1열캠프] 남고비 오아시스 사파리 5박6일', price: '800,000원~' }
+    ]
+  },
+  {
+    id: 'ag12', name: '알타이 오프로드 클럽', en: 'ALTAI OFFROAD CLUB', certNo: 'MOKTA-012',
+    cat: '남고비특화', specLabel: '푸르공 오지탐험', rating: '4.92', reviews: 82,
+    speed: '21분', fleetCount: '푸르공 18대', confirmRate: '98.7%',
+    c1: '#475569', c2: '#1e293b', motif: 'compass',
+    cover: './images/steppe_ger_suvs.jpg',
+    thumbs: ['./images/steppe_ger_suvs.jpg', './images/vehicle_fleet.jpg', './images/baga_gazriin_sunset.jpg'],
+    fleet: '신형 개조 UAZ 푸르공 18대 · 베테랑 미캐닉 기사단',
+    desc: '서부 알타이 산맥부터 남고비 협곡까지 진짜 야생 몽골을 달리는 오프로드 전문사',
+    products: [
+      { name: '[푸르공로망] 바얀작+욜린암 오프로드 5박6일', price: '710,000원~' }
+    ]
+  },
+  {
+    id: 'ag13', name: '몽골리아 돔 스테이', en: 'MONGOLIA DOME STAY', certNo: 'MOKTA-013',
+    cat: '럭셔리캠프', specLabel: '파노라마 투명돔', rating: '4.97', reviews: 119,
+    speed: '13분', fleetCount: '돔캠프 3곳', confirmRate: '99.6%',
+    c1: '#ec4899', c2: '#be185d', motif: 'dome',
+    cover: './images/glamping_dome_friends.jpg',
+    thumbs: ['./images/glamping_dome_friends.jpg', './images/ger_interior.jpg', './images/starlight_ger_snap.jpg'],
+    fleet: '침대에 누워 별을 보는 투명 돔 글램핑 3개 지점 직영',
+    desc: '2030 여성 여행자 및 커플 만족도 압도적 1위! 감성 인테리어 돔 글램핑 투어',
+    products: [
+      { name: '[감성돔숙박] 미니사막+테를지 별밤돔 3박4일', price: '690,000원~' }
+    ]
+  },
+  {
+    id: 'ag14', name: '차강노르 에코투어', en: 'TSAGAAN ECO TOUR', certNo: 'MOKTA-014',
+    cat: '럭셔리캠프', specLabel: '화산호수·에코캠프', rating: '4.94', reviews: 76,
+    speed: '18분', fleetCount: '직영 12대', confirmRate: '99.0%',
+    c1: '#06b6d4', c2: '#0e7490', motif: 'crater',
+    cover: './images/terkhiin_lake_forest.jpg',
+    thumbs: ['./images/terkhiin_lake_forest.jpg', './images/khuvsgul_island.jpg', './images/green_steppe_flock.jpg'],
+    fleet: '친환경 태양광 온수 투어리스트 캠프 제휴',
+    desc: '호르고 화산 분화구 트레킹과 테르힝차강 화이트 레이크 호반 캠핑 전문',
+    products: [
+      { name: '[청정자연] 호르고화산+차강노르 호반힐링 4박5일', price: '740,000원~' }
+    ]
+  },
+  {
+    id: 'ag15', name: '칭기스 고메 투어', en: 'CHINGGIS GOURMET', certNo: 'MOKTA-015',
+    cat: '가족·VIP', specLabel: '현지특식·한식셰프', rating: '4.98', reviews: 108,
+    speed: '14분', fleetCount: '조리팀 12팀', confirmRate: '99.7%',
+    c1: '#ef4444', c2: '#b91c1c', motif: 'flame',
+    cover: './images/khorkhog_feast.jpg',
+    thumbs: ['./images/khorkhog_feast.jpg', './images/campfire_cheers.jpg', './images/terelj_resort_camp.jpg'],
+    fleet: '전문 캠핑 셰프 동행 · 위생 인증 키친카/다이닝 게르',
+    desc: '몽골 음식 걱정 끝! 잡내 없는 프리미엄 허르헉과 정갈한 한식 세끼를 차려드립니다',
+    products: [
+      { name: '[미식올인원] 셰프동행 중부+고비 미식투어 5박6일', price: '890,000원~' }
+    ]
+  },
+  {
+    id: 'ag16', name: '선셋 레이크 요트투어', en: 'SUNSET LAKE VOYAGE', certNo: 'MOKTA-016',
+    cat: '가족·VIP', specLabel: '홉스골 선셋보트', rating: '4.96', reviews: 91,
+    speed: '16분', fleetCount: '전용보트 5척', confirmRate: '99.2%',
+    c1: '#6366f1', c2: '#4338ca', motif: 'sail',
+    cover: './images/khuvsgul_boat_sunset.jpg',
+    thumbs: ['./images/khuvsgul_boat_sunset.jpg', './images/khuvsgul_island.jpg', './images/terkhiin_lake_forest.jpg'],
+    fleet: '홉스골 선착장 프라이빗 보트 5척 및 스타렉스 9대',
+    desc: '어머니의 바다 홉스골에서 즐기는 선셋 프라이빗 보트와 호숫가 통나무 별장 투어',
+    products: [
+      { name: '[선셋보트] 홉스골 통나무집 & 호수휴양 4박5일', price: '920,000원~' }
+    ]
+  },
+  {
+    id: 'ag17', name: '노마딕 캠프파이어', en: 'NOMADIC CAMPFIRE', certNo: 'MOKTA-017',
+    cat: '스냅·2030', specLabel: '2030 동행조인 1위', rating: '4.95', reviews: 214,
+    speed: '9분', fleetCount: '조인전용 25대', confirmRate: '99.5%',
+    c1: '#f97316', c2: '#c2410c', motif: 'spark',
+    cover: './images/campfire_cheers.jpg',
+    thumbs: ['./images/campfire_cheers.jpg', './images/companion_team_hands.jpg', './images/glamping_dome_friends.jpg'],
+    fleet: '2030 또래 매칭 전담 코디네이터 및 차량 25대',
+    desc: '혼자 와도 어색함 제로! 나이대·성향 맞춤 조인 매칭과 매일 밤 불멍 캠프파이어',
+    products: [
+      { name: '[솔로환영] 2030 또래매칭 별밤불멍 4박5일', price: '710,000원~' }
+    ]
+  },
+  {
+    id: 'ag18', name: '그린스텝 승마트레킹', en: 'GREEN STEPPE RIDING', certNo: 'MOKTA-018',
+    cat: '스냅·2030', specLabel: '초원승마·유목체험', rating: '4.94', reviews: 87,
+    speed: '19분', fleetCount: '승마장 3곳', confirmRate: '99.1%',
+    c1: '#16a34a', c2: '#166534', motif: 'horse',
+    cover: './images/green_steppe_flock.jpg',
+    thumbs: ['./images/green_steppe_flock.jpg', './images/hero_steppe_sunset.jpg', './images/terelj_resort_camp.jpg'],
+    fleet: '초보자 안전 교육 완료 마필 60두 및 안전장비 완비',
+    desc: '초원 위를 직접 달리는 종일 승마 트레킹부터 유목민 가정 방문·전통 의상 스냅까지',
+    products: [
+      { name: '[초원질주] 안전가이드 동행 승마트레킹 3박4일', price: '660,000원~' }
+    ]
+  },
+  {
+    id: 'ag19', name: '캐니언 드론 투어스', en: 'CANYON DRONE TOURS', certNo: 'MOKTA-019',
+    cat: '스냅·2030', specLabel: '시네마틱 드론촬영', rating: '4.96', reviews: 105,
+    speed: '12분', fleetCount: '드론팀 14대', confirmRate: '99.3%',
+    c1: '#0891b2', c2: '#155e75', motif: 'drone',
+    cover: './images/orkhon_canyon_top.jpg',
+    thumbs: ['./images/orkhon_canyon_top.jpg', './images/tsagaan_suvarga_snap.jpg', './images/gobi_camp_vans.jpg'],
+    fleet: '전 차량 DJI Mavic 3 Pro 드론 및 편집 매니저 배정',
+    desc: '협곡과 사막 위를 달리는 우리 팀 차량 행렬을 영화 같은 4K 드론 릴스로 제작해 드립니다',
+    products: [
+      { name: '[릴스제작포함] 차강소브라가+어르헝 드론투어 4박5일', price: '780,000원~' }
+    ]
+  },
+  {
+    id: 'ag20', name: '골든이글 프라이빗', en: 'GOLDEN EAGLE PRIVATE', certNo: 'MOKTA-020',
+    cat: '가족·VIP', specLabel: '단독맞춤·골프투어', rating: '4.99', reviews: 73,
+    speed: '10분', fleetCount: 'VIP 15대', confirmRate: '100%',
+    c1: '#ca8a04', c2: '#854d0e', motif: 'eagle',
+    cover: './images/hero_steppe_sunset.jpg',
+    thumbs: ['./images/hero_steppe_sunset.jpg', './images/baga_gazriin_sunset.jpg', './images/ger_interior.jpg'],
+    fleet: '징기스칸 CC·마운틴보그드 CC 부킹권 및 VIP 의전차량',
+    desc: '2인 커플 프라이빗 단독투어부터 여름 시원한 몽골 명문 골프 라운딩 패키지까지 맞춤 설계',
+    products: [
+      { name: '[단독프라이빗] 우리끼리 커스텀 초원+골프 3박4일', price: '1,050,000원~' }
     ]
   }
 ];
@@ -988,7 +1151,66 @@ function openReelPlayer(id) {
   openModal('reelModal');
 }
 
-// ==================== 4. 테두리 없는 1:1 상품 그리드 & 32개 회원사 ====================
+// ==================== 4. 테두리 없는 1:1 상품 그리드 & 20개 회원사 로고·슬라이더 ====================
+// 20개 MOKTA 회원사별 고유 벡터 브랜드 엠블럼 생성기
+function buildAgencyEmblemSvg(a) {
+  const shapes = {
+    dune: '<circle cx="30" cy="14" r="5" fill="#fde047"/><path d="M6 34 Q18 21 30 31 T42 28 L42 42 L6 42 Z" fill="#fff" opacity="0.92"/>',
+    ger: '<path d="M9 32 L9 24 L24 13 L39 24 L39 32 Z" fill="#fff"/><path d="M19 32 V24 H29 V32" fill="none" stroke="' + a.c2 + '" stroke-width="2.2"/><circle cx="24" cy="19" r="2.3" fill="' + a.c1 + '"/>',
+    wave: '<path d="M8 23 Q16 16 24 23 T40 23" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M8 31 Q16 24 24 31 T40 31" fill="none" stroke="#99f6e4" stroke-width="2.6" stroke-linecap="round"/>',
+    lens: '<rect x="10" y="14" width="28" height="20" rx="5" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="24" cy="24" r="5.5" fill="#fff"/><circle cx="33" cy="18" r="1.8" fill="#fde047"/>',
+    peak: '<path d="M7 34 L19 14 L27 26 L33 18 L41 34 Z" fill="#fff"/><path d="M19 14 L23 20 L19 19 L15 20 Z" fill="#fcd34d"/>',
+    arch: '<path d="M11 34 V21 A13 13 0 0 1 37 21 V34" fill="none" stroke="#fff" stroke-width="3"/><path d="M18 34 V23 A6 6 0 0 1 30 23 V34" fill="#a7f3d0"/>',
+    star: '<path d="M24 10 L27 20 L38 24 L27 28 L24 38 L21 28 L10 24 L21 20 Z" fill="#fff"/><circle cx="34" cy="14" r="2" fill="#fde047"/>',
+    pine: '<path d="M24 10 L35 23 H29 L37 34 H11 L19 23 H13 Z" fill="#fff"/>',
+    wheel: '<circle cx="24" cy="24" r="11" fill="none" stroke="#fff" stroke-width="2.6"/><circle cx="24" cy="24" r="3.5" fill="#fde047"/><path d="M24 13 V35 M13 24 H35" stroke="#fff" stroke-width="2"/>',
+    stupa: '<path d="M24 10 L29 18 H19 Z M16 20 H32 V27 H16 Z M11 29 H37 V35 H11 Z" fill="#fff"/>',
+    camel: '<path d="M11 32 L14 22 Q18 14 21 22 Q25 13 29 22 L34 20 L37 25 L34 32 Z" fill="#fff"/>',
+    compass: '<circle cx="24" cy="24" r="12" fill="none" stroke="#fff" stroke-width="2.2"/><polygon points="24,13 28,24 24,35 20,24" fill="#fff"/><circle cx="24" cy="24" r="2.2" fill="#f59e0b"/>',
+    dome: '<path d="M9 33 A15 15 0 0 1 39 33 Z" fill="#fff"/><path d="M15 33 A9 9 0 0 1 33 33" fill="none" stroke="' + a.c2 + '" stroke-width="2"/>',
+    crater: '<path d="M8 33 L16 18 L24 23 L32 18 L40 33 Z" fill="#fff"/><ellipse cx="24" cy="20" rx="6" ry="2.5" fill="#67e8f9"/>',
+    flame: '<path d="M24 10 C31 17 35 23 31 31 C29 35 19 35 17 31 C13 24 18 17 24 10 Z" fill="#fff"/><circle cx="24" cy="28" r="4" fill="#fde047"/>',
+    sail: '<path d="M23 11 V31 H11 Z" fill="#fff"/><path d="M26 15 L36 31 H26 Z" fill="#c7d2fe"/><path d="M9 34 H39" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>',
+    spark: '<path d="M16 34 L24 14 L32 34 M12 31 L36 21 M12 21 L36 31" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>',
+    horse: '<path d="M14 34 L17 20 L25 13 L33 17 L30 23 L24 22 L23 34 Z" fill="#fff"/>',
+    drone: '<circle cx="14" cy="15" r="4" stroke="#fff" stroke-width="2" fill="none"/><circle cx="34" cy="15" r="4" stroke="#fff" stroke-width="2" fill="none"/><circle cx="14" cy="33" r="4" stroke="#fff" stroke-width="2" fill="none"/><circle cx="34" cy="33" r="4" stroke="#fff" stroke-width="2" fill="none"/><rect x="19" y="20" width="10" height="8" rx="3" fill="#fff"/>',
+    eagle: '<path d="M8 18 Q17 14 24 23 Q31 14 40 18 Q32 28 24 33 Q16 28 8 18 Z" fill="#fff"/><circle cx="24" cy="16" r="2.5" fill="#fef08a"/>'
+  };
+  const inner = shapes[a.motif] || shapes.star;
+  const gid = 'lg_' + a.id + '_' + Math.random().toString(36).slice(2, 6);
+  return `
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${a.c1}" />
+          <stop offset="100%" stop-color="${a.c2}" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="url(#${gid})" />
+      ${inner}
+    </svg>
+  `;
+}
+
+function renderLogoMarquee() {
+  const track = document.getElementById('logoMarqueeTrack');
+  if (!track) return;
+  const doubled = [...MOKTA_AGENCIES, ...MOKTA_AGENCIES];
+  track.innerHTML = doubled.map(a => `
+    <div class="bl-logo-chip" onclick="openAgencyMiniHome('${a.id}')">
+      <div class="bl-logo-chip-svg">${buildAgencyEmblemSvg(a)}</div>
+      <div class="bl-logo-chip-meta">
+        <strong>${a.name}</strong>
+        <span>${a.specLabel} · <i class="xi-star"></i> ${a.rating}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+let partnerAutoTimer = null;
+let partnerAutoPlaying = true;
+let partnerHoverPaused = false;
+
 function renderStoreAndAgencies() {
   const prodList = DIRECT_PRODUCTS.filter(p => !searchKeyword || p.title.toLowerCase().includes(searchKeyword) || p.agency.toLowerCase().includes(searchKeyword));
 
@@ -1017,35 +1239,52 @@ function renderStoreAndAgencies() {
 
   const agList = MOKTA_AGENCIES.filter(a => {
     const matchC = curAgencyCat === 'all' || a.cat === curAgencyCat;
-    const matchKw = !searchKeyword || a.name.toLowerCase().includes(searchKeyword) || a.desc.toLowerCase().includes(searchKeyword);
+    const matchKw = !searchKeyword || a.name.toLowerCase().includes(searchKeyword) || a.desc.toLowerCase().includes(searchKeyword) || a.specLabel.toLowerCase().includes(searchKeyword);
     return matchC && matchKw;
   });
 
-  document.getElementById('agencyCardsGrid').innerHTML = agList.map(a => `
+  const track = document.getElementById('agencyCardsGrid');
+  track.innerHTML = agList.map(a => `
     <article class="bl-partner-card">
       <div>
-        <div class="bl-partner-head" onclick="openAgencyMiniHome('${a.id}')" style="cursor:pointer;">
-          <img src="${a.logo}" alt="${a.name}" class="bl-partner-logo" />
-          <div style="min-width:0;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span class="bl-mokta-tag">${a.certNo}</span>
-              <span style="font-size:12px; font-weight:600; color:var(--bl-gray-700);"><i class="xi-star" style="color:var(--bl-star);"></i> ${a.rating} (${a.reviews})</span>
-            </div>
-            <h4 style="font-size:16px; font-weight:700; margin-top:3px; color:var(--bl-gray-900);">${a.name}</h4>
-            <div style="font-size:12px; color:var(--bl-gray-500);">${a.response} · ${a.fleet}</div>
+        <div class="bl-pcard-cover" onclick="openAgencyMiniHome('${a.id}')">
+          <img src="${a.cover}" alt="${a.name}" class="cover-img" loading="lazy" />
+          <div class="bl-pcard-cover-top">
+            <span class="bl-pcard-cert">${a.certNo} 공식인증</span>
+            <span class="bl-pcard-rating"><i class="xi-star"></i> ${a.rating} (${a.reviews})</span>
           </div>
         </div>
 
-        <p style="font-size:13px; color:var(--bl-gray-700); margin:12px 0 10px; line-height:1.5;">${a.desc}</p>
+        <div class="bl-pcard-body">
+          <div class="bl-pcard-brand-row">
+            <div class="bl-pcard-emblem" onclick="openAgencyMiniHome('${a.id}')" style="cursor:pointer;">
+              ${buildAgencyEmblemSvg(a)}
+            </div>
+            <span class="bl-pcard-spec-badge">${a.specLabel}</span>
+          </div>
 
-        <div class="bl-partner-thumbs" onclick="openAgencyMiniHome('${a.id}')" style="cursor:pointer;">
-          ${a.thumbs.map(t => `<img src="${t}" alt="인프라 실사" loading="lazy" />`).join('')}
+          <div class="bl-pcard-title-box" onclick="openAgencyMiniHome('${a.id}')" style="cursor:pointer;">
+            <h4>${a.name}</h4>
+            <div class="en-name">${a.en}</div>
+          </div>
+
+          <p class="bl-pcard-desc">${a.desc}</p>
+
+          <div class="bl-pcard-metrics">
+            <div><span>평균응답</span><strong>${a.speed}</strong></div>
+            <div><span>보유인프라</span><strong>${a.fleetCount}</strong></div>
+            <div><span>출발확정률</span><strong>${a.confirmRate}</strong></div>
+          </div>
+
+          <div class="bl-partner-thumbs" onclick="openAgencyMiniHome('${a.id}')" style="cursor:pointer;">
+            ${a.thumbs.map(t => `<img src="${t}" alt="${a.name} 실사" loading="lazy" />`).join('')}
+          </div>
         </div>
       </div>
 
-      <div style="display:flex; gap:8px; padding-top:4px;">
+      <div style="padding:0 18px 18px; display:flex; gap:8px;">
         <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" style="flex:1;" onclick="openAgencyMiniHome('${a.id}')">
-          미니홈 보기
+          브랜드 미니홈
         </button>
         <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openModal('rfqWizardModal')">
           1:1 지정견적
@@ -1053,6 +1292,97 @@ function renderStoreAndAgencies() {
       </div>
     </article>
   `).join('');
+
+  track.scrollLeft = 0;
+  updatePartnerProgress(agList.length);
+}
+
+function slidePartnerCards(dir) {
+  const track = document.getElementById('agencyCardsGrid');
+  if (!track) return;
+  const firstCard = track.querySelector('.bl-partner-card');
+  const step = firstCard ? firstCard.offsetWidth + 16 : 360;
+  const maxScroll = track.scrollWidth - track.clientWidth;
+
+  if (dir > 0 && track.scrollLeft >= maxScroll - 12) {
+    track.scrollTo({ left: 0, behavior: 'smooth' });
+  } else if (dir < 0 && track.scrollLeft <= 12) {
+    track.scrollTo({ left: maxScroll, behavior: 'smooth' });
+  } else {
+    track.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+}
+
+function updatePartnerProgress(totalOverride) {
+  const track = document.getElementById('agencyCardsGrid');
+  const fill = document.getElementById('partnerProgressFill');
+  const txt = document.getElementById('partnerPageTxt');
+  if (!track || !fill || !txt) return;
+
+  const cards = track.querySelectorAll('.bl-partner-card');
+  const total = totalOverride || cards.length || 1;
+  const maxScroll = Math.max(1, track.scrollWidth - track.clientWidth);
+  const ratio = Math.min(1, Math.max(0, track.scrollLeft / maxScroll));
+  const curIdx = Math.min(total, Math.max(1, Math.round(ratio * (total - 1)) + 1));
+
+  fill.style.width = `${Math.max(8, ratio * 100)}%`;
+  txt.textContent = `${curIdx} / ${total}`;
+}
+
+function togglePartnerAutoSlide() {
+  partnerAutoPlaying = !partnerAutoPlaying;
+  const btn = document.getElementById('partnerAutoBtn');
+  const mq = document.getElementById('logoMarqueeWrap');
+  if (mq) mq.classList.toggle('paused', !partnerAutoPlaying);
+  if (btn) {
+    btn.innerHTML = partnerAutoPlaying
+      ? '<i class="xi-pause"></i> 자동 슬라이드 중'
+      : '<i class="xi-play"></i> 슬라이드 정지됨';
+  }
+}
+
+function initPartnerCarouselEngine() {
+  const track = document.getElementById('agencyCardsGrid');
+  const viewport = document.getElementById('partnerSliderViewport');
+  if (!track || !viewport) return;
+
+  track.addEventListener('scroll', () => updatePartnerProgress(), { passive: true });
+
+  viewport.addEventListener('mouseenter', () => { partnerHoverPaused = true; });
+  viewport.addEventListener('mouseleave', () => { partnerHoverPaused = false; });
+  viewport.addEventListener('touchstart', () => { partnerHoverPaused = true; }, { passive: true });
+  viewport.addEventListener('touchend', () => {
+    setTimeout(() => { partnerHoverPaused = false; }, 2200);
+  }, { passive: true });
+
+  // 마우스 드래그 스크롤 지원
+  let isDown = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+  track.addEventListener('mousedown', (e) => {
+    if (e.target.closest('button')) return;
+    isDown = true;
+    track.classList.add('dragging');
+    startX = e.pageX - track.offsetLeft;
+    startScrollLeft = track.scrollLeft;
+  });
+  window.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false;
+    track.classList.remove('dragging');
+  });
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    track.scrollLeft = startScrollLeft - (x - startX) * 1.2;
+  });
+
+  clearInterval(partnerAutoTimer);
+  partnerAutoTimer = setInterval(() => {
+    if (!partnerAutoPlaying || partnerHoverPaused || document.body.classList.contains('partner-mode')) return;
+    slidePartnerCards(1);
+  }, 3200);
 }
 
 function filterAgencies(cat, btn) {
@@ -1066,15 +1396,30 @@ function openAgencyMiniHome(agId) {
   const a = MOKTA_AGENCIES.find(x => x.id === agId) || MOKTA_AGENCIES[0];
   document.getElementById('agencyModalTitle').textContent = `${a.name} (${a.certNo})`;
   document.getElementById('agencyModalBody').innerHTML = `
-    <div style="display:flex; align-items:center; gap:16px; padding-bottom:16px; border-bottom:1px solid var(--bl-gray-100); margin-bottom:16px; flex-wrap:wrap;">
-      <img src="${a.logo}" alt="${a.name}" style="width:68px; height:68px; border-radius:14px; object-fit:cover;" />
-      <div style="flex:1; min-width:220px;">
-        <span class="bl-mokta-tag">몽골한국관광협회 공식 정회원 · ${a.certNo}</span>
-        <h3 style="font-size:20px; font-weight:800; margin-top:4px;">${a.name}</h3>
-        <p style="font-size:13px; color:var(--bl-gray-500); margin-top:2px;">${a.fleet} · <i class="xi-star" style="color:var(--bl-star);"></i> ${a.rating} (${a.reviews}개 리뷰)</p>
+    <div style="position:relative; height:180px; border-radius:12px; overflow:hidden; margin-bottom:16px;">
+      <img src="${a.cover}" alt="${a.name}" style="width:100%; height:100%; object-fit:cover;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(18,22,25,0.82) 0%, rgba(18,22,25,0.28) 100%); padding:20px; display:flex; align-items:flex-end; justify-content:space-between; gap:14px; flex-wrap:wrap; color:#fff;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="width:60px; height:60px; border-radius:14px; background:#fff; padding:4px; flex-shrink:0;">
+            ${buildAgencyEmblemSvg(a)}
+          </div>
+          <div>
+            <span class="bl-mokta-tag" style="margin-bottom:4px;">몽골한국관광협회 공식 정회원 · ${a.certNo}</span>
+            <h3 style="font-size:21px; font-weight:800;">${a.name}</h3>
+            <div style="font-size:12px; opacity:0.88;">${a.en} · <i class="xi-star" style="color:var(--bl-star);"></i> ${a.rating} (${a.reviews}개 인증 리뷰)</div>
+          </div>
+        </div>
+        <button type="button" class="bl-btn bl-btn-point" onclick="closeModal('agencyHomeModal'); openModal('rfqWizardModal');">이 업체에 지정견적 요청</button>
       </div>
-      <button type="button" class="bl-btn bl-btn-point" onclick="closeModal('agencyHomeModal'); openModal('rfqWizardModal');">이 업체에 지정견적 요청</button>
     </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:18px; background:var(--bl-gray-50); border-radius:10px; padding:12px; text-align:center;">
+      <div><span style="font-size:12px; color:var(--bl-gray-500);">평균 견적 응답</span><strong style="display:block; font-size:15px; margin-top:2px;">${a.speed}</strong></div>
+      <div><span style="font-size:12px; color:var(--bl-gray-500);">직영·제휴 인프라</span><strong style="display:block; font-size:15px; margin-top:2px;">${a.fleetCount}</strong></div>
+      <div><span style="font-size:12px; color:var(--bl-gray-500);">출발 확정률</span><strong style="display:block; font-size:15px; color:var(--bl-point-text); margin-top:2px;">${a.confirmRate}</strong></div>
+    </div>
+
+    <p style="font-size:13.5px; color:var(--bl-gray-700); margin-bottom:16px; line-height:1.55;">${a.desc} (${a.fleet})</p>
 
     <strong style="display:block; font-size:14.5px; margin-bottom:10px;">보유 차량 · 직영 캠프 · 현장 실사</strong>
     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px;">
@@ -1248,5 +1593,7 @@ renderHeroBanners();
 renderRfqBoard();
 renderJoinSection();
 renderShowcase();
+renderLogoMarquee();
 renderStoreAndAgencies();
+initPartnerCarouselEngine();
 populatePartnerRfqDropdown();
