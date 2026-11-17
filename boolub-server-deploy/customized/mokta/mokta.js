@@ -1,18 +1,18 @@
 /* ============================================================================
    부럽(BOOLUB) × 몽골한국관광협회(MOKTA) 공식 몽골 전용관 v4 (app.js)
-   Target Live URL: https://www.boolub.com/?pn=pages.view&type=pages&data=mj
+   Target Live URL: https://www.boolub.com/?pn=pages.view&type=pages&data=mokta
    - 부럽 실제 입점 파트너사(9곳) 로고·상점(pid)·실제 판매상품(pcode) 완벽 연동
    - MOKTA 협회 순차 입점 회원사(11곳) 슬롯 및 패스트트랙 입점 신청 지원
    - 부럽 직영 몽골원정대·쿠폰특가·공항픽업·여행자보험·eSIM 자연스러운 전환 설계
 ============================================================================ */
 
-/* 0. 데모 환경에서도 실제 적용 주소(?pn=pages.view&type=pages&data=mj) 구조 재현 */
+/* 0. 데모 환경에서도 실제 적용 주소(?pn=pages.view&type=pages&data=mokta) 구조 재현 */
 (function syncTargetQueryUrl() {
   try {
     if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
       const params = new URLSearchParams(window.location.search);
       if (!params.get('data')) {
-        const nextUrl = window.location.pathname + '?pn=pages.view&type=pages&data=mj' + (window.location.hash || '');
+        const nextUrl = window.location.pathname + '?pn=pages.view&type=pages&data=mokta' + (window.location.hash || '');
         window.history.replaceState({ page: 'mokta' }, '', nextUrl);
       }
     }
@@ -687,43 +687,137 @@ const MOKTA_AGENCIES = [
   }
 ];
 
-/* 4. 실시간 출발확정 동행·조인 데이터 (파트너 오픈조인 + 여행자 모집 + 원정대 통합) */
-const JOIN_CAL_DAYS = [
-  { key: '07-18', label: '7/18(토)', badge: '확정 2팀', cls: 'confirm' },
-  { key: '07-25', label: '7/25(토)', badge: '1자리 남음', cls: 'imminent' },
-  { key: '08-01', label: '8/01(토)', badge: '확정 3팀', cls: 'confirm' },
-  { key: '08-08', label: '8/08(토)', badge: '마감임박', cls: 'imminent' },
-  { key: '08-15', label: '8/15(광복절)', badge: '인기·확정', cls: 'confirm' },
-  { key: '08-22', label: '8/22(토)', badge: '모집중', cls: 'bidding' },
-  { key: '09-05', label: '9/05(토)', badge: '동행모집', cls: 'bidding' }
-];
+/* 4. 실시간 출발확정 동행·조인 데이터 (5월~10월 월간 캘린더 연동 · 파트너 오픈조인 + 여행자 모집 + 원정대 통합) */
+const KR_HOLIDAYS_2026 = {
+  '2026-05-01': '근로자의날',
+  '2026-05-05': '어린이날',
+  '2026-05-24': '석가탄신일',
+  '2026-05-25': '대체휴일',
+  '2026-06-06': '현충일',
+  '2026-08-15': '광복절',
+  '2026-08-17': '대체휴일',
+  '2026-09-24': '추석연휴',
+  '2026-09-25': '추석',
+  '2026-09-26': '추석연휴',
+  '2026-10-03': '개천절',
+  '2026-10-05': '대체휴일',
+  '2026-10-09': '한글날'
+};
 
 const JOIN_ITEMS = [
   {
-    id: 'j1',
-    dateKey: '08-15',
-    dateStr: '8.15(토) ~ 8.19(수) · 4박5일',
-    regionKey: '고비',
-    durationKey: '4박5일',
+    id: 'j_may1',
+    dateKey: '2026-05-02',
+    dateStr: '5.02(토) ~ 5.05(화) · 3박4일',
+    regionKey: '중부',
+    durationKey: '3박4일',
     styleKey: '원정대',
-    statusBadge: '100% 출발확정',
+    statusBadge: '어린이날 연휴 확정',
     statusCls: 'sky',
     subBadge: '2자리 남음',
     subCls: 'coral',
     agency: '부럽 몽골원정대 (직영)',
-    pcode: 'C3954-E9344-H0474',
-    title: '[광복절 연휴] 고비사막 원정대 4박5일 (홍고린엘스·바양작·유심 무료포함)',
-    img: './images/sand_dunes_camp.jpg',
+    pcode: 'T0950-Q2923-W2496',
+    title: '[5월 황금연휴] 중부 미니사막·테를지·우기호수 3박4일 원정대 조인',
+    img: './images/orkhon_waterfall_rainbow.jpg',
+    filled: 4,
+    max: 6,
+    seats: ['20대여', '20대여', '30대남', '30대여', '빈좌석', '빈좌석'],
+    curPrice: '799,000원',
+    fullPrice: '699,000원',
+    tags: '연차 1일 황금연휴 · USIM 무료 · 특식 3회'
+  },
+  {
+    id: 'j_may2',
+    dateKey: '2026-05-23',
+    dateStr: '5.23(토) ~ 5.26(화) · 3박4일',
+    regionKey: '고비',
+    durationKey: '3박4일',
+    styleKey: '조인',
+    statusBadge: '출발확정 오픈조인',
+    statusCls: 'sky',
+    subBadge: '1자리 남음!',
+    subCls: 'coral',
+    agency: '하닥투어 (KHADAG TOUR)',
+    pcode: 'H7863-P9594-D9241',
+    title: '[대체휴일 연휴] 사막+초원+쳉헤르 노천온천 3박4일 마지막 1분 모십니다',
+    img: './images/green_steppe_flock.jpg',
+    filled: 5,
+    max: 6,
+    seats: ['20대여', '30대여', '30대남', '20대남', '30대여', '빈좌석'],
+    curPrice: '720,000원',
+    fullPrice: '660,000원',
+    tags: '석가탄신일 대체휴일 · 노천온천 캠프 포함'
+  },
+  {
+    id: 'j_jun1',
+    dateKey: '2026-06-05',
+    dateStr: '6.05(금) ~ 6.07(일) · 2박3일',
+    regionKey: '테를지',
+    durationKey: '2박3일',
+    styleKey: '조인',
+    statusBadge: '현충일 주말확정',
+    statusCls: 'sky',
+    subBadge: '2자리 남음',
+    subCls: 'coral',
+    agency: '하닥투어 (KHADAG TOUR)',
+    pcode: 'L0277-Y0435-H3099',
+    title: '[현충일 주말] 직장인 연차 1개! 테를지·승마·초원 힐링 2박3일 조인팀',
+    img: './images/terelj_resort_camp.jpg',
     filled: 4,
     max: 6,
     seats: ['20대여', '20대여', '30대남', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '1,150,000원',
-    fullPrice: '990,000원',
-    tags: '추가금 0원 · USIM 무료 · 특식 3회 · 각자 카드결제'
+    curPrice: '540,000원',
+    fullPrice: '490,000원',
+    tags: '직장인 주말추천 · 온수 샤워 게르 · 승마 포함'
+  },
+  {
+    id: 'j_jun2',
+    dateKey: '2026-06-20',
+    dateStr: '6.20(토) ~ 6.24(수) · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '조인',
+    statusBadge: '여행자 동행모집',
+    statusCls: 'amber',
+    subBadge: '3자리 모집중',
+    subCls: 'sky',
+    agency: '노라투어 전담매칭',
+    pcode: 'V6003-W0388-Z1928',
+    title: '6월 말 초여름 푸른 초원+고비사막 은하수 4박5일 동행 3분 구해요!',
+    img: './images/milkyway_gobi.jpg',
+    filled: 3,
+    max: 6,
+    seats: ['20대여(방장)', '20대여', '30대남', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '1,050,000원',
+    fullPrice: '890,000원',
+    tags: '성수기 전 쾌적한 날씨 · 신형 스타렉스 · 스냅촬영'
+  },
+  {
+    id: 'j5',
+    dateKey: '2026-07-18',
+    dateStr: '7.18(토) ~ 7.20(월) · 2박3일',
+    regionKey: '고비',
+    durationKey: '2박3일',
+    styleKey: '조인',
+    statusBadge: '출발확정',
+    statusCls: 'sky',
+    subBadge: '2자리 남음',
+    subCls: 'coral',
+    agency: 'BBM TOUR (비비엠투어)',
+    pcode: 'W0569-C8410-H2737',
+    title: '[연차 1일] 차강소브락 대협곡·바가가쯔링촐로 남부 핵심 2박3일 조인팀',
+    img: './images/baga_gazriin_sunset.jpg',
+    filled: 4,
+    max: 6,
+    seats: ['20대남', '20대여', '30대여', '30대남', '빈좌석', '빈좌석'],
+    curPrice: '640,000원',
+    fullPrice: '580,000원',
+    tags: '후기 88건 검증 코스 · 감성 푸르공 · 별밤 스냅'
   },
   {
     id: 'j2',
-    dateKey: '07-25',
+    dateKey: '2026-07-25',
     dateStr: '7.25(토) ~ 7.29(수) · 4박5일',
     regionKey: '고비',
     durationKey: '4박5일',
@@ -744,31 +838,9 @@ const JOIN_ITEMS = [
     tags: '신형 스타렉스 · 온수 샤워 캠프 · 6인 마감 시 전원 할인'
   },
   {
-    id: 'j3',
-    dateKey: '08-01',
-    dateStr: '8.01(토) ~ 8.04(화) · 3박4일',
-    regionKey: '중부',
-    durationKey: '3박4일',
-    styleKey: '원정대',
-    statusBadge: '1인 신청도 확정',
-    statusCls: 'sky',
-    subBadge: '3자리 남음',
-    subCls: 'amber',
-    agency: '부럽 몽골원정대 (직영)',
-    pcode: 'T0950-Q2923-W2496',
-    title: '[여름휴가] 중부 미니사막·테를지·우기호수 3박4일 원정대 조인 모집',
-    img: './images/orkhon_waterfall_rainbow.jpg',
-    filled: 3,
-    max: 6,
-    seats: ['20대여', '30대여', '30대남', '빈좌석', '빈좌석', '빈좌석'],
-    curPrice: '799,000원',
-    fullPrice: '699,000원',
-    tags: '게르 업그레이드 · 유심 제공 · 허르헉 특식 포함'
-  },
-  {
-    id: 'j4',
-    dateKey: '08-08',
-    dateStr: '8.08(토) ~ 8.13(목) · 5박6일',
+    id: 'j_jul3',
+    dateKey: '2026-07-29',
+    dateStr: '7.29(수) ~ 8.03(월) · 5박6일',
     regionKey: '홉스골',
     durationKey: '5박6일',
     styleKey: '조인',
@@ -776,49 +848,115 @@ const JOIN_ITEMS = [
     statusCls: 'sky',
     subBadge: '2자리 남음',
     subCls: 'coral',
-    agency: '양가투어 (YangGa Friends)',
-    pcode: 'E4890-B3318-G7233',
-    title: '한여름 시원한 홉스골 호수 + 어르헝폭포 5박6일 동행 2분 합류하세요',
-    img: './images/khuvsgul_boat_sunset.jpg',
+    agency: '노라투어 (NORA TOUR)',
+    pcode: 'A9725-O5305-E2887',
+    title: '[여름 성수기] 푸른 진주 홉스골 호수 1열 캠프 힐링 5박6일 조인 모집',
+    img: './images/khuvsgul_island.jpg',
     filled: 4,
     max: 6,
     seats: ['30대여', '30대여', '30대남', '40대여', '빈좌석', '빈좌석'],
-    curPrice: '1,184,000원',
+    curPrice: '1,320,000원',
+    fullPrice: '1,180,000원',
+    tags: '호숫가 레이크뷰 캠프 · 보트 유람 · 승마 트레킹'
+  },
+  {
+    id: 'j3',
+    dateKey: '2026-08-01',
+    dateStr: '8.01(토) ~ 8.04(화) · 3박4일',
+    regionKey: '중부',
+    durationKey: '3박4일',
+    styleKey: '원정대',
+    statusBadge: '1인 신청도 확정',
+    statusCls: 'sky',
+    subBadge: '2자리 남음',
+    subCls: 'coral',
+    agency: '부럽 몽골원정대 (직영)',
+    pcode: 'T0950-Q2923-W2496',
+    title: '[여름휴가 피크] 중부 미니사막·테를지·우기호수 3박4일 원정대 조인',
+    img: './images/orkhon_waterfall_rainbow.jpg',
+    filled: 4,
+    max: 6,
+    seats: ['20대여', '30대여', '30대남', '20대남', '빈좌석', '빈좌석'],
+    curPrice: '799,000원',
+    fullPrice: '699,000원',
+    tags: '게르 업그레이드 · 유심 제공 · 허르헉 특식 포함'
+  },
+  {
+    id: 'j4',
+    dateKey: '2026-08-08',
+    dateStr: '8.08(토) ~ 8.13(목) · 5박6일',
+    regionKey: '홉스골',
+    durationKey: '5박6일',
+    styleKey: '조인',
+    statusBadge: '출발확정 오픈조인',
+    statusCls: 'sky',
+    subBadge: '마지막 1자리!',
+    subCls: 'coral',
+    agency: '양가투어 (YangGa Friends)',
+    pcode: 'E4890-B3318-G7233',
+    title: '한여름 시원한 홉스골 호수 + 어르헝폭포 5박6일 마지막 1자리 합류하세요',
+    img: './images/khuvsgul_boat_sunset.jpg',
+    filled: 5,
+    max: 6,
+    seats: ['30대여', '30대여', '30대남', '40대여', '30대남', '빈좌석'],
+    curPrice: '1,120,000원',
     fullPrice: '1,050,000원',
     tags: '60일전 100% 환불 · 보트체험 · 호숫가 게르 숙박'
   },
   {
-    id: 'j5',
-    dateKey: '07-18',
-    dateStr: '7.18(토) ~ 7.20(월) · 2박3일',
+    id: 'j1',
+    dateKey: '2026-08-15',
+    dateStr: '8.15(토) ~ 8.19(수) · 4박5일',
     regionKey: '고비',
-    durationKey: '2박3일',
-    styleKey: '조인',
-    statusBadge: '출발확정',
+    durationKey: '4박5일',
+    styleKey: '원정대',
+    statusBadge: '100% 출발확정',
     statusCls: 'sky',
     subBadge: '2자리 남음',
-    subCls: 'amber',
-    agency: 'BBM TOUR (비비엠투어)',
-    pcode: 'W0569-C8410-H2737',
-    title: '[연차 1일] 차강소브락 대협곡·바가가쯔링촐로 남부 핵심 2박3일 조인팀',
-    img: './images/baga_gazriin_sunset.jpg',
+    subCls: 'coral',
+    agency: '부럽 몽골원정대 (직영)',
+    pcode: 'C3954-E9344-H0474',
+    title: '[광복절 대체휴일] 고비사막 원정대 4박5일 (홍고린엘스·바양작·유심 무료)',
+    img: './images/sand_dunes_camp.jpg',
     filled: 4,
     max: 6,
-    seats: ['20대남', '20대여', '30대여', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '640,000원',
-    fullPrice: '580,000원',
-    tags: '후기 88건 검증 코스 · 감성 푸르공 · 별밤 스냅'
+    seats: ['20대여', '20대여', '30대남', '30대남', '빈좌석', '빈좌석'],
+    curPrice: '1,150,000원',
+    fullPrice: '990,000원',
+    tags: '추가금 0원 · USIM 무료 · 특식 3회 · 각자 카드결제'
+  },
+  {
+    id: 'j_aug_sub',
+    dateKey: '2026-08-15',
+    dateStr: '8.15(토) ~ 8.20(목) · 5박6일',
+    regionKey: '고비',
+    durationKey: '5박6일',
+    styleKey: '조인',
+    statusBadge: '출발확정 오픈조인',
+    statusCls: 'sky',
+    subBadge: '1자리 남음!',
+    subCls: 'coral',
+    agency: '밝은 미래 여행 (BRIGHT FUTURE)',
+    pcode: 'E0711-V0341-Z7774',
+    title: '[광복절 연휴] 일출부터 별빛까지 남고비·테를지 5박6일 확정차량 잔여 1석',
+    img: './images/gobi_camp_vans.jpg',
+    filled: 5,
+    max: 6,
+    seats: ['20대남', '20대여', '20대여', '30대남', '30대여', '빈좌석'],
+    curPrice: '1,002,400원',
+    fullPrice: '890,000원',
+    tags: '몽골 관광부 정식인가 · 남고비+테를지 완주'
   },
   {
     id: 'j6',
-    dateKey: '08-22',
+    dateKey: '2026-08-22',
     dateStr: '8.22(토) ~ 8.25(화) · 3박4일',
     regionKey: '테를지',
     durationKey: '3박4일',
     styleKey: '조인',
     statusBadge: '여행자 동행모집',
     statusCls: 'amber',
-    subBadge: '파트너 매칭완료',
+    subBadge: '3자리 모집중',
     subCls: 'sky',
     agency: '스카이 투어 몽골 전담',
     pcode: 'J8833-W9230-L2860',
@@ -830,6 +968,50 @@ const JOIN_ITEMS = [
     curPrice: '841,464원',
     fullPrice: '750,000원',
     tags: '천체망원경 은하수 관측 · 노천온천 힐링 · 비흡연 환영'
+  },
+  {
+    id: 'j_sep1',
+    dateKey: '2026-09-24',
+    dateStr: '9.24(목) ~ 9.28(월) · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '원정대',
+    statusBadge: '추석연휴 출발확정',
+    statusCls: 'sky',
+    subBadge: '2자리 남음',
+    subCls: 'coral',
+    agency: '부럽 몽골원정대 (직영)',
+    pcode: 'C3954-E9344-H0474',
+    title: '[추석 황금연휴] 고비사막 은하수 원정대 4박5일 (연차 1일 · 출발확정)',
+    img: './images/campfire_cheers.jpg',
+    filled: 4,
+    max: 6,
+    seats: ['20대여', '30대여', '30대남', '30대남', '빈좌석', '빈좌석'],
+    curPrice: '1,150,000원',
+    fullPrice: '990,000원',
+    tags: '추석연휴 조기마감 주의 · USIM 포함 · 추가금 0원'
+  },
+  {
+    id: 'j_oct1',
+    dateKey: '2026-10-03',
+    dateStr: '10.03(토) ~ 10.06(화) · 3박4일',
+    regionKey: '고비',
+    durationKey: '3박4일',
+    styleKey: '조인',
+    statusBadge: '개천절 연휴모집',
+    statusCls: 'amber',
+    subBadge: '3자리 모집중',
+    subCls: 'sky',
+    agency: 'BBM TOUR (비비엠투어)',
+    pcode: 'Z6438-S8935-G7323',
+    title: '[10월 개천절 대체휴일] 가을 황금빛 초원+미니사막+온천 3박4일 동행 모집',
+    img: './images/tsagaan_suvarga_snap.jpg',
+    filled: 3,
+    max: 6,
+    seats: ['30대여(방장)', '30대여', '30대남', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '853,360원',
+    fullPrice: '760,000원',
+    tags: '연차 1일 알짜코스 · 쳉헤르 온천 숙박'
   }
 ];
 
@@ -1192,12 +1374,22 @@ let ONBOARD_ITEMS = [
 
 let curHeroPage = 0;
 let curStoreCat = 'all';
-let curJoinDate = 'all';
+let curCalYear = 2026;
+let curCalMonth = 8;    // 기본 8월 성수기 월간 캘린더 표시 (0이면 전체 월 보기)
+let curJoinDate = 'all'; // 특정 일자 클릭 시 'YYYY-MM-DD', 미선택 시 'all' (선택 월 전체)
 let curRfqFilter = 'all';
 let curShowcaseFilter = 'all';
 let curAgencyFilter = 'all';
 let globalKeyword = '';
 let quickFinder = { region: 'all', duration: 'all', style: 'all' };
+
+function getReturnUrlEncoded() {
+  try {
+    return encodeURIComponent((window.location.pathname || '/') + (window.location.search || '?pn=pages.view&type=pages&data=mj'));
+  } catch (_) {
+    return encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
+  }
+}
 
 let partnerAutoTimer = null;
 let isPartnerAutoPlaying = true;
@@ -1328,27 +1520,15 @@ function simulateAuthRole(mode) {
   }
 }
 
-/* ================= 유틸리티 & 로고 렌더러 ================= */
-function renderPartnerBadgeMedia(ag, size = 46) {
+/* ================= 유틸리티 & 로고 렌더러 (SVG ID 중복 없는 순수 CSS 모노그램) ================= */
+function renderPartnerBadgeMedia(ag) {
   if (ag.logoImg) {
     return `<img src="${ag.logoImg}" alt="${ag.name} 로고" loading="lazy" />`;
   }
   const c1 = ag.c1 || '#0284c7';
   const c2 = ag.c2 || '#38bdf8';
   const abbr = ag.abbr || ag.name.slice(0, 2);
-  return `
-    <svg viewBox="0 0 64 64" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg" aria-label="${ag.name}">
-      <defs>
-        <linearGradient id="g_${ag.id}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="${c1}" />
-          <stop offset="100%" stop-color="${c2}" />
-        </linearGradient>
-      </defs>
-      <rect width="64" height="64" rx="14" fill="url(#g_${ag.id})" />
-      <path d="M12 46 L26 26 L36 39 L44 30 L54 46 Z" fill="rgba(255,255,255,0.22)" />
-      <text x="32" y="37" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="800" font-family="SUIT, Pretendard, sans-serif">${abbr}</text>
-    </svg>
-  `;
+  return `<span class="bl-emblem-monogram" style="background:linear-gradient(135deg, ${c1} 0%, ${c2} 100%);">${abbr}</span>`;
 }
 
 function showToast(msg) {
@@ -1464,14 +1644,15 @@ function applyQuickFinder(shouldScroll = false) {
   quickFinder.duration = document.getElementById('findDuration')?.value || 'all';
   quickFinder.style = document.getElementById('findStyle')?.value || 'all';
 
-  renderStoreProducts();
+  renderJoinCalendar();
   renderJoinCards();
+  renderStoreProducts();
 
   if (shouldScroll) {
-    const targetId = quickFinder.style === '조인' ? 'sec-join' : 'sec-store';
+    const targetId = quickFinder.style === '단독' ? 'sec-store' : 'sec-join';
     const sec = document.getElementById(targetId);
     if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('선택하신 조건에 맞는 부럽 투어 및 동행·조인 팀을 필터링했습니다.');
+    showToast('선택하신 조건에 맞는 동행·조인 팀 및 부럽 투어를 필터링했습니다.');
   }
 }
 
@@ -1641,22 +1822,272 @@ function openProductPreviewModal(pcode) {
   openModal('productPreviewModal');
 }
 
-/* ================= 섹션 2: 실시간 동행·조인 & 1/N 분할결제 ================= */
-function renderJoinCalendar() {
-  const cal = document.getElementById('joinCalGrid');
-  if (!cal) return;
-  cal.innerHTML = JOIN_CAL_DAYS.map(d => `
-    <button type="button" class="bl-cal-item ${curJoinDate === d.key ? 'active' : ''}" onclick="filterJoinByDate('${d.key}')">
-      <span class="d-num">${d.label}</span>
-      <span class="bl-cal-dot ${d.cls}">${d.badge}</span>
-    </button>
-  `).join('');
+/* ================= 섹션 1 (메인 전면): 월간 동행·조인 캘린더 허브 & 1/N 분할결제 ================= */
+const WEEKDAY_KO = ['일', '월', '화', '수', '목', '금', '토'];
+
+function normalizeJoinDateIso(rawKey, fallbackStr = '') {
+  const s = String(rawKey || '').trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if (/^\d{2}-\d{2}$/.test(s)) return `2026-${s}`;
+  const m = String(fallbackStr).match(/(\d{1,2})\.(\d{1,2})/);
+  if (m) {
+    const mm = String(m[1]).padStart(2, '0');
+    const dd = String(m[2]).padStart(2, '0');
+    return `2026-${mm}-${dd}`;
+  }
+  return '2026-08-15';
+}
+
+function formatKoreanDateRange(isoStart, durationKey) {
+  const [y, m, d] = normalizeJoinDateIso(isoStart).split('-').map(Number);
+  const nightsMap = { '2박3일': 2, '3박4일': 3, '4박5일': 4, '5박6일': 5 };
+  const nights = nightsMap[durationKey] || 4;
+  const startDt = new Date(y, m - 1, d);
+  const endDt = new Date(y, m - 1, d + nights);
+  const sLabel = `${startDt.getMonth() + 1}.${String(startDt.getDate()).padStart(2, '0')}(${WEEKDAY_KO[startDt.getDay()]})`;
+  const eLabel = `${endDt.getMonth() + 1}.${String(endDt.getDate()).padStart(2, '0')}(${WEEKDAY_KO[endDt.getDay()]})`;
+  return `${sLabel} ~ ${eLabel} · ${durationKey}`;
+}
+
+function changeCalendarMonth(delta) {
+  let nextM = (curCalMonth === 0 ? 8 : curCalMonth) + delta;
+  let nextY = curCalYear;
+  if (nextM < 5) { nextM = 10; }
+  if (nextM > 10) { nextM = 5; }
+  curCalYear = nextY;
+  curCalMonth = nextM;
+  curJoinDate = 'all';
+  renderJoinCalendar();
+  renderJoinCards();
+}
+
+function setCalendarMonth(monthNum) {
+  curCalMonth = monthNum; // 0 = 전체 시즌 보기, 5~10 = 월별
+  curJoinDate = 'all';
+  renderJoinCalendar();
+  renderJoinCards();
+}
+
+function selectCalendarDate(dateIso) {
+  if (dateIso === 'all') {
+    curJoinDate = 'all';
+  } else if (curJoinDate === dateIso) {
+    curJoinDate = 'all';
+  } else {
+    curJoinDate = dateIso;
+    const [y, m] = dateIso.split('-').map(Number);
+    if (y && m) {
+      curCalYear = y;
+      curCalMonth = m;
+    }
+  }
+  renderJoinCalendar();
+  renderJoinCards();
+}
+
+function openCompanionModalForDate(dateIso) {
+  const targetDate = (dateIso && /^\d{4}-\d{2}-\d{2}$/.test(dateIso))
+    ? dateIso
+    : (curJoinDate !== 'all' ? curJoinDate : `${curCalYear}-${String(curCalMonth || 8).padStart(2, '0')}-15`);
+  const dateInput = document.getElementById('cwStartDate');
+  if (dateInput) dateInput.value = targetDate;
+  openModal('companionWriteModal');
 }
 
 function filterJoinByDate(dateKey) {
-  curJoinDate = dateKey;
-  renderJoinCalendar();
-  renderJoinCards();
+  selectCalendarDate(dateKey);
+}
+
+function renderJoinCalendar() {
+  const monthTitleEl = document.getElementById('calCurrentMonthTitle');
+  const pillsEl = document.getElementById('calMonthPills');
+  const daysGridEl = document.getElementById('mainMonthCalDays');
+  const sidePanelEl = document.getElementById('calSelectedPanel');
+  const tabJoinCnt = document.getElementById('tabJoinCount');
+
+  if (tabJoinCnt) tabJoinCnt.textContent = String(JOIN_ITEMS.length);
+  if (!daysGridEl) return;
+
+  const activeMonth = curCalMonth === 0 ? 8 : curCalMonth;
+  if (monthTitleEl) monthTitleEl.textContent = `${curCalYear}년 ${activeMonth}월`;
+
+  // 1. 월별 빠른 전환 탭 (5월 ~ 10월 + 전체)
+  const months = [5, 6, 7, 8, 9, 10];
+  if (pillsEl) {
+    const monthBtns = months.map(m => {
+      const prefix = `${curCalYear}-${String(m).padStart(2, '0')}`;
+      const cnt = JOIN_ITEMS.filter(j => normalizeJoinDateIso(j.dateKey, j.dateStr).startsWith(prefix)).length;
+      return `
+        <button type="button" class="bl-mpill ${curCalMonth === m ? 'active' : ''}" onclick="setCalendarMonth(${m})">
+          ${m}월 <em>(${cnt})</em>
+        </button>
+      `;
+    }).join('');
+    pillsEl.innerHTML = monthBtns + `
+      <button type="button" class="bl-mpill ${curCalMonth === 0 ? 'active' : ''}" onclick="setCalendarMonth(0)">
+        전체 시즌 <em>(${JOIN_ITEMS.length})</em>
+      </button>
+    `;
+  }
+
+  // 2. 날짜별 모집/확정 팀 인덱싱
+  const eventsByDate = {};
+  JOIN_ITEMS.forEach(j => {
+    const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
+    j.dateKey = iso;
+    if (!eventsByDate[iso]) eventsByDate[iso] = [];
+    eventsByDate[iso].push(j);
+  });
+
+  // 3. 7열 정식 월간 달력 셀 렌더링
+  const firstDow = new Date(curCalYear, activeMonth - 1, 1).getDay();
+  const lastDate = new Date(curCalYear, activeMonth, 0).getDate();
+  const cells = [];
+
+  for (let i = 0; i < firstDow; i++) {
+    cells.push(`<div class="bl-mday is-empty"></div>`);
+  }
+
+  for (let d = 1; d <= lastDate; d++) {
+    const iso = `${curCalYear}-${String(activeMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const dow = (firstDow + d - 1) % 7;
+    const hol = KR_HOLIDAYS_2026[iso] || '';
+    const dayEvents = eventsByDate[iso] || [];
+    const isActive = curJoinDate === iso;
+
+    const clsList = ['bl-mday'];
+    if (dow === 0) clsList.push('is-sun');
+    if (dow === 6) clsList.push('is-sat');
+    if (hol) clsList.push('is-hol');
+    if (dayEvents.length) clsList.push('has-teams');
+    if (isActive) clsList.push('active');
+
+    const pillsHtml = dayEvents.slice(0, 2).map(ev => {
+      const rem = Math.max(0, ev.max - ev.filled);
+      let pCls = 'is-confirm';
+      let shortTxt = `확정·${ev.regionKey}`;
+      if (ev.statusCls === 'amber') {
+        pCls = 'is-recruit';
+        shortTxt = `모집·${ev.regionKey}`;
+      } else if (rem <= 1) {
+        pCls = 'is-imminent';
+        shortTxt = rem === 0 ? '마감' : `잔여1석·${ev.regionKey}`;
+      } else {
+        shortTxt = `확정(${rem}석)·${ev.regionKey}`;
+      }
+      return `<span class="bl-mday-pill ${pCls}">${shortTxt}</span>`;
+    }).join('');
+
+    const moreHtml = dayEvents.length > 2
+      ? `<span class="bl-mday-more">+${dayEvents.length - 2}팀 더보기</span>`
+      : '';
+
+    cells.push(`
+      <button type="button" class="${clsList.join(' ')}" onclick="selectCalendarDate('${iso}')">
+        <div class="bl-mday-head">
+          <span class="bl-mday-num">${d}</span>
+          ${hol ? `<span class="bl-mday-hol">${hol}</span>` : ''}
+        </div>
+        <div class="bl-mday-events">
+          ${pillsHtml}
+          ${moreHtml}
+        </div>
+      </button>
+    `);
+  }
+
+  const trailing = (7 - (cells.length % 7)) % 7;
+  for (let i = 0; i < trailing; i++) {
+    cells.push(`<div class="bl-mday is-empty"></div>`);
+  }
+  daysGridEl.innerHTML = cells.join('');
+
+  // 4. 우측 선택 날짜 실시간 브리핑 패널 렌더링
+  if (sidePanelEl) {
+    let targetItems = [];
+    let panelTitle = '';
+    let targetIsoForWrite = `${curCalYear}-${String(activeMonth).padStart(2, '0')}-15`;
+
+    if (curJoinDate !== 'all') {
+      targetItems = eventsByDate[curJoinDate] || [];
+      targetIsoForWrite = curJoinDate;
+      const [yy, mm, dd] = curJoinDate.split('-').map(Number);
+      const dt = new Date(yy, mm - 1, dd);
+      const holTxt = KR_HOLIDAYS_2026[curJoinDate] ? ` · ${KR_HOLIDAYS_2026[curJoinDate]}` : '';
+      panelTitle = `${mm}월 ${dd}일(${WEEKDAY_KO[dt.getDay()]}${holTxt}) 출발 현황`;
+    } else if (curCalMonth === 0) {
+      targetItems = JOIN_ITEMS;
+      panelTitle = `2026 전체 시즌 출발·모집 (${targetItems.length}팀)`;
+    } else {
+      const mPrefix = `${curCalYear}-${String(activeMonth).padStart(2, '0')}`;
+      targetItems = JOIN_ITEMS.filter(j => normalizeJoinDateIso(j.dateKey, j.dateStr).startsWith(mPrefix));
+      panelTitle = `${activeMonth}월 출발확정·동행모집 (${targetItems.length}팀)`;
+    }
+
+    if (!targetItems.length) {
+      sidePanelEl.innerHTML = `
+        <div>
+          <div class="bl-side-head">
+            <strong style="font-size:15px; color:var(--bl-gray-900);">${panelTitle}</strong>
+            <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="selectCalendarDate('all')">월 전체보기</button>
+          </div>
+          <div class="bl-side-empty-box" style="margin-top:12px;">
+            <strong style="display:block; font-size:14.5px; color:var(--bl-gray-900);">이 날짜의 첫 동행 모집 방장이 되어보세요!</strong>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin:6px 0 14px; line-height:1.5;">
+              선택하신 날짜로 동행을 모집하거나, 1인 신청도 100% 출발 확정되는 부럽 몽골원정대·맞춤견적으로 바로 출발할 수 있습니다.
+            </p>
+            <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate('${targetIsoForWrite}')">
+                <i class="xi-plus-min"></i> 이 날짜로 동행 모집하기
+              </button>
+              <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="prefillRfqFromCourse('선택일자 맞춤견적 문의', '${targetIsoForWrite} 출발 희망')">
+                맞춤견적 받기
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      sidePanelEl.innerHTML = `
+        <div>
+          <div class="bl-side-head">
+            <strong style="font-size:15px; color:var(--bl-gray-900);">${panelTitle}</strong>
+            <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openCompanionModalForDate('${targetIsoForWrite}')">
+              <i class="xi-plus-min"></i> 이 시기 동행모집
+            </button>
+          </div>
+          <div class="bl-side-team-list" style="margin-top:10px;">
+            ${targetItems.map(t => {
+              const rem = Math.max(0, t.max - t.filled);
+              return `
+                <div class="bl-side-team-row" onclick="openJoinDetailModal('${t.id}')">
+                  <div style="min-width:0; flex:1;">
+                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:2px;">
+                      <span class="bl-badge-solid ${t.statusCls}" style="font-size:10px; padding:2px 6px;">${t.statusBadge}</span>
+                      <span style="font-size:11.5px; font-weight:700; color:var(--bl-gray-500);">${t.dateStr}</span>
+                    </div>
+                    <strong style="display:block; font-size:13px; color:var(--bl-gray-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                      ${t.title}
+                    </strong>
+                  </div>
+                  <div style="text-align:right; flex-shrink:0;">
+                    <span style="display:block; font-size:11px; font-weight:800; color:var(--bl-coral);">${rem === 0 ? '마감' : `${rem}석 남음`}</span>
+                    <strong style="font-size:13px; color:var(--bl-point-text);">${t.curPrice}</strong>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        ${curJoinDate !== 'all' ? `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--bl-gray-200); font-size:12px;">
+            <span style="color:var(--bl-gray-500);">선택 날짜 필터 적용 중</span>
+            <button type="button" style="color:var(--bl-point-text); font-weight:700;" onclick="selectCalendarDate('all')">월 전체 일정으로 복귀 ↺</button>
+          </div>
+        ` : ''}
+      `;
+    }
+  }
 }
 
 function setSimPax(pax, btnEl) {
@@ -1680,10 +2111,17 @@ function setSimPax(pax, btnEl) {
 
 function renderJoinCards() {
   const grid = document.getElementById('joinCardsGrid');
+  const subTitleEl = document.getElementById('joinListSubTitle');
   if (!grid) return;
 
   const list = JOIN_ITEMS.filter(j => {
-    if (curJoinDate !== 'all' && j.dateKey !== curJoinDate) return false;
+    const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
+    if (curJoinDate !== 'all') {
+      if (iso !== curJoinDate) return false;
+    } else if (curCalMonth !== 0) {
+      const mPrefix = `${curCalYear}-${String(curCalMonth).padStart(2, '0')}`;
+      if (!iso.startsWith(mPrefix)) return false;
+    }
     if (quickFinder.region !== 'all' && j.regionKey !== quickFinder.region) return false;
     if (quickFinder.duration !== 'all' && j.durationKey !== quickFinder.duration) return false;
     if (quickFinder.style === '원정대' && j.styleKey !== '원정대') return false;
@@ -1694,14 +2132,25 @@ function renderJoinCards() {
     return true;
   });
 
+  if (subTitleEl) {
+    if (curJoinDate !== 'all') {
+      const [, mm, dd] = curJoinDate.split('-').map(Number);
+      subTitleEl.textContent = `${mm}월 ${dd}일 출발 동행·오픈조인 리스트 (${list.length}팀)`;
+    } else if (curCalMonth === 0) {
+      subTitleEl.textContent = `2026 전체 시즌 동행·오픈조인 모집 리스트 (${list.length}팀)`;
+    } else {
+      subTitleEl.textContent = `${curCalYear}년 ${curCalMonth}월 출발 동행·오픈조인 모집 리스트 (${list.length}팀)`;
+    }
+  }
+
   if (!list.length) {
     grid.innerHTML = `
       <div style="grid-column:1/-1; padding:32px; text-align:center; background:var(--bl-gray-50); border-radius:12px; border:1px dashed var(--bl-gray-200);">
         <strong style="font-size:15px; color:var(--bl-gray-900);">선택하신 날짜·조건에 모집 중인 조인 팀이 아직 없습니다.</strong>
-        <p style="font-size:13px; color:var(--bl-gray-500); margin:6px 0 14px;">직접 동행 모집글을 올리시거나, 1인 신청도 100% 출발 확정되는 부럽 몽골원정대를 확인해보세요!</p>
-        <div style="display:flex; justify-content:center; gap:8px;">
-          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="filterJoinByDate('all'); resetQuickFinder();">전체 조인팀 보기</button>
-          <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openModal('companionWriteModal')">동행 모집글 첫 등록하기</button>
+        <p style="font-size:13px; color:var(--bl-gray-500); margin:6px 0 14px;">이 날짜로 동행 모집글을 직접 올리시거나, 1인 신청도 100% 출발 확정되는 부럽 몽골원정대를 확인해보세요!</p>
+        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="setCalendarMonth(0); resetQuickFinder();">전체 시즌 조인팀 보기</button>
+          <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openCompanionModalForDate()">선택 날짜로 동행 모집하기</button>
           <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openProductPreviewModal('T0950-Q2923-W2496')">1인 출발확정 원정대 보기</button>
         </div>
       </div>
@@ -1720,7 +2169,7 @@ function renderJoinCards() {
           </div>
         </div>
         <div class="bl-join-body">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
             <span class="bl-join-agency">${j.agency}</span>
             <span style="font-size:12px; font-weight:700; color:var(--bl-gray-700);">${j.dateStr}</span>
           </div>
@@ -1747,7 +2196,7 @@ function renderJoinCards() {
 }
 
 function openJoinDetailModal(joinId) {
-  const item = JOIN_ITEMS.find(x => x.id === joinId) || JOIN_ITEMS[0];
+  const item = JOIN_ITEMS.find(x => String(x.id) === String(joinId)) || JOIN_ITEMS[0];
   const body = document.getElementById('joinModalBody');
   const prodLink = item.pcode
     ? `https://www.boolub.com/?pn=product.view&pcode=${item.pcode}`
@@ -1806,7 +2255,7 @@ async function confirmJoinSeat(joinId) {
     const res = await moktaApiCall('ajax.mokta.join.pro.php', { _mode: 'apply_seat', join_id: joinId });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
+        location.href = '/?pn=member.login.form&_rurl=' + getReturnUrlEncoded();
         return;
       }
       showToast(res.message || '좌석 합류 처리 중 오류가 발생했습니다.');
@@ -1819,6 +2268,7 @@ async function confirmJoinSeat(joinId) {
     if (openIdx !== -1) item.seats[openIdx] = '신규합류';
     item.filled += 1;
     item.subBadge = item.filled >= item.max ? '모집마감' : `${item.max - item.filled}자리 남음`;
+    renderJoinCalendar();
     renderJoinCards();
   }
   closeModal('joinDetailModal');
@@ -1826,15 +2276,21 @@ async function confirmJoinSeat(joinId) {
 }
 
 async function submitCompanionPost() {
-  const dateStr = document.getElementById('cwDate')?.value || '9.05(토) ~ 9.09(수) · 4박5일';
+  const sdate = document.getElementById('cwStartDate')?.value || '2026-08-15';
+  const regionKey = document.getElementById('cwRegion')?.value || '고비';
+  const durationKey = document.getElementById('cwDuration')?.value || '4박5일';
   const curCnt = parseInt(document.getElementById('cwSeats')?.value || '2', 10);
-  const title = document.getElementById('cwTitle')?.value || '9월 고비사막 같이 가실 동행 구해요!';
+  const title = (document.getElementById('cwTitle')?.value || '').trim() || '같이 가실 몽골 동행 구해요!';
   const tags = document.getElementById('cwTags')?.value || '2030 또래 · 비흡연 환영';
+  const dateStr = formatKoreanDateRange(sdate, durationKey);
 
   let newId = 'j_' + Date.now();
   if (API_BASE) {
     const res = await moktaApiCall('ajax.mokta.join.pro.php', {
       _mode: 'add_member_join',
+      sdate,
+      region_key: regionKey,
+      duration_key: durationKey,
       date_str: dateStr,
       cur_pax: curCnt,
       max_pax: 6,
@@ -1843,7 +2299,7 @@ async function submitCompanionPost() {
     });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
+        location.href = '/?pn=member.login.form&_rurl=' + getReturnUrlEncoded();
         return;
       }
       showToast(res.message || '동행글 등록에 실패했습니다.');
@@ -1859,10 +2315,10 @@ async function submitCompanionPost() {
 
   JOIN_ITEMS.unshift({
     id: newId,
-    dateKey: '09-05',
+    dateKey: sdate,
     dateStr,
-    regionKey: '고비',
-    durationKey: '4박5일',
+    regionKey,
+    durationKey,
     styleKey: '조인',
     statusBadge: '신규 동행모집',
     statusCls: 'amber',
@@ -1880,12 +2336,17 @@ async function submitCompanionPost() {
     tags
   });
 
-  curJoinDate = 'all';
+  const [yy, mm] = sdate.split('-').map(Number);
+  if (yy && mm) {
+    curCalYear = yy;
+    curCalMonth = mm;
+  }
+  curJoinDate = sdate;
   renderJoinCalendar();
   renderJoinCards();
   closeModal('companionWriteModal');
   scrollToSection('sec-join');
-  showToast('동행 모집글이 등록되었습니다! 희망 코스에 맞는 공식 파트너사 제안도 함께 받아보실 수 있습니다.');
+  showToast('선택하신 출발 날짜의 월간 캘린더에 동행 모집글이 등록되었습니다!');
 }
 
 /* ================= 섹션 3: 내 일정 맞춤견적 보드 (고객 전용 깔끔 UI) ================= */
@@ -1999,7 +2460,7 @@ async function submitCustomerWizard() {
     });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
+        location.href = '/?pn=member.login.form&_rurl=' + getReturnUrlEncoded();
         return;
       }
       showToast(res.message || '맞춤견적 등록 중 오류가 발생했습니다.');
@@ -2614,9 +3075,12 @@ async function registerPartnerOpenJoin() {
     openModal('partnerApplyModal');
     return;
   }
-  const dateStr = document.getElementById('pjDate')?.value || '8.15(토) ~ 8.19(수) · 4박5일';
+  const sdate = document.getElementById('pjStartDate')?.value || '2026-08-15';
+  const regionKey = document.getElementById('pjRegion')?.value || '고비';
+  const durationKey = document.getElementById('pjDuration')?.value || '4박5일';
+  const dateStr = formatKoreanDateRange(sdate, durationKey);
   const filled = parseInt(document.getElementById('pjSeats')?.value || '4', 10);
-  const title = document.getElementById('pjTitle')?.value || '[출발확정] 고비사막 4박5일 오픈조인 잔여석 모집';
+  const title = (document.getElementById('pjTitle')?.value || '').trim() || '[출발확정] 고비사막 4박5일 오픈조인 잔여석 모집';
   const curPrice = document.getElementById('pjCurPrice')?.value || '890,000원';
   const fullPrice = document.getElementById('pjFullPrice')?.value || '780,000원';
   const meta = resolvePartnerMetaByName(activePartnerName);
@@ -2628,6 +3092,9 @@ async function registerPartnerOpenJoin() {
       target_pid: meta.pid,
       target_agency: activePartnerName,
       pcode: meta.pcode,
+      sdate,
+      region_key: regionKey,
+      duration_key: durationKey,
       date_str: dateStr,
       cur_pax: filled,
       max_pax: 6,
@@ -2649,10 +3116,10 @@ async function registerPartnerOpenJoin() {
 
   JOIN_ITEMS.unshift({
     id: newJoinId,
-    dateKey: '08-15',
+    dateKey: sdate,
     dateStr,
-    regionKey: '고비',
-    durationKey: '4박5일',
+    regionKey,
+    durationKey,
     styleKey: '조인',
     statusBadge: '파트너 출발확정',
     statusCls: 'sky',
@@ -2670,12 +3137,17 @@ async function registerPartnerOpenJoin() {
     tags: '출발 100% 확정 차량 · 1/N 각자 카드결제 · 차액 자동환급'
   });
 
-  curJoinDate = 'all';
+  const [yy, mm] = sdate.split('-').map(Number);
+  if (yy && mm) {
+    curCalYear = yy;
+    curCalMonth = mm;
+  }
+  curJoinDate = sdate;
   renderJoinCalendar();
   renderJoinCards();
   switchSiteRole('customer');
   scrollToSection('sec-join');
-  showToast(`[${activePartnerName}] 출발확정 오픈조인 잔여석이 실시간 보드 최상단에 등록되었습니다!`);
+  showToast(`[${activePartnerName}] 출발확정 오픈조인 잔여석이 월간 캘린더에 등록되었습니다!`);
 }
 
 function selectShowcasePreset(el) {
@@ -2924,13 +3396,19 @@ async function hydrateFromLiveBackend() {
       DIRECT_PRODUCTS.splice(0, DIRECT_PRODUCTS.length, ...data.products);
     }
     if (Array.isArray(data.rfqs) && data.rfqs.length) {
-      RFQ_ITEMS.splice(0, RFQ_ITEMS.length, ...data.rfqs);
+      const existingTitles = new Set(data.rfqs.map(x => x.title));
+      const mergedRfqs = [...data.rfqs, ...RFQ_ITEMS.filter(x => !existingTitles.has(x.title))];
+      RFQ_ITEMS.splice(0, RFQ_ITEMS.length, ...mergedRfqs);
     }
     if (Array.isArray(data.joins) && data.joins.length) {
-      JOIN_ITEMS.splice(0, JOIN_ITEMS.length, ...data.joins);
+      const existingJoinTitles = new Set(data.joins.map(x => x.title));
+      const mergedJoins = [...data.joins, ...JOIN_ITEMS.filter(x => !existingJoinTitles.has(x.title))];
+      JOIN_ITEMS.splice(0, JOIN_ITEMS.length, ...mergedJoins);
     }
     if (Array.isArray(data.stories) && data.stories.length) {
-      SHOWCASE_ITEMS.splice(0, SHOWCASE_ITEMS.length, ...data.stories);
+      const existingStoryTitles = new Set(data.stories.map(x => x.title));
+      const mergedStories = [...data.stories, ...SHOWCASE_ITEMS.filter(x => !existingStoryTitles.has(x.title))];
+      SHOWCASE_ITEMS.splice(0, SHOWCASE_ITEMS.length, ...mergedStories);
     }
     if (Array.isArray(data.onboardList)) {
       ONBOARD_ITEMS = data.onboardList;
@@ -2938,6 +3416,7 @@ async function hydrateFromLiveBackend() {
 
     applyAuthUi();
     renderStoreProducts();
+    renderJoinCalendar();
     renderJoinCards();
     renderRfqBoard();
     renderShowcase();

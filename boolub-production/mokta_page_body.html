@@ -1,4 +1,6 @@
+<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_7" />
 <div id="bl-mokta-cms-wrap">
+  <!-- 전용관 상단 컨트롤 바: 비로그인·일반고객은 [파트너 입점신청] 노출 / 로그인 파트너·마스터만 [파트너사 센터] 노출 -->
   <div class="bl-cms-hub-bar">
     <div class="bl-container bl-cms-hub-inner">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1;">
@@ -10,10 +12,12 @@
       </div>
 
       <div class="header-actions">
+        <!-- [비로그인 / 일반 고객 전용 노출] -->
         <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
           <i class="xi-briefcase"></i> 파트너 입점신청
         </button>
 
+        <!-- [입점 파트너 / 마스터 계정 로그인 시에만 노출] -->
         <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist">
           <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">여행자 홈</button>
           <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
@@ -31,8 +35,10 @@
   <nav class="bl-sub-gnb" id="customerSubNav">
       <div class="bl-container bl-sub-gnb-list">
         <button type="button" class="bl-gnb-item active" onclick="filterPageView('all', this)">전체보기</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-join', this)">
+          동행·조인 월간 캘린더 <span class="gnb-dot" id="tabJoinCount">14</span>
+        </button>
         <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-store', this)">부럽 특가·원정대</button>
-        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-join', this)">동행·조인 찾기</button>
         <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-rfq', this)">
           내 일정 맞춤견적 <span class="gnb-dot" id="tabRfqCount">4</span>
         </button>
@@ -44,7 +50,7 @@
   </header>
 
   <!-- =========================================================================
-       [1] 여행자(고객) 화면 — 직관적 탐색 + 부럽 실제 상품 자연스러운 연결
+       [1] 여행자(고객) 화면 — 메인 전면 동행·조인 달력 + 부럽 실제 상품 연결
   ========================================================================= -->
   <main class="customer-view-wrap">
 
@@ -67,6 +73,34 @@
 
         <!-- 4단 실사 썸네일 퀵 액션 박스 -->
         <div class="bl-quick-4box">
+          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-join')">
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="/customized/mokta/images/companion_team_hands.jpg" alt="동행·조인 월간 캘린더" />
+                <span class="bl-qbox-mini-badge is-point"><i class="xi-calendar"></i></span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>동행·조인 월간 캘린더</strong>
+                <span>날짜별 출발확정·잔여석 한눈에 확인</span>
+              </div>
+            </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
+          </button>
+
+          <button type="button" class="bl-qbox-item" onclick="openCompanionModalForDate()">
+            <div class="bl-qbox-left">
+              <div class="bl-qbox-thumb">
+                <img src="/customized/mokta/images/campfire_cheers.jpg" alt="동행 모집글 올리기" />
+                <span class="bl-qbox-mini-badge">1/N</span>
+              </div>
+              <div class="bl-qbox-txt">
+                <strong>내 일정 동행 모집하기</strong>
+                <span>모일수록 내려가는 각자 카드결제</span>
+              </div>
+            </div>
+            <i class="xi-angle-right-min bl-qbox-arrow"></i>
+          </button>
+
           <button type="button" class="bl-qbox-item" onclick="openModal('rfqWizardModal')">
             <div class="bl-qbox-left">
               <div class="bl-qbox-thumb">
@@ -75,21 +109,7 @@
               </div>
               <div class="bl-qbox-txt">
                 <strong>내 일정 맞춤견적</strong>
-                <span>원하는 코스 올리고 업체별 비교</span>
-              </div>
-            </div>
-            <i class="xi-angle-right-min bl-qbox-arrow"></i>
-          </button>
-
-          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-join')">
-            <div class="bl-qbox-left">
-              <div class="bl-qbox-thumb">
-                <img src="/customized/mokta/images/companion_team_hands.jpg" alt="실시간 동행·조인" />
-                <span class="bl-qbox-mini-badge">1/N</span>
-              </div>
-              <div class="bl-qbox-txt">
-                <strong>출발확정 동행·조인</strong>
-                <span>모일수록 내려가는 1/N 분할결제</span>
+                <span>원하는 코스 올리고 파트너 실사 비교</span>
               </div>
             </div>
             <i class="xi-angle-right-min bl-qbox-arrow"></i>
@@ -104,20 +124,6 @@
               <div class="bl-qbox-txt">
                 <strong>부럽 몽골원정대</strong>
                 <span>1인 신청도 출발확정 · 유심·특식 포함</span>
-              </div>
-            </div>
-            <i class="xi-angle-right-min bl-qbox-arrow"></i>
-          </button>
-
-          <button type="button" class="bl-qbox-item" onclick="scrollToSection('sec-essentials')">
-            <div class="bl-qbox-left">
-              <div class="bl-qbox-thumb">
-                <img src="/customized/mokta/images/ger_interior.jpg" alt="몽골 필수 준비물" />
-                <span class="bl-qbox-mini-badge"><i class="xi-briefcase"></i></span>
-              </div>
-              <div class="bl-qbox-txt">
-                <strong>출국 필수 준비물</strong>
-                <span>공항 단독픽업 · 이심 · 여행자보험</span>
               </div>
             </div>
             <i class="xi-angle-right-min bl-qbox-arrow"></i>
@@ -170,7 +176,103 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 1: 부럽 단독 쿠폰특가 & 직영 몽골원정대 (실제 판매 상품 직결!) ==================== -->
+    <!-- ==================== 섹션 1 (메인 최상단 전면 배치): 한눈에 보는 몽골 동행·조인 월간 캘린더 ==================== -->
+    <section class="bl-section page-sec" id="sec-join">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3>한눈에 보는 몽골 동행·조인 월간 캘린더</h3>
+            <p>달력에서 원하는 출발 날짜를 클릭해 출발확정 차량 잔여석에 바로 합류하거나, 내 일정으로 새 동행을 쉽게 모집해보세요</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="selectCalendarDate('all')">
+              전체 월 일정 보기
+            </button>
+            <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate()">
+              <i class="xi-plus-min"></i> 동행·조인 모집글 올리기
+            </button>
+          </div>
+        </div>
+
+        <!-- 월간 캘린더 + 선택 날짜 실시간 브리핑 통합 허브 -->
+        <div class="bl-cal-hub-wrap">
+          <div class="bl-cal-toolbar">
+            <div class="bl-month-nav-group">
+              <div class="bl-month-Arrow-box">
+                <button type="button" class="bl-circle-nav" onclick="changeCalendarMonth(-1)" aria-label="이전 달">
+                  <i class="xi-angle-left"></i>
+                </button>
+                <strong class="bl-month-title" id="calCurrentMonthTitle">2026년 8월</strong>
+                <button type="button" class="bl-circle-nav" onclick="changeCalendarMonth(1)" aria-label="다음 달">
+                  <i class="xi-angle-right"></i>
+                </button>
+              </div>
+
+              <div class="bl-month-pills" id="calMonthPills"></div>
+            </div>
+
+            <div class="bl-cal-legend">
+              <span class="bl-leg-item"><i class="bl-leg-dot is-confirm"></i> 출발확정</span>
+              <span class="bl-leg-item"><i class="bl-leg-dot is-imminent"></i> 마감임박(1~2석)</span>
+              <span class="bl-leg-item"><i class="bl-leg-dot is-recruit"></i> 동행모집중</span>
+            </div>
+          </div>
+
+          <div class="bl-cal-hub-grid">
+            <!-- 좌측: 정식 7열 월간 캘린더 -->
+            <div class="bl-month-calendar">
+              <div class="bl-mcal-weekdays">
+                <span class="is-sun">일</span>
+                <span>월</span>
+                <span>화</span>
+                <span>수</span>
+                <span>목</span>
+                <span>금</span>
+                <span class="is-sat">토</span>
+              </div>
+              <div class="bl-mcal-days" id="mainMonthCalDays"></div>
+            </div>
+
+            <!-- 우측: 선택한 날짜 모집 현황 & 1/N 자동할인 안내 -->
+            <div class="bl-cal-side-panel">
+              <div class="bl-side-date-box" id="calSelectedPanel"></div>
+
+              <div class="bl-clean-box soft-sky" style="padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <strong style="font-size:14.5px; color:var(--bl-gray-900);">인원별 1/N 자동할인 시뮬레이터</strong>
+                  <span class="bl-mokta-tag">각자 카드결제 · 차액환급</span>
+                </div>
+                <div class="bl-pax-tabs" style="margin:10px 0;">
+                  <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3명 모임</button>
+                  <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4명 확정</button>
+                  <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5명 합류</button>
+                  <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6명 마감가</button>
+                </div>
+                <div class="bl-sim-result" style="padding:11px 14px;">
+                  <div>
+                    <div style="font-size:11px; font-weight:700; color:var(--bl-point-text);" id="simDescLabel">5명 합류 시 전원 1인 부담금</div>
+                    <strong style="font-size:18px; font-weight:800; color:var(--bl-gray-900);" id="simKrwText">820,000원</strong>
+                    <span style="font-size:11.5px; color:var(--bl-gray-500); margin-left:3px;" id="simUsdText">(3인 대비 29만 원 절약)</span>
+                  </div>
+                  <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openJoinDetailModal('j1')">
+                    1/N 결제안내
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 선택 월/날짜에 해당하는 실시간 동행·오픈조인 카드 그리드 -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+          <strong style="font-size:15.5px; color:var(--bl-gray-900);" id="joinListSubTitle">2026년 8월 출발 동행·오픈조인 모집 리스트</strong>
+          <span style="font-size:12.5px; color:var(--bl-gray-500);">날짜를 클릭하면 해당 출발일 팀만 모아볼 수 있습니다</span>
+        </div>
+        <div class="bl-join-grid" id="joinCardsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 섹션 2: 부럽 단독 쿠폰특가 & 직영 몽골원정대 (실제 판매 상품 직결!) ==================== -->
     <section class="bl-section page-sec" id="sec-store">
       <div class="bl-container">
         <div class="bl-sec-head">
@@ -223,68 +325,6 @@
         </div>
 
         <div class="bl-waug-item-grid" id="productStoreGrid"></div>
-      </div>
-    </section>
-
-    <!-- ==================== 섹션 2: 실시간 동행·조인 찾기 (여행자 모집 + 파트너 오픈조인 통합) ==================== -->
-    <section class="bl-section page-sec" id="sec-join">
-      <div class="bl-container">
-        <div class="bl-sec-head">
-          <div>
-            <h3>실시간 출발확정 동행·조인 찾기</h3>
-            <p>차량 1대(최대 6인) 인원이 채워질수록 전원 1인당 투어비가 내려가며, 총무 없이 각자 카드로 안전하게 결제합니다</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openModal('companionWriteModal')">
-              <i class="xi-plus-min"></i> 동행 모집글 쓰기
-            </button>
-          </div>
-        </div>
-
-        <div class="bl-join-top-bar">
-          <!-- 출발일 캘린더 필터 -->
-          <div class="bl-clean-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-              <div>
-                <strong style="font-size:15px; color:var(--bl-gray-900);">출발 시기별 조인 팀 찾기</strong>
-                <span style="font-size:12px; color:var(--bl-gray-500); margin-left:6px;">원하는 출발일을 눌러 잔여 좌석을 확인하세요</span>
-              </div>
-              <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="filterJoinByDate('all')">전체 일정</button>
-            </div>
-            <div class="bl-cal-strip" id="joinCalGrid"></div>
-          </div>
-
-          <!-- 인원별 1/N 비용 안내기 -->
-          <div class="bl-clean-box soft-sky">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <strong style="font-size:15px; color:var(--bl-gray-900);">인원별 1인 예상 투어비 안내</strong>
-              <span class="bl-mokta-tag">차액 자동환급</span>
-            </div>
-            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-top:3px;">
-              고비·중부 4박5일 표준 조인 기준 (인원 추가 시 전원 할인가 소급 적용)
-            </p>
-
-            <div class="bl-pax-tabs">
-              <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3명 모임</button>
-              <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4명 출발확정</button>
-              <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5명 합류</button>
-              <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6명 마감가</button>
-            </div>
-
-            <div class="bl-sim-result">
-              <div>
-                <div style="font-size:11.5px; font-weight:700; color:var(--bl-point-text);" id="simDescLabel">5명 합류 시 전원 1인 부담금</div>
-                <strong style="font-size:20px; font-weight:800; color:var(--bl-gray-900);" id="simKrwText">820,000원</strong>
-                <span style="font-size:12px; color:var(--bl-gray-500); margin-left:4px;" id="simUsdText">(3인 대비 29만 원 절약)</span>
-              </div>
-              <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openJoinDetailModal('j1')">
-                1/N 분할결제 안내
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bl-join-grid" id="joinCardsGrid"></div>
       </div>
     </section>
 
@@ -599,21 +639,39 @@
           <span class="bl-mokta-tag" style="margin-bottom:8px;">출발확정 차량 잔여석 빠르게 채우기</span>
           <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">오픈조인 출발팀 신규 등록 <span class="mn-txt">/ Нэгдсэн аялал нэмэх</span></h3>
           <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
-            이미 3~4명이 모인 출발 확정 차량의 남은 1~3자리를 등록하면 여행자 동행·조인 보드 최상단에 즉시 노출됩니다.
+            선택하신 출발 날짜의 월간 캘린더 셀과 동행·조인 모집 리스트 최상단에 즉시 노출됩니다.
           </p>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
             <div class="bl-field">
-              <label>출발 일정</label>
-              <input type="text" class="bl-input" id="pjDate" value="8.15(토) ~ 8.19(수) · 4박5일" />
+              <label>출발 날짜 (캘린더 연동)</label>
+              <input type="date" class="bl-input" id="pjStartDate" value="2026-08-15" />
             </div>
             <div class="bl-field">
-              <label>현재 확정 인원 / 정원</label>
-              <select class="bl-select" id="pjSeats">
-                <option value="4">4명 확정 / 6인 정원 (2자리 남음)</option>
-                <option value="5">5명 확정 / 6인 정원 (마지막 1자리!)</option>
-                <option value="3">3명 모집중 / 6인 정원 (1명 추가시 확정)</option>
+              <label>여행 지역</label>
+              <select class="bl-select" id="pjRegion">
+                <option value="고비">고비사막 · 남부</option>
+                <option value="중부">중부 · 온천</option>
+                <option value="홉스골">홉스골 · 북부</option>
+                <option value="테를지">테를지 · 단기</option>
               </select>
             </div>
+            <div class="bl-field">
+              <label>여행 기간</label>
+              <select class="bl-select" id="pjDuration">
+                <option value="2박3일">2박 3일</option>
+                <option value="3박4일">3박 4일</option>
+                <option value="4박5일" selected>4박 5일</option>
+                <option value="5박6일">5박 6일 이상</option>
+              </select>
+            </div>
+          </div>
+          <div class="bl-field">
+            <label>현재 확정 인원 / 정원</label>
+            <select class="bl-select" id="pjSeats">
+              <option value="4">4명 확정 / 6인 정원 (2자리 남음)</option>
+              <option value="5">5명 확정 / 6인 정원 (마지막 1자리!)</option>
+              <option value="3">3명 모집중 / 6인 정원 (1명 추가시 확정)</option>
+            </select>
           </div>
           <div class="bl-field">
             <label>오픈조인 투어 제목</label>
@@ -630,7 +688,7 @@
             </div>
           </div>
           <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="registerPartnerOpenJoin()">
-            실시간 동행·조인 보드에 바로 등록하기
+            월간 캘린더 &amp; 실시간 조인 보드에 바로 등록하기
           </button>
         </div>
       </div>
@@ -770,37 +828,55 @@
   <div class="bl-modal-dim" id="companionWriteModal" onclick="bgClose(event, 'companionWriteModal')">
     <div class="bl-modal sm">
       <div class="bl-modal-head">
-        <h4>동행 모집글 올리기</h4>
+        <h4>내 일정으로 동행·조인 모집글 올리기</h4>
         <button type="button" class="bl-modal-close" onclick="closeModal('companionWriteModal')"><i class="xi-close"></i></button>
       </div>
       <div class="bl-modal-body">
         <p style="font-size:13px; color:var(--bl-gray-500); margin-bottom:16px;">
-          함께 차량을 쉐어할 동행을 모집해보세요. 모집 중인 방에도 부럽 공식 파트너사가 전담 투어 조건을 제안해 드릴 수 있습니다.
+          원하는 출발 날짜를 선택해 등록하면 메인 월간 캘린더에 바로 표시되며, 함께 갈 동행과 공식 파트너사의 맞춤 투어 제안까지 받아보실 수 있습니다.
         </p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
           <div class="bl-field">
-            <label>여행 일정</label>
-            <input type="text" class="bl-input" id="cwDate" value="9.05(토) ~ 9.09(수) · 4박5일" />
+            <label>희망 출발일 *</label>
+            <input type="date" class="bl-input" id="cwStartDate" value="2026-08-15" />
           </div>
           <div class="bl-field">
-            <label>현재 인원 / 목표 정원</label>
-            <select class="bl-select" id="cwSeats">
-              <option value="2">현재 2명 확정 / 총 6명 모집</option>
-              <option value="3">현재 3명 확정 / 총 6명 모집</option>
-              <option value="1">현재 1명(방장) / 총 4~6명 모집</option>
+            <label>희망 지역</label>
+            <select class="bl-select" id="cwRegion">
+              <option value="고비">고비사막 · 남부</option>
+              <option value="중부">중부 · 온천</option>
+              <option value="홉스골">홉스골 · 북부</option>
+              <option value="테를지">테를지 · 근교</option>
+            </select>
+          </div>
+          <div class="bl-field">
+            <label>여행 기간</label>
+            <select class="bl-select" id="cwDuration">
+              <option value="2박3일">2박 3일</option>
+              <option value="3박4일">3박 4일</option>
+              <option value="4박5일" selected>4박 5일</option>
+              <option value="5박6일">5박 6일 이상</option>
             </select>
           </div>
         </div>
         <div class="bl-field">
-          <label>모집 제목 및 희망 코스</label>
-          <input type="text" class="bl-input" id="cwTitle" value="9월 초 고비사막+쳉헤르 온천 별 보러 같이 가실 2030 동행 구해요!" />
+          <label>현재 확정 인원 / 목표 정원</label>
+          <select class="bl-select" id="cwSeats">
+            <option value="2">현재 2명 확정 / 총 6명 모집</option>
+            <option value="3">현재 3명 확정 / 총 6명 모집</option>
+            <option value="1">현재 1명(방장) / 총 4~6명 모집</option>
+          </select>
+        </div>
+        <div class="bl-field">
+          <label>모집 제목 및 희망 코스 *</label>
+          <input type="text" class="bl-input" id="cwTitle" value="고비사막+쳉헤르 온천 별 보러 같이 가실 동행 구해요!" />
         </div>
         <div class="bl-field">
           <label>선호 동행 성향 (연령대, 흡연여부, 항공권 등)</label>
           <input type="text" class="bl-input" id="cwTags" value="2030 또래 · 비흡연 · 사진 촬영 좋아하는 분 환영" />
         </div>
         <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="submitCompanionPost()">
-          동행 모집글 등록하기
+          월간 캘린더에 동행 모집글 등록하기
         </button>
       </div>
     </div>
@@ -922,3 +998,8 @@
 
   <div class="bl-toast" id="toastEl"></div>
 </div>
+<script>
+  window.BOOLUB_MOKTA_ASSET_BASE = "/customized/mokta";
+  window.BOOLUB_MOKTA_API_BASE = "/program";
+</script>
+<script src="/customized/mokta/mokta.js?v=bl_mokta_7"></script>
