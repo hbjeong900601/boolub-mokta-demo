@@ -1,6 +1,5 @@
-<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_7" />
+<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_8" />
 <div id="bl-mokta-cms-wrap">
-  <!-- 전용관 상단 컨트롤 바: 비로그인·일반고객은 [파트너 입점신청] 노출 / 로그인 파트너·마스터만 [파트너사 센터] 노출 -->
   <div class="bl-cms-hub-bar">
     <div class="bl-container bl-cms-hub-inner">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1;">
@@ -12,12 +11,10 @@
       </div>
 
       <div class="header-actions">
-        <!-- [비로그인 / 일반 고객 전용 노출] -->
         <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
           <i class="xi-briefcase"></i> 파트너 입점신청
         </button>
 
-        <!-- [입점 파트너 / 마스터 계정 로그인 시에만 노출] -->
         <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist">
           <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">여행자 홈</button>
           <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
@@ -1002,4 +999,4 @@
   window.BOOLUB_MOKTA_ASSET_BASE = "/customized/mokta";
   window.BOOLUB_MOKTA_API_BASE = "/program";
 </script>
-<script src="/customized/mokta/mokta.js?v=bl_mokta_7"></script>
+<script src="/customized/mokta/mokta.js?v=bl_mokta_8"></script>

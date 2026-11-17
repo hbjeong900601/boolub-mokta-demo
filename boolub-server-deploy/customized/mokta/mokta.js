@@ -2603,7 +2603,7 @@ function renderShowcase() {
     <article class="bl-explore-card" onclick="openShowcaseModal('${s.id}')">
       <img src="${s.img}" alt="${s.title}" class="bg-photo" loading="lazy" />
       <div class="bl-explore-top">
-        <span class="bl-glass-pill"><i class="xi-check-circle"></i> ${s.agency}</span>
+        <span class="bl-glass-pill"><i class="xi-check-circle"></i> ${s.agency.split('(')[0].trim()}</span>
         <span class="bl-glass-pill">${s.badge}</span>
       </div>
       <div class="bl-explore-txt">
@@ -2719,9 +2719,9 @@ function renderPartnerSection() {
           <p class="bl-pcard-desc">${ag.desc}</p>
 
           <div class="bl-pcard-metrics">
-            <div><span>응답·확정</span><strong>${ag.resp}</strong></div>
-            <div><span>주력차량</span><strong>${ag.fleet.slice(0, 9)}</strong></div>
-            <div><span>숙소품질</span><strong>${ag.camp.slice(0, 9)}</strong></div>
+            <div><span>응답·확정</span><strong title="${ag.resp}">${ag.resp}</strong></div>
+            <div><span>주력차량</span><strong title="${ag.fleet}">${ag.fleet}</strong></div>
+            <div><span>숙소품질</span><strong title="${ag.camp}">${ag.camp}</strong></div>
           </div>
 
           <div class="bl-partner-thumbs">
@@ -3448,4 +3448,10 @@ document.addEventListener('DOMContentLoaded', () => {
   bindPartnerSliderEvents();
   startPartnerAutoSlide();
   hydrateFromLiveBackend();
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.bl-modal-dim.open').forEach(m => m.classList.remove('open'));
+    }
+  });
 });

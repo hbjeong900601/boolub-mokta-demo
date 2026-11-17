@@ -1,6 +1,6 @@
 <?php
 /**
- * 부럽 본 사이트 (data=mj 및 data=mokta 공통) 몽골 전용관 마운트 뷰 (v7)
+ * 부럽 본 사이트 (data=mj 및 data=mokta 공통) 몽골 전용관 마운트 뷰 (v8)
  * 서버 배포 위치: /customized/mokta/pages.mokta.php
  *
  * 연동 방법 (/skin/site_m/responsive-play/pages.view.php 상단):
@@ -23,7 +23,7 @@ if (!$MOKTA_PUBLIC_OPEN && $moktaAuth['role'] !== 'partner' && $moktaAuth['role'
 }
 ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
-<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_7" />
+<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_8" />
 
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/customized/mokta/mokta_body.inc.html'); ?>
 
@@ -32,4 +32,4 @@ if (!$MOKTA_PUBLIC_OPEN && $moktaAuth['role'] !== 'partner' && $moktaAuth['role'
   window.BOOLUB_MOKTA_API_BASE   = '/program';
   window.BOOLUB_MOKTA_AUTH       = <?php echo json_encode($moktaAuth, JSON_UNESCAPED_UNICODE); ?>;
 </script>
-<script src="/customized/mokta/mokta.js?v=bl_mokta_7"></script>
+<script src="/customized/mokta/mokta.js?v=bl_mokta_8"></script>

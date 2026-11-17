@@ -1,8 +1,9 @@
 @charset "utf-8";
 /* =========================================================================
-   BOOLUB x MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_7)
-   - 기본 리셋은 :where(#bl-mokta-cms-wrap) (명시도 0,0,0) 처리하여 내부 클래스 침범 원천 차단
-   - 모든 컴포넌트 규칙은 #bl-mokta-cms-wrap .bl-* (명시도 1,1,0+) 처리하여 기존 common.css/setting.css 완벽 우위 확보
+   BOOLUB x MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_8)
+   - Tier 1 리셋: :where(#bl-mokta-cms-wrap) (명시도 0,0,0) -> 컴포넌트 여백/버튼 스타일 침범 제로
+   - Tier 2 상속 보호: #bl-mokta-cms-wrap :where(span,strong,em,p,a...) (명시도 1,0,0) -> setting.css의 span{color:#333} 완벽 무력화
+   - Tier 3 컴포넌트: #bl-mokta-cms-wrap .bl-* (명시도 1,1,0+) -> 33개 공통 CSS 완벽 우위
    ========================================================================= */
 :where(#bl-mokta-cms-wrap) {
   display: block;
@@ -21,6 +22,9 @@
   padding: 0;
   word-break: keep-all;
   overflow-wrap: break-word;
+}
+#bl-mokta-cms-wrap :where(span, strong, em, b, i, a, p, h1, h2, h3, h4, label) {
+  color: inherit;
 }
 :where(#bl-mokta-cms-wrap) input,
 :where(#bl-mokta-cms-wrap) select,
@@ -834,19 +838,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  gap: 6px;
+  color: #ffffff;
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 #bl-mokta-cms-wrap .bl-glass-pill {
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(18, 22, 25, 0.48);
-  backdrop-filter: blur(4px);
+  background: rgba(18, 22, 25, 0.64);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  max-width: 62%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+#bl-mokta-cms-wrap .bl-glass-pill i {
+  color: #7dd3fc;
+  flex-shrink: 0;
 }
 
 #bl-mokta-cms-wrap .bl-explore-txt {
@@ -1747,6 +1765,8 @@
 }
 
 #bl-mokta-cms-wrap .bl-pcard-metrics div {
+  min-width: 0;
+  padding: 0 5px;
   border-right: 1px solid var(--bl-gray-200);
 }
 
@@ -1762,10 +1782,13 @@
 
 #bl-mokta-cms-wrap .bl-pcard-metrics strong {
   display: block;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--bl-gray-900);
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
@@ -1836,11 +1859,11 @@
 
 #bl-mokta-cms-wrap .bl-service-card:hover { transform: translateY(-2px); }
 
-#bl-mokta-cms-wrap .bl-service-card.is-sky { background: #E3F2FD; color: #1565C0; }
+#bl-mokta-cms-wrap .bl-service-card.is-sky { background: #EBF6FF; color: #1565C0; border: 1px solid #D0E8FF; }
 
-#bl-mokta-cms-wrap .bl-service-card.is-kakao { background: #FFE812; color: #3B1E1E; }
+#bl-mokta-cms-wrap .bl-service-card.is-kakao { background: #FFF8DB; color: #78350F; border: 1px solid #FDE68A; }
 
-#bl-mokta-cms-wrap .bl-service-card.is-pink { background: #FCE4EC; color: #C62828; }
+#bl-mokta-cms-wrap .bl-service-card.is-pink { background: #FFF0F3; color: #C62828; border: 1px solid #FECDD3; }
 
 #bl-mokta-cms-wrap .bl-service-badge {
   display: inline-block;
@@ -1921,9 +1944,21 @@ body.show-mn #bl-mokta-cms-wrap .mn-txt { display: inline; }
 }
 
 #bl-mokta-cms-wrap .bl-input,
-#bl-mokta-cms-wrap .bl-select,
+#bl-mokta-cms-wrap .bl-select {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--bl-gray-200);
+  border-radius: var(--bl-radius);
+  padding: 0 12px;
+  font-size: 13.5px;
+  color: var(--bl-gray-900);
+  background: #ffffff;
+  transition: border-color 0.18s;
+}
+
 #bl-mokta-cms-wrap .bl-textarea {
   width: 100%;
+  min-height: 84px;
   border: 1px solid var(--bl-gray-200);
   border-radius: var(--bl-radius);
   padding: 10px 12px;

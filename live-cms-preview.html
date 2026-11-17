@@ -22,12 +22,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
   <!-- 이번에 고도화한 충돌 제로 스코프 mokta.css (v7) -->
-  <link rel="stylesheet" href="./boolub-server-deploy/customized/mokta/mokta.css?v=bl_mokta_7" />
+  <link rel="stylesheet" href="./boolub-server-deploy/customized/mokta/mokta.css?v=bl_mokta_8" />
 </head>
 <body class="if_view is-live-cms" style="overflow-x:hidden;">
   <div class="wrap js_header_position post_hide_section" id="cert_info">
     <div id="bl-mokta-cms-wrap">
-  <!-- 전용관 상단 컨트롤 바: 비로그인·일반고객은 [파트너 입점신청] 노출 / 로그인 파트너·마스터만 [파트너사 센터] 노출 -->
   <div class="bl-cms-hub-bar">
     <div class="bl-container bl-cms-hub-inner">
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1;">
@@ -39,12 +38,10 @@
       </div>
 
       <div class="header-actions">
-        <!-- [비로그인 / 일반 고객 전용 노출] -->
         <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
           <i class="xi-briefcase"></i> 파트너 입점신청
         </button>
 
-        <!-- [입점 파트너 / 마스터 계정 로그인 시에만 노출] -->
         <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist">
           <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">여행자 홈</button>
           <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
@@ -1029,6 +1026,6 @@
   <script>
     window.BOOLUB_MOKTA_ASSET_BASE = ".";
   </script>
-  <script src="./boolub-server-deploy/customized/mokta/mokta.js?v=bl_mokta_7"></script>
+  <script src="./boolub-server-deploy/customized/mokta/mokta.js?v=bl_mokta_8"></script>
 </body>
 </html>

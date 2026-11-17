@@ -691,18 +691,31 @@ em, i { font-style: normal; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  gap: 6px;
+  color: #ffffff;
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 700;
 }
 .bl-glass-pill {
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(18, 22, 25, 0.48);
-  backdrop-filter: blur(4px);
+  background: rgba(18, 22, 25, 0.64);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  max-width: 62%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+.bl-glass-pill i {
+  color: #7dd3fc;
+  flex-shrink: 0;
 }
 .bl-explore-txt {
   position: absolute;
@@ -1486,6 +1499,8 @@ em, i { font-style: normal; }
   text-align: center;
 }
 .bl-pcard-metrics div {
+  min-width: 0;
+  padding: 0 5px;
   border-right: 1px solid var(--bl-gray-200);
 }
 .bl-pcard-metrics div:last-child {
@@ -1498,10 +1513,13 @@ em, i { font-style: normal; }
 }
 .bl-pcard-metrics strong {
   display: block;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--bl-gray-900);
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bl-partner-thumbs {
@@ -1562,9 +1580,9 @@ em, i { font-style: normal; }
   transition: transform 0.2s ease;
 }
 .bl-service-card:hover { transform: translateY(-2px); }
-.bl-service-card.is-sky { background: #E3F2FD; color: #1565C0; }
-.bl-service-card.is-kakao { background: #FFE812; color: #3B1E1E; }
-.bl-service-card.is-pink { background: #FCE4EC; color: #C62828; }
+.bl-service-card.is-sky { background: #EBF6FF; color: #1565C0; border: 1px solid #D0E8FF; }
+.bl-service-card.is-kakao { background: #FFF8DB; color: #78350F; border: 1px solid #FDE68A; }
+.bl-service-card.is-pink { background: #FFF0F3; color: #C62828; border: 1px solid #FECDD3; }
 .bl-service-badge {
   display: inline-block;
   padding: 2px 8px;
@@ -1629,8 +1647,20 @@ body.show-mn .mn-txt { display: inline; }
   color: var(--bl-gray-900);
   margin-bottom: 6px;
 }
-.bl-input, .bl-select, .bl-textarea {
+.bl-input, .bl-select {
   width: 100%;
+  height: 42px;
+  border: 1px solid var(--bl-gray-200);
+  border-radius: var(--bl-radius);
+  padding: 0 12px;
+  font-size: 13.5px;
+  color: var(--bl-gray-900);
+  background: #ffffff;
+  transition: border-color 0.18s;
+}
+.bl-textarea {
+  width: 100%;
+  min-height: 84px;
   border: 1px solid var(--bl-gray-200);
   border-radius: var(--bl-radius);
   padding: 10px 12px;
