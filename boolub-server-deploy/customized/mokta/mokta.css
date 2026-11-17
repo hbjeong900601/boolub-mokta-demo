@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* =========================================================================
-   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_15)
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_16)
    - 본 페이지(data=mj, data=mokta)에서는 부럽 기본 상단 헤더(.sc_Header) 비노출 + MOKTA 전용 스티키 헤더 노출
    - 3-Tier CSS Specificity Guard + 30개 파트너사 도트 캘린더 + 신뢰 보증 섹션 + 미니홈 커스터마이저
    ========================================================================= */
@@ -213,13 +213,35 @@ body.is-live-cms {
 #bl-mokta-cms-wrap .bl-mokta-logo-area {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   flex-shrink: 0;
   cursor: pointer;
 }
 
+#bl-mokta-cms-wrap .bl-dual-logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
 #bl-mokta-cms-wrap .bl-mokta-logo-img {
-  height: 48px;
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+#bl-mokta-cms-wrap .bl-dual-logo-x {
+  font-size: 14px;
+  font-weight: 700;
+  color: #94a3b8;
+  line-height: 1;
+  user-select: none;
+}
+
+#bl-mokta-cms-wrap .bl-boolub-logo-img {
+  height: 36px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
@@ -228,31 +250,34 @@ body.is-live-cms {
 #bl-mokta-cms-wrap .bl-mokta-logo-meta {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
+  border-left: 1px solid #e5e8eb;
   line-height: 1.25;
 }
 
 #bl-mokta-cms-wrap .bl-mokta-logo-title {
-  font-size: 15.5px;
+  font-size: 14px;
   font-weight: 800;
   color: #1d2a4d;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 #bl-mokta-cms-wrap .bl-mokta-logo-sub {
   font-size: 11px;
   font-weight: 600;
   color: var(--bl-gray-500);
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 
 
 #bl-mokta-cms-wrap .bl-search-box {
   flex: 1;
-  max-width: 420px;
+  max-width: 440px;
   position: relative;
 }
 
@@ -351,12 +376,25 @@ body.is-live-cms {
 #bl-mokta-cms-wrap .bl-sub-gnb-list {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: space-between;
+  gap: 12px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 
 #bl-mokta-cms-wrap .bl-sub-gnb-list::-webkit-scrollbar { display: none; }
+
+#bl-mokta-cms-wrap .bl-sub-gnb-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+#bl-mokta-cms-wrap .role-switch-pill.is-gnb-right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
 
 #bl-mokta-cms-wrap .bl-gnb-item {
   display: inline-flex;
@@ -5040,9 +5078,11 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 
   #bl-mokta-cms-wrap .bl-mokta-header .bl-mokta-header-top { height: auto; padding: 10px 0; flex-wrap: wrap; }
 
-  #bl-mokta-cms-wrap .bl-mokta-logo-img { height: 40px; }
+  #bl-mokta-cms-wrap .bl-mokta-logo-img { height: 34px; }
 
-  #bl-mokta-cms-wrap .bl-mokta-logo-sub { display: none; }
+  #bl-mokta-cms-wrap .bl-boolub-logo-img { height: 28px; }
+
+  #bl-mokta-cms-wrap .bl-mokta-logo-meta { display: none; }
 
   #bl-mokta-cms-wrap .bl-search-box { order: 3; max-width: 100%; flex: 0 0 100%; }
 

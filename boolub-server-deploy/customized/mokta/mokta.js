@@ -1979,8 +1979,15 @@ function switchSiteRole(role) {
   document.body.classList.toggle('partner-mode', isPartner);
   document.getElementById('roleCustomerBtn')?.classList.toggle('active', !isPartner);
   document.getElementById('rolePartnerBtn')?.classList.toggle('active', isPartner);
+
+  // 2단 GNB 우측에 파트너 스위치가 위치하므로, 파트너 모드 진입 시에도 2단 GNB 바는 항상 유지!
   const subNav = document.getElementById('customerSubNav');
-  if (subNav) subNav.style.display = isPartner ? 'none' : '';
+  if (subNav) subNav.style.display = '';
+  document.querySelectorAll('#customerSubNav .bl-gnb-item').forEach(b => {
+    const bMode = b.getAttribute('data-cmode');
+    b.classList.toggle('active', !isPartner && bMode === curCustomerMode);
+  });
+
   if (isPartner) {
     populatePartnerRfqSelect();
     loadPartnerMinihomeForm();

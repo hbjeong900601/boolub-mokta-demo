@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
-  <link rel="stylesheet" href="./styles.css?v=bl_mokta_15" />
+  <link rel="stylesheet" href="./styles.css?v=bl_mokta_16" />
 </head>
 <body id="top">
 
@@ -45,16 +45,20 @@
     </div>
   </div>
 
-  <!-- MOKTA 전용관 단독 상단 헤더 (부럽 공통 헤더 대신 노출되는 전용 헤더) -->
+  <!-- MOKTA × 부럽 전용관 단독 상단 헤더 (2개 로고 동시 노출 + 2단 우측 파트너 스위치) -->
   <header class="bl-mokta-header" id="moktaMainHeader">
     <div class="bl-container bl-mokta-header-top">
       <a href="#top" class="bl-mokta-logo-area" onclick="switchSiteRole('customer'); switchCustomerMode('home', document.querySelector('#customerSubNav .bl-gnb-item'));">
-        <img src="./images/mokta_logo.png" alt="MOKTA 몽골한국관광협회" class="bl-mokta-logo-img" />
+        <div class="bl-dual-logo-lockup">
+          <img src="./images/mokta_logo.png" alt="MOKTA 몽골한국관광협회" class="bl-mokta-logo-img" />
+          <span class="bl-dual-logo-x" aria-hidden="true">×</span>
+          <img src="./images/boolub_logo.png" alt="부럽(BOOLUB)" class="bl-boolub-logo-img" />
+        </div>
         <div class="bl-mokta-logo-meta">
           <div class="bl-mokta-logo-title">
-            몽골한국관광협회 <span class="bl-mokta-tag">공식전용관</span>
+            <span class="bl-mokta-tag">공식전용관</span>
           </div>
-          <span class="bl-mokta-logo-sub">몽골 투어 · 실시간 동행 · 맞춤 비교견적</span>
+          <span class="bl-mokta-logo-sub">몽골 투어 · 동행 · 맞춤견적</span>
         </div>
       </a>
 
@@ -91,37 +95,39 @@
           파트너 입점신청
         </button>
 
-        <!-- [로그인한 입점 파트너 계정 & 마스터 계정 전용 노출] 파트너사 센터 스위치 -->
-        <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist" aria-label="이용자 및 파트너사 전환">
-          <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
-            여행자 홈
-          </button>
-          <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
-            <span id="rolePartnerBtnLabel">파트너사 센터</span> <span class="role-count" id="headerBidBadge">4</span>
-          </button>
-        </div>
-
         <button type="button" class="bl-btn bl-btn-point" onclick="openModal('rfqWizardModal')">
           맞춤견적 문의
         </button>
       </div>
     </div>
 
-    <!-- 4대 핵심 모드로 단순화된 상단 GNB -->
+    <!-- 2단 GNB 라인: 좌측 4대 고객 탭 + 우측 끝 [여행자 홈 / 파트너사 센터] 전환 스위치 (입점 파트너·마스터 로그인 시에만 노출) -->
     <nav class="bl-sub-gnb" id="customerSubNav">
       <div class="bl-container bl-sub-gnb-list">
-        <button type="button" class="bl-gnb-item active" data-cmode="home" onclick="switchCustomerMode('home', this)">
-          <span>추천 홈</span>
-        </button>
-        <button type="button" class="bl-gnb-item" data-cmode="join" onclick="switchCustomerMode('join', this)">
-          <span>동행 · 오픈조인</span> <span class="gnb-dot" id="tabJoinCount">23</span>
-        </button>
-        <button type="button" class="bl-gnb-item" data-cmode="store" onclick="switchCustomerMode('store', this)">
-          <span>투어 스토어</span> <span class="gnb-dot" id="tabStoreCount">104</span>
-        </button>
-        <button type="button" class="bl-gnb-item" data-cmode="partner" onclick="switchCustomerMode('partner', this)">
-          <span>맞춤견적 · 파트너 (<em id="tabPartnerCount" style="font-style:normal;">9</em>)</span>
-        </button>
+        <div class="bl-sub-gnb-left">
+          <button type="button" class="bl-gnb-item active" data-cmode="home" onclick="switchCustomerMode('home', this)">
+            <span>추천 홈</span>
+          </button>
+          <button type="button" class="bl-gnb-item" data-cmode="join" onclick="switchCustomerMode('join', this)">
+            <span>동행 · 오픈조인</span> <span class="gnb-dot" id="tabJoinCount">23</span>
+          </button>
+          <button type="button" class="bl-gnb-item" data-cmode="store" onclick="switchCustomerMode('store', this)">
+            <span>투어 스토어</span> <span class="gnb-dot" id="tabStoreCount">104</span>
+          </button>
+          <button type="button" class="bl-gnb-item" data-cmode="partner" onclick="switchCustomerMode('partner', this)">
+            <span>맞춤견적 · 파트너 (<em id="tabPartnerCount" style="font-style:normal;">9</em>)</span>
+          </button>
+        </div>
+
+        <!-- [입점 파트너 / 마스터 로그인 시에만 우측 끝 노출] 여행자 홈 ↔ 파트너사 센터 전환 -->
+        <div class="role-switch-pill is-gnb-right" id="partnerRoleSwitchWrap" style="display:none;" role="tablist" aria-label="여행자 홈 및 파트너사 센터 전환">
+          <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
+            <span>여행자 홈</span>
+          </button>
+          <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
+            <span id="rolePartnerBtnLabel">파트너사 센터</span> <span class="role-count" id="headerBidBadge">4</span>
+          </button>
+        </div>
       </div>
     </nav>
   </header>
@@ -1543,6 +1549,6 @@
 
   <div class="bl-toast" id="toastEl"></div>
 
-  <script src="./app.js?v=bl_mokta_15"></script>
+  <script src="./app.js?v=bl_mokta_16"></script>
 </body>
 </html>

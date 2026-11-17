@@ -133,12 +133,31 @@ em, i { font-style: normal; }
 .bl-mokta-logo-area {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   flex-shrink: 0;
   cursor: pointer;
 }
+.bl-dual-logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
 .bl-mokta-logo-img {
-  height: 48px;
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.bl-dual-logo-x {
+  font-size: 14px;
+  font-weight: 700;
+  color: #94a3b8;
+  line-height: 1;
+  user-select: none;
+}
+.bl-boolub-logo-img {
+  height: 36px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
@@ -146,28 +165,31 @@ em, i { font-style: normal; }
 .bl-mokta-logo-meta {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
+  border-left: 1px solid #e5e8eb;
   line-height: 1.25;
 }
 .bl-mokta-logo-title {
-  font-size: 15.5px;
+  font-size: 14px;
   font-weight: 800;
   color: #1d2a4d;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 .bl-mokta-logo-sub {
   font-size: 11px;
   font-weight: 600;
   color: var(--bl-gray-500);
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 /* 와그형 컴팩트 알약 검색바 (waug.css 1597행 동일) */
 .bl-search-box {
   flex: 1;
-  max-width: 420px;
+  max-width: 440px;
   position: relative;
 }
 .bl-search-box i.xi-search {
@@ -246,7 +268,7 @@ em, i { font-style: normal; }
   font-weight: 800;
 }
 
-/* 헤더 2단 카테고리 네비게이션 (waug.css .top_commu_menu_swiper 동일) */
+/* 헤더 2단 카테고리 네비게이션 (좌측 고객 4대 메뉴 + 우측 끝 파트너사 센터 스위치) */
 .bl-sub-gnb {
   border-top: 1px solid var(--bl-gray-100);
   background: #ffffff;
@@ -254,11 +276,22 @@ em, i { font-style: normal; }
 .bl-sub-gnb-list {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: space-between;
+  gap: 12px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .bl-sub-gnb-list::-webkit-scrollbar { display: none; }
+.bl-sub-gnb-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.role-switch-pill.is-gnb-right {
+  margin-left: auto;
+  flex-shrink: 0;
+}
 .bl-gnb-item {
   display: inline-flex;
   align-items: center;
@@ -4329,8 +4362,9 @@ body.is-live-cms .bl-auth-sim-bar {
 
 @media (max-width: 640px) {
   .bl-mokta-header .bl-mokta-header-top { height: auto; padding: 10px 0; flex-wrap: wrap; }
-  .bl-mokta-logo-img { height: 40px; }
-  .bl-mokta-logo-sub { display: none; }
+  .bl-mokta-logo-img { height: 34px; }
+  .bl-boolub-logo-img { height: 28px; }
+  .bl-mokta-logo-meta { display: none; }
   .bl-search-box { order: 3; max-width: 100%; flex: 0 0 100%; }
   .bl-hero-viewport { margin: 0; }
   .bl-hero-slide { flex: 0 0 100%; max-width: 100%; padding: 0; }
