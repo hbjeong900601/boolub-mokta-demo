@@ -1149,7 +1149,47 @@ const ESSENTIALS_DATA = [
   }
 ];
 
-/* ================= 상태 변수 ================= */
+/* ================= 권한(Auth) & 백엔드 API 상태 변수 (v5) ================= */
+const API_BASE = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_API_BASE)
+  ? window.BOOLUB_MOKTA_API_BASE.replace(/\/$/, '')
+  : '';
+
+let AUTH_STATE = {
+  role: 'guest',          // 'guest' | 'member' | 'partner' | 'master'
+  userId: '',
+  userName: '',
+  partnerId: '',          // 입점 파트너 로그인 시 cp_id (예: 'anoratour')
+  partnerName: '',        // 예: '노라투어 (NORA TOUR)'
+  isLiveCms: Boolean(API_BASE)
+};
+
+if (typeof window !== 'undefined' && window.BOOLUB_MOKTA_AUTH) {
+  AUTH_STATE = Object.assign(AUTH_STATE, window.BOOLUB_MOKTA_AUTH);
+}
+
+let ONBOARD_ITEMS = [
+  {
+    id: 'ob1',
+    company: '어드벤처 몽골 투어 (ADVENTURE MONGOLIA)',
+    moktaYn: 'Y',
+    contact: '010-8241-**** / 카톡 adv_mn',
+    memberId: 'adventure_mn',
+    desc: '남고비·중부 전문 / 신형 스타렉스 9대·푸르공 14대 직영 / 홍고린 온수캠프 제휴',
+    status: 'pending',
+    rdate: '2026-11-16 18:20'
+  },
+  {
+    id: 'ob2',
+    company: '고비 스타 글램핑 (GOBI STAR)',
+    moktaYn: 'Y',
+    contact: '010-5390-**** / 카톡 gobistar',
+    memberId: 'gobistar_kr',
+    desc: '전 일정 호텔식 침구 및 개별 샤워실 완비 직영 글램핑 캠프 2곳 운영',
+    status: 'pending',
+    rdate: '2026-11-17 08:45'
+  }
+];
+
 let curHeroPage = 0;
 let curStoreCat = 'all';
 let curJoinDate = 'all';
@@ -1164,6 +1204,129 @@ let isPartnerAutoPlaying = true;
 let activePartnerName = '노라투어 (NORA TOUR)';
 let selectedBidPhoto = { veh: './images/vehicle_fleet.jpg', ger: './images/ger_interior.jpg' };
 let selectedShowcaseImg = './images/khorkhog_feast.jpg';
+let uploadedShowcaseFile = null;
+
+async function moktaApiCall(endpoint, payload = {}, isMultipart = false) {
+  if (!API_BASE) return null;
+  try {
+    let body;
+    if (isMultipart && payload instanceof FormData) {
+      body = payload;
+    } else {
+      body = new FormData();
+      Object.entries(payload).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) body.append(k, v);
+      });
+    }
+    const res = await fetch(`${API_BASE}/${endpoint}`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      body
+    });
+    return await res.json();
+  } catch (err) {
+    console.error('[MOKTA API Error]', endpoint, err);
+    return { ok: false, message: '서버 통신 중 일시적인 오류가 발생했습니다.' };
+  }
+}
+
+function canAccessPartnerConsole() {
+  return AUTH_STATE.role === 'partner' || AUTH_STATE.role === 'master';
+}
+
+function applyAuthUi() {
+  if (AUTH_STATE.isLiveCms) {
+    document.body.classList.add('is-live-cms');
+  }
+
+  const applyBtn = document.getElementById('partnerApplyHeaderBtn');
+  const roleSwitchWrap = document.getElementById('partnerRoleSwitchWrap');
+  const rolePartnerBtnLabel = document.getElementById('rolePartnerBtnLabel');
+  const lockedBadge = document.getElementById('partnerIdentityLockedBadge');
+  const lockedTxt = document.getElementById('lockedPartnerNameTxt');
+  const masterSelectWrap = document.getElementById('masterPartnerSelectWrap');
+  const ptabMasterBtn = document.getElementById('ptabMasterBtn');
+  const onboardCnt = document.getElementById('ptabOnboardCnt');
+
+  if (onboardCnt) {
+    onboardCnt.textContent = String(ONBOARD_ITEMS.filter(x => x.status === 'pending').length);
+  }
+
+  // 데모 상단 권한 프리뷰 버튼 활성화 상태 동기화
+  document.querySelectorAll('#demoAuthSimBar .bl-auth-sim-btn').forEach(btn => {
+    const r = btn.getAttribute('data-sim-role');
+    const isGuestGroup = (AUTH_STATE.role === 'guest' || AUTH_STATE.role === 'member') && r === 'guest';
+    btn.classList.toggle('active', isGuestGroup || AUTH_STATE.role === r);
+  });
+
+  if (!canAccessPartnerConsole()) {
+    // [조건 3] 미로그인 고객 & 일반 로그인 고객: 파트너사 센터 완전 비노출 + 파트너 입점신청 버튼 노출
+    if (applyBtn) applyBtn.style.display = 'inline-flex';
+    if (roleSwitchWrap) roleSwitchWrap.style.display = 'none';
+    if (ptabMasterBtn) ptabMasterBtn.style.display = 'none';
+    document.body.classList.remove('partner-mode');
+    const subNav = document.getElementById('customerSubNav');
+    if (subNav) subNav.style.display = '';
+    return;
+  }
+
+  // [조건 2] 로그인한 입점 파트너 계정 & 마스터 계정만 파트너사 센터 오픈
+  if (applyBtn) applyBtn.style.display = 'none';
+  if (roleSwitchWrap) roleSwitchWrap.style.display = 'inline-flex';
+
+  if (AUTH_STATE.role === 'partner') {
+    activePartnerName = AUTH_STATE.partnerName || '노라투어 (NORA TOUR)';
+    if (rolePartnerBtnLabel) rolePartnerBtnLabel.textContent = '파트너사 센터';
+    if (lockedBadge) lockedBadge.style.display = 'inline-flex';
+    if (lockedTxt) lockedTxt.textContent = `${activePartnerName} (${AUTH_STATE.partnerId || 'anoratour'}) · 공식 입점 파트너`;
+    if (masterSelectWrap) masterSelectWrap.style.display = 'none';
+    if (ptabMasterBtn) ptabMasterBtn.style.display = 'none';
+    // 만약 마스터 전용 탭이 열려 있었다면 1번 탭으로 복귀
+    const obPane = document.getElementById('ptab-onboard');
+    if (obPane && obPane.classList.contains('active')) {
+      switchPartnerTab('ptab-quote', document.querySelector('.bl-ptab-btn'));
+    }
+  } else if (AUTH_STATE.role === 'master') {
+    const sel = document.getElementById('activePartnerSelect');
+    if (sel) activePartnerName = sel.value;
+    if (rolePartnerBtnLabel) rolePartnerBtnLabel.textContent = '파트너사 센터 [MASTER]';
+    if (lockedBadge) lockedBadge.style.display = 'none';
+    if (masterSelectWrap) masterSelectWrap.style.display = 'inline-flex';
+    if (ptabMasterBtn) ptabMasterBtn.style.display = 'inline-flex';
+    renderMasterOnboardList();
+  }
+}
+
+function simulateAuthRole(mode) {
+  if (mode === 'partner') {
+    AUTH_STATE = Object.assign(AUTH_STATE, {
+      role: 'partner',
+      userId: 'anoratour',
+      partnerId: 'anoratour',
+      partnerName: '노라투어 (NORA TOUR)'
+    });
+    applyAuthUi();
+    showToast('[권한 확인] 로그인한 입점 파트너(노라투어) 세션이 적용되었습니다. 상단에 파트너사 센터가 활성화됩니다.');
+  } else if (mode === 'master') {
+    AUTH_STATE = Object.assign(AUTH_STATE, {
+      role: 'master',
+      userId: 'admin',
+      partnerId: 'boolub',
+      partnerName: '부럽 몽골원정대 (직영)'
+    });
+    applyAuthUi();
+    showToast('[권한 확인] 부럽 마스터 관리자 세션이 적용되었습니다. 전체 파트너 대행 및 입점 승인 관리가 활성화됩니다.');
+  } else {
+    AUTH_STATE = Object.assign(AUTH_STATE, {
+      role: 'guest',
+      userId: '',
+      partnerId: '',
+      partnerName: ''
+    });
+    applyAuthUi();
+    showToast('[권한 확인] 미로그인·일반 고객 화면입니다. 파트너사 센터가 숨겨지고 [파트너 입점신청] 버튼이 노출됩니다.');
+  }
+}
 
 /* ================= 유틸리티 & 로고 렌더러 ================= */
 function renderPartnerBadgeMedia(ag, size = 46) {
@@ -1220,8 +1383,13 @@ function scrollToSection(secId) {
   }, 40);
 }
 
-/* ================= 헤더 검색 & GNB 섹션 전환 ================= */
+/* ================= 헤더 검색 & GNB 섹션 전환 (파트너·마스터 권한 검증 포함) ================= */
 function switchSiteRole(role) {
+  if (role === 'partner' && !canAccessPartnerConsole()) {
+    openModal('partnerApplyModal');
+    showToast('파트너사 센터는 승인된 입점 파트너 및 마스터 계정만 접근 가능합니다.');
+    return;
+  }
   const isPartner = role === 'partner';
   document.body.classList.toggle('partner-mode', isPartner);
   document.getElementById('roleCustomerBtn')?.classList.toggle('active', !isPartner);
@@ -1230,6 +1398,7 @@ function switchSiteRole(role) {
   if (subNav) subNav.style.display = isPartner ? 'none' : '';
   if (isPartner) {
     populatePartnerRfqSelect();
+    if (AUTH_STATE.role === 'master') renderMasterOnboardList();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
@@ -1632,8 +1801,19 @@ function openJoinDetailModal(joinId) {
   openModal('joinDetailModal');
 }
 
-function confirmJoinSeat(joinId) {
-  const item = JOIN_ITEMS.find(x => x.id === joinId);
+async function confirmJoinSeat(joinId) {
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.join.pro.php', { _mode: 'apply_seat', join_id: joinId });
+    if (res && !res.ok) {
+      if (res.requireLogin) {
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        return;
+      }
+      showToast(res.message || '좌석 합류 처리 중 오류가 발생했습니다.');
+      return;
+    }
+  }
+  const item = JOIN_ITEMS.find(x => String(x.id) === String(joinId));
   if (item && item.filled < item.max) {
     const openIdx = item.seats.indexOf('빈좌석');
     if (openIdx !== -1) item.seats[openIdx] = '신규합류';
@@ -1645,16 +1825,40 @@ function confirmJoinSeat(joinId) {
   showToast('동행·조인 합류 신청이 접수되었습니다! 부럽 알림톡으로 개별 카드결제 링크가 발송됩니다.');
 }
 
-function submitCompanionPost() {
+async function submitCompanionPost() {
   const dateStr = document.getElementById('cwDate')?.value || '9.05(토) ~ 9.09(수) · 4박5일';
   const curCnt = parseInt(document.getElementById('cwSeats')?.value || '2', 10);
   const title = document.getElementById('cwTitle')?.value || '9월 고비사막 같이 가실 동행 구해요!';
   const tags = document.getElementById('cwTags')?.value || '2030 또래 · 비흡연 환영';
 
+  let newId = 'j_' + Date.now();
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.join.pro.php', {
+      _mode: 'add_member_join',
+      date_str: dateStr,
+      cur_pax: curCnt,
+      max_pax: 6,
+      title,
+      tags
+    });
+    if (res && !res.ok) {
+      if (res.requireLogin) {
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        return;
+      }
+      showToast(res.message || '동행글 등록에 실패했습니다.');
+      return;
+    }
+    if (res && res.id) newId = res.id;
+  }
+
   const seats = Array.from({ length: 6 }, (_, i) => (i < curCnt ? (i === 0 ? '방장(나)' : `확정${i + 1}`) : '빈좌석'));
+  const assetPrefix = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE)
+    ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
+    : '.';
 
   JOIN_ITEMS.unshift({
-    id: 'j_' + Date.now(),
+    id: newId,
     dateKey: '09-05',
     dateStr,
     regionKey: '고비',
@@ -1667,7 +1871,7 @@ function submitCompanionPost() {
     agency: '파트너 전담매칭 대기중',
     pcode: 'C3954-E9344-H0474',
     title,
-    img: './images/companion_team_hands.jpg',
+    img: `${assetPrefix}/images/companion_team_hands.jpg`,
     filled: curCnt,
     max: 6,
     seats,
@@ -1772,7 +1976,7 @@ function prefillRfqFromCourse(courseTitle, datesStr) {
   openModal('rfqWizardModal');
 }
 
-function submitCustomerWizard() {
+async function submitCustomerWizard() {
   const dates = document.getElementById('wDates')?.value || '8월 15일 ~ 8월 19일 (4박 5일)';
   const paxType = document.getElementById('wType')?.value || '단독투어 · 4명 확정';
   const course = document.getElementById('wCourse')?.value || '고비사막 핵심';
@@ -1782,10 +1986,36 @@ function submitCustomerWizard() {
   const isJoin = paxType.includes('동행조인');
   const regionTag = course.includes('홉스골') ? '홉스골' : '고비';
 
+  let newRfqId = 'r_' + Date.now();
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.rfq.pro.php', {
+      _mode: 'add',
+      dates,
+      pax_type: paxType,
+      course,
+      infra,
+      region_tag: regionTag,
+      memo
+    });
+    if (res && !res.ok) {
+      if (res.requireLogin) {
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        return;
+      }
+      showToast(res.message || '맞춤견적 등록 중 오류가 발생했습니다.');
+      return;
+    }
+    if (res && res.id) newRfqId = res.id;
+  }
+
+  const assetPrefix = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE)
+    ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
+    : '.';
+
   const newItem = {
-    id: 'r_' + Date.now(),
-    author: '나의 맞춤견적 요청',
-    avatar: '나',
+    id: newRfqId,
+    author: AUTH_STATE.userName ? `${AUTH_STATE.userName} 여행자님` : '나의 맞춤견적 요청',
+    avatar: AUTH_STATE.userName ? AUTH_STATE.userName.slice(0, 1) : '나',
     timeAgo: '방금 전 등록',
     cat: isJoin ? '동행조인' : '단독투어',
     regionTag,
@@ -1799,14 +2029,14 @@ function submitCustomerWizard() {
         agency: '부럽 몽골원정대 · AI 빠른추천',
         pid: 'boolub',
         pcode: regionTag === '홉스골' ? 'A9725-O5305-E2887' : 'C3954-E9344-H0474',
-        logo: './images/boolub_logo.png',
+        logo: `${assetPrefix}/images/boolub_logo.png`,
         badge: '견적 대기 없이 즉시 예약 가능',
         price4: regionTag === '홉스골' ? '1,400,000원' : '1,150,000원',
         price6: regionTag === '홉스골' ? '1,184,000원' : '990,000원',
         veh: infra,
         ger: '부럽 검증 정식 캠프 + USIM 혜택',
-        vehImg: './images/vehicle_fleet.jpg',
-        gerImg: './images/ger_interior.jpg',
+        vehImg: `${assetPrefix}/images/vehicle_fleet.jpg`,
+        gerImg: `${assetPrefix}/images/ger_interior.jpg`,
         comment: '파트너사 개별 맞춤 견적이 도착하는 동안, 조건이 가장 유사한 부럽 즉시확정 베스트 상품을 먼저 확인해보세요!'
       }
     ]
@@ -2171,8 +2401,8 @@ function openAgencyHomeModal(agId) {
             <strong style="font-size:14px; color:var(--bl-gray-900);">몽골한국관광협회(MOKTA) 공식 제휴 입점 진행 중인 회원사입니다.</strong>
             <p style="font-size:12.5px; color:var(--bl-gray-500); margin-top:2px;">사전 맞춤견적 문의를 남겨주시면 입점 완료 즉시 알림 및 동일 등급 파트너 견적을 함께 안내해 드립니다.</p>
           </div>
-          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="closeModal('agencyHomeModal'); switchSiteRole('partner'); switchPartnerTab('ptab-onboard', document.querySelectorAll('.bl-ptab-btn')[3]);">
-            파트너 입점 안내 보기
+          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="closeModal('agencyHomeModal'); openModal('partnerApplyModal');">
+            파트너 입점신청 안내
           </button>
         </div>
       `}
@@ -2205,16 +2435,25 @@ function renderEssentials() {
   `).join('');
 }
 
-/* ================= 파트너사 전용 센터 (4탭 실무 워크스페이스) ================= */
+/* ================= 파트너사 전용 센터 (파트너·마스터 권한 전용) ================= */
 function switchPartnerTab(paneId, btnEl) {
+  if (!canAccessPartnerConsole()) return;
+  if (paneId === 'ptab-onboard' && AUTH_STATE.role !== 'master') {
+    showToast('입점신청 승인 관리는 마스터 계정 전용 메뉴입니다.');
+    return;
+  }
   document.querySelectorAll('.bl-ptab-btn').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   document.querySelectorAll('.bl-ptab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
 }
 
 function changeActivePartnerAccount(val) {
+  if (AUTH_STATE.role !== 'master') {
+    showToast('본인 파트너 계정으로만 이용 가능합니다.');
+    return;
+  }
   activePartnerName = val;
-  showToast(`접속 계정이 [${val}] 파트너 모드로 전환되었습니다.`);
+  showToast(`[MASTER] 대행·관리 대상 파트너가 [${val}]로 전환되었습니다.`);
 }
 
 function toggleMongolianMode() {
@@ -2285,9 +2524,33 @@ function selectBidPhotoPair(el) {
   };
 }
 
-function sendPartnerQuoteLive() {
+function resolvePartnerMetaByName(partnerLabel) {
+  const assetPrefix = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE)
+    ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
+    : '.';
+  const logoMap = {
+    '부럽 몽골원정대': { logo: `${assetPrefix}/images/boolub_logo.png`, pid: 'boolub', pcode: 'T0950-Q2923-W2496' },
+    '노라투어': { logo: `${assetPrefix}/images/partners/anoratour.png`, pid: 'anoratour', pcode: 'V6003-W0388-Z1928' },
+    'BBM': { logo: `${assetPrefix}/images/partners/bbm0707.jpeg`, pid: 'bbm0707', pcode: 'A7468-J1235-Q7992' },
+    '하닥투어': { logo: `${assetPrefix}/images/partners/khadag.png`, pid: 'khadag', pcode: 'H7863-P9594-D9241' },
+    '스카이': { logo: `${assetPrefix}/images/partners/SKYTOURS.jpg`, pid: 'SKYTOURS', pcode: 'J8833-W9230-L2860' },
+    '밝은 미래': { logo: `${assetPrefix}/images/partners/Bftour.png`, pid: 'Bftour', pcode: 'E0711-V0341-Z7774' },
+    '양가투어': { logo: `${assetPrefix}/images/partners/YangGaTour.png`, pid: 'YangGaTour', pcode: 'E4890-B3318-G7233' },
+    '더블유아이티': { logo: `${assetPrefix}/images/partners/wit77777.png`, pid: 'wit77777', pcode: 'I3885-I4036-S5377' }
+  };
+  const matchedKey = Object.keys(logoMap).find(k => partnerLabel.includes(k));
+  return matchedKey
+    ? logoMap[matchedKey]
+    : { logo: `${assetPrefix}/images/boolub_logo.png`, pid: AUTH_STATE.partnerId || 'doittavel', pcode: 'G8231-V9289-H9933' };
+}
+
+async function sendPartnerQuoteLive() {
+  if (!canAccessPartnerConsole()) {
+    openModal('partnerApplyModal');
+    return;
+  }
   const rfqId = document.getElementById('pTargetRfq')?.value;
-  const target = RFQ_ITEMS.find(x => x.id === rfqId) || RFQ_ITEMS[0];
+  const target = RFQ_ITEMS.find(x => String(x.id) === String(rfqId)) || RFQ_ITEMS[0];
   if (!target) return;
 
   if (target.quotes.length >= 6) {
@@ -2295,16 +2558,33 @@ function sendPartnerQuoteLive() {
     return;
   }
 
-  const logoMap = {
-    '노라투어': { logo: './images/partners/anoratour.png', pid: 'anoratour', pcode: 'V6003-W0388-Z1928' },
-    'BBM': { logo: './images/partners/bbm0707.jpeg', pid: 'bbm0707', pcode: 'A7468-J1235-Q7992' },
-    '하닥투어': { logo: './images/partners/khadag.png', pid: 'khadag', pcode: 'H7863-P9594-D9241' },
-    '스카이': { logo: './images/partners/SKYTOURS.jpg', pid: 'SKYTOURS', pcode: 'J8833-W9230-L2860' },
-    '밝은 미래': { logo: './images/partners/Bftour.png', pid: 'Bftour', pcode: 'E0711-V0341-Z7774' },
-    '양가투어': { logo: './images/partners/YangGaTour.png', pid: 'YangGaTour', pcode: 'E4890-B3318-G7233' }
-  };
-  const matchedKey = Object.keys(logoMap).find(k => activePartnerName.includes(k));
-  const meta = matchedKey ? logoMap[matchedKey] : { logo: './images/boolub_logo.png', pid: 'doittavel', pcode: 'G8231-V9289-H9933' };
+  const meta = resolvePartnerMetaByName(activePartnerName);
+  const price4 = document.getElementById('pKrw4')?.value || '1,060,000원';
+  const price6 = document.getElementById('pKrw6')?.value || '840,000원';
+  const veh = document.getElementById('pVehName')?.value || '신형 스타렉스 4WD';
+  const ger = document.getElementById('pGerName')?.value || '온수 샤워 정식 캠프';
+  const comment = document.getElementById('pComment')?.value || '정성껏 모시겠습니다.';
+
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.bid.pro.php', {
+      _mode: 'add',
+      rfq_id: target.id,
+      target_pid: meta.pid,
+      target_agency: activePartnerName,
+      pcode: meta.pcode,
+      price4,
+      price6,
+      veh_name: veh,
+      ger_name: ger,
+      veh_img: selectedBidPhoto.veh,
+      ger_img: selectedBidPhoto.ger,
+      comment
+    });
+    if (res && !res.ok) {
+      showToast(res.message || '견적 발송 중 권한 또는 서버 오류가 발생했습니다.');
+      return;
+    }
+  }
 
   target.quotes.unshift({
     agency: activePartnerName,
@@ -2312,13 +2592,13 @@ function sendPartnerQuoteLive() {
     pcode: meta.pcode,
     logo: meta.logo,
     badge: '방금 도착한 파트너 실사견적',
-    price4: document.getElementById('pKrw4')?.value || '1,060,000원',
-    price6: document.getElementById('pKrw6')?.value || '840,000원',
-    veh: document.getElementById('pVehName')?.value || '신형 스타렉스 4WD',
-    ger: document.getElementById('pGerName')?.value || '온수 샤워 정식 캠프',
+    price4,
+    price6,
+    veh,
+    ger,
     vehImg: selectedBidPhoto.veh,
     gerImg: selectedBidPhoto.ger,
-    comment: document.getElementById('pComment')?.value || '정성껏 모시겠습니다.'
+    comment
   });
 
   renderRfqBoard();
@@ -2326,20 +2606,49 @@ function sendPartnerQuoteLive() {
   switchSiteRole('customer');
   scrollToSection('sec-rfq');
   setTimeout(() => openQuoteCompareModal(target.id), 450);
-  showToast(`[${activePartnerName}] 실사 견적서가 고객에게 즉시 발송되었습니다!`);
+  showToast(`[${activePartnerName}] 실사 견적서가 DB에 저장되어 고객에게 발송되었습니다!`);
 }
 
-function registerPartnerOpenJoin() {
+async function registerPartnerOpenJoin() {
+  if (!canAccessPartnerConsole()) {
+    openModal('partnerApplyModal');
+    return;
+  }
   const dateStr = document.getElementById('pjDate')?.value || '8.15(토) ~ 8.19(수) · 4박5일';
   const filled = parseInt(document.getElementById('pjSeats')?.value || '4', 10);
   const title = document.getElementById('pjTitle')?.value || '[출발확정] 고비사막 4박5일 오픈조인 잔여석 모집';
   const curPrice = document.getElementById('pjCurPrice')?.value || '890,000원';
   const fullPrice = document.getElementById('pjFullPrice')?.value || '780,000원';
+  const meta = resolvePartnerMetaByName(activePartnerName);
+
+  let newJoinId = 'pj_' + Date.now();
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.join.pro.php', {
+      _mode: 'add_partner_join',
+      target_pid: meta.pid,
+      target_agency: activePartnerName,
+      pcode: meta.pcode,
+      date_str: dateStr,
+      cur_pax: filled,
+      max_pax: 6,
+      title,
+      cur_price: curPrice,
+      full_price: fullPrice
+    });
+    if (res && !res.ok) {
+      showToast(res.message || '오픈조인 등록 실패');
+      return;
+    }
+    if (res && res.id) newJoinId = res.id;
+  }
 
   const seats = Array.from({ length: 6 }, (_, i) => (i < filled ? `확정고객${i + 1}` : '빈좌석'));
+  const assetPrefix = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE)
+    ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
+    : '.';
 
   JOIN_ITEMS.unshift({
-    id: 'pj_' + Date.now(),
+    id: newJoinId,
     dateKey: '08-15',
     dateStr,
     regionKey: '고비',
@@ -2350,9 +2659,9 @@ function registerPartnerOpenJoin() {
     subBadge: `${6 - filled}자리 남음!`,
     subCls: 'coral',
     agency: activePartnerName,
-    pcode: 'V6003-W0388-Z1928',
+    pcode: meta.pcode,
     title,
-    img: './images/gobi_camp_vans.jpg',
+    img: `${assetPrefix}/images/gobi_camp_vans.jpg`,
     filled,
     max: 6,
     seats,
@@ -2372,12 +2681,14 @@ function registerPartnerOpenJoin() {
 function selectShowcasePreset(el) {
   document.querySelectorAll('#showcasePresetPicker .bl-photo-pick').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
+  uploadedShowcaseFile = null;
   selectedShowcaseImg = el.getAttribute('data-img') || './images/khorkhog_feast.jpg';
 }
 
 function handleLocalPhotoUpload(e) {
   const file = e.target?.files?.[0];
   if (!file) return;
+  uploadedShowcaseFile = file;
   const reader = new FileReader();
   reader.onload = ev => {
     if (ev.target?.result) {
@@ -2388,21 +2699,50 @@ function handleLocalPhotoUpload(e) {
   reader.readAsDataURL(file);
 }
 
-function publishPartnerShowcase() {
+async function publishPartnerShowcase() {
+  if (!canAccessPartnerConsole()) {
+    openModal('partnerApplyModal');
+    return;
+  }
   const title = document.getElementById('pShowTitle')?.value || '오늘 캠프 현장 사진 공유합니다!';
   const cat = document.getElementById('pShowCat')?.value || '음식·불멍파티';
   const prodName = document.getElementById('pShowProd')?.value || '[몽골] 고비사막 시그니처 코스 4박5일';
+  const meta = resolvePartnerMetaByName(activePartnerName);
+
+  let finalImgUrl = selectedShowcaseImg;
+  let newStoryId = 's_' + Date.now();
+
+  if (API_BASE) {
+    const fd = new FormData();
+    fd.append('_mode', 'add');
+    fd.append('target_pid', meta.pid);
+    fd.append('target_agency', activePartnerName);
+    fd.append('pcode', meta.pcode);
+    fd.append('prod_name', prodName);
+    fd.append('cat', cat);
+    fd.append('title', title);
+    fd.append('preset_img', selectedShowcaseImg.startsWith('data:') ? '' : selectedShowcaseImg);
+    if (uploadedShowcaseFile) fd.append('photo_file', uploadedShowcaseFile);
+
+    const res = await moktaApiCall('ajax.mokta.story.pro.php', fd, true);
+    if (res && !res.ok) {
+      showToast(res.message || '현장 스토리 등록에 실패했습니다.');
+      return;
+    }
+    if (res && res.mediaUrl) finalImgUrl = res.mediaUrl;
+    if (res && res.id) newStoryId = res.id;
+  }
 
   SHOWCASE_ITEMS.unshift({
-    id: 's_' + Date.now(),
+    id: newStoryId,
     cat,
     agency: activePartnerName,
-    pcode: 'V6003-W0388-Z1928',
+    pcode: meta.pcode,
     prodName,
     price: '쿠폰특가 적용',
     badge: '방금 올라온 LIVE',
     title,
-    img: selectedShowcaseImg,
+    img: finalImgUrl,
     tip: `${activePartnerName} 현지 매니저가 방금 직접 촬영해 업로드한 최신 현장 컨디션입니다.`
   });
 
@@ -2413,16 +2753,104 @@ function publishPartnerShowcase() {
   showToast('현장 LIVE 스토리가 게시되어 판매 상품과 자동 연결되었습니다!');
 }
 
-function submitMoktaOnboarding() {
-  const comp = (document.getElementById('obCompany')?.value || '').trim();
-  if (!comp) {
-    showToast('입점 신청하실 여행사명을 입력해 주세요.');
+/* ================= 비로그인/일반고객 화면: 파트너 입점신청 모달 & 마스터 승인 관리 ================= */
+async function submitPartnerApplyModal() {
+  const company = (document.getElementById('paCompany')?.value || '').trim();
+  const moktaYn = document.getElementById('paMoktaYn')?.value || 'Y';
+  const contact = (document.getElementById('paContact')?.value || '').trim();
+  const memberId = (document.getElementById('paMemberId')?.value || '').trim();
+  const desc = (document.getElementById('paDesc')?.value || '').trim();
+
+  if (!company || !contact) {
+    showToast('여행사명과 담당자 연락처(또는 카톡ID)를 입력해 주세요.');
     return;
   }
-  showToast(`[${comp}] MOKTA 패스트트랙 입점 신청이 접수되었습니다! 부럽 제휴팀에서 24시간 내 연락드립니다.`);
-  document.getElementById('obCompany').value = '';
-  document.getElementById('obContact').value = '';
-  document.getElementById('obDesc').value = '';
+
+  let newObId = 'ob_' + Date.now();
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.onboard.pro.php', {
+      _mode: 'apply',
+      company,
+      mokta_yn: moktaYn,
+      contact,
+      member_id: memberId,
+      desc
+    });
+    if (res && !res.ok) {
+      showToast(res.message || '입점 신청 접수 중 오류가 발생했습니다.');
+      return;
+    }
+    if (res && res.id) newObId = res.id;
+  }
+
+  ONBOARD_ITEMS.unshift({
+    id: newObId,
+    company,
+    moktaYn,
+    contact,
+    memberId: memberId || '-',
+    desc: desc || '상세 소개 추후 제출',
+    status: 'pending',
+    rdate: '방금 전 접수'
+  });
+
+  const onboardCnt = document.getElementById('ptabOnboardCnt');
+  if (onboardCnt) onboardCnt.textContent = String(ONBOARD_ITEMS.filter(x => x.status === 'pending').length);
+  if (AUTH_STATE.role === 'master') renderMasterOnboardList();
+
+  document.getElementById('paCompany').value = '';
+  document.getElementById('paContact').value = '';
+  document.getElementById('paMemberId').value = '';
+  document.getElementById('paDesc').value = '';
+
+  closeModal('partnerApplyModal');
+  showToast(`[${company}] 파트너 입점 심사 신청이 접수되었습니다! 마스터 관리자 확인 후 파트너사 센터 권한이 부여됩니다.`);
+}
+
+function renderMasterOnboardList() {
+  const box = document.getElementById('masterOnboardList');
+  if (!box) return;
+  if (!ONBOARD_ITEMS.length) {
+    box.innerHTML = `<div style="padding:20px; text-align:center; color:var(--bl-gray-500);">접수된 신규 입점 신청 내역이 없습니다.</div>`;
+    return;
+  }
+  box.innerHTML = ONBOARD_ITEMS.map(ob => `
+    <div class="bl-onboard-item">
+      <div style="flex:1; min-width:240px;">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
+          <span class="bl-mokta-tag">${ob.moktaYn === 'Y' ? 'MOKTA 정회원' : '일반 전문여행사'}</span>
+          <strong style="font-size:15px; color:var(--bl-gray-900);">${ob.company}</strong>
+          <span style="font-size:12px; color:var(--bl-gray-400);">· ${ob.rdate}</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--bl-gray-700);">연락처: <strong>${ob.contact}</strong> · 연동 희망 아이디: <strong>${ob.memberId}</strong></div>
+        <div style="font-size:12.5px; color:var(--bl-gray-500); margin-top:3px;">${ob.desc}</div>
+      </div>
+      <div>
+        ${ob.status === 'approved'
+          ? `<span class="bl-locked-partner-pill"><i class="xi-check"></i> 입점 및 권한 승인완료</span>`
+          : `<button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="approvePartnerOnboard('${ob.id}')"><i class="xi-check"></i> 파트너 승인·권한부여</button>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function approvePartnerOnboard(obId) {
+  if (AUTH_STATE.role !== 'master') return;
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.onboard.pro.php', { _mode: 'approve', ob_id: obId });
+    if (res && !res.ok) {
+      showToast(res.message || '승인 처리 중 오류가 발생했습니다.');
+      return;
+    }
+  }
+  const target = ONBOARD_ITEMS.find(x => String(x.id) === String(obId));
+  if (target) {
+    target.status = 'approved';
+    showToast(`[${target.company}] 파트너 입점 승인 및 파트너사 센터 접근 권한 부여가 완료되었습니다.`);
+  }
+  const onboardCnt = document.getElementById('ptabOnboardCnt');
+  if (onboardCnt) onboardCnt.textContent = String(ONBOARD_ITEMS.filter(x => x.status === 'pending').length);
+  renderMasterOnboardList();
 }
 
 /* ================= 가로 슬라이더 마우스 드래그 및 호버 제어 ================= */
@@ -2459,7 +2887,7 @@ function bindPartnerSliderEvents() {
   });
 }
 
-/* ================= 초기 구동 ================= */
+/* ================= 백엔드 DB 초기 데이터 하이드레이션 & 초기 구동 ================= */
 function applyExternalAssetBase(obj, base) {
   if (!obj || typeof obj !== 'object') return;
   if (Array.isArray(obj)) {
@@ -2482,6 +2910,44 @@ function applyExternalAssetBase(obj, base) {
   }
 }
 
+async function hydrateFromLiveBackend() {
+  if (!API_BASE) return;
+  try {
+    const res = await fetch(`${API_BASE}/ajax.mokta.init.php`, { credentials: 'same-origin' });
+    const data = await res.json();
+    if (!data || !data.ok) return;
+
+    if (data.auth) {
+      AUTH_STATE = Object.assign(AUTH_STATE, data.auth, { isLiveCms: true });
+    }
+    if (Array.isArray(data.products) && data.products.length) {
+      DIRECT_PRODUCTS.splice(0, DIRECT_PRODUCTS.length, ...data.products);
+    }
+    if (Array.isArray(data.rfqs) && data.rfqs.length) {
+      RFQ_ITEMS.splice(0, RFQ_ITEMS.length, ...data.rfqs);
+    }
+    if (Array.isArray(data.joins) && data.joins.length) {
+      JOIN_ITEMS.splice(0, JOIN_ITEMS.length, ...data.joins);
+    }
+    if (Array.isArray(data.stories) && data.stories.length) {
+      SHOWCASE_ITEMS.splice(0, SHOWCASE_ITEMS.length, ...data.stories);
+    }
+    if (Array.isArray(data.onboardList)) {
+      ONBOARD_ITEMS = data.onboardList;
+    }
+
+    applyAuthUi();
+    renderStoreProducts();
+    renderJoinCards();
+    renderRfqBoard();
+    renderShowcase();
+    renderPartnerSection();
+    populatePartnerRfqSelect();
+  } catch (err) {
+    console.warn('[MOKTA Init Fallback]', err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE) {
     const base = window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '');
@@ -2490,6 +2956,7 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedShowcaseImg = base + selectedShowcaseImg.slice(1);
     }
   }
+  applyAuthUi();
   renderHeroBanners();
   renderStoreProducts();
   renderJoinCalendar();
@@ -2501,4 +2968,5 @@ document.addEventListener('DOMContentLoaded', () => {
   populatePartnerRfqSelect();
   bindPartnerSliderEvents();
   startPartnerAutoSlide();
+  hydrateFromLiveBackend();
 });

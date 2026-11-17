@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
-  <link rel="stylesheet" href="./styles.css?v=bl_mokta_4" />
+  <link rel="stylesheet" href="./styles.css?v=bl_mokta_5" />
 </head>
 <body id="top">
 
@@ -31,11 +31,16 @@
         <span>부럽 공식 입점 파트너사 &amp; 몽골한국관광협회(MOKTA) 제휴 전용관 · 미확정 시 100% 환불 보장</span>
       </div>
       <div class="bl-notice-right">
-        <a href="https://www.boolub.com/?pn=pages.view&amp;type=pages&amp;data=mgexpedition" target="_blank" rel="noopener">부럽원정대 바로가기</a>
+        <!-- 데모 환경 전용 세션 시뮬레이터 (본 사이트 탑재 시 자동 숨김, 서버 PHP 세션으로 자동 판별) -->
+        <div class="bl-auth-sim-bar" id="demoAuthSimBar" title="실제 본 사이트에서는 로그인 세션(일반/파트너/마스터)에 따라 자동 적용됩니다">
+          <span style="font-size:11px; color:var(--bl-gray-500); padding-left:4px;">권한 미리보기:</span>
+          <button type="button" class="bl-auth-sim-btn active" data-sim-role="guest" onclick="simulateAuthRole('guest')">미로그인·일반고객</button>
+          <button type="button" class="bl-auth-sim-btn" data-sim-role="partner" onclick="simulateAuthRole('partner')">입점파트너 로그인</button>
+          <button type="button" class="bl-auth-sim-btn" data-sim-role="master" onclick="simulateAuthRole('master')">마스터 계정</button>
+        </div>
+        <a href="https://www.boolub.com/?pn=pages.view&amp;type=pages&amp;data=mgexpedition" target="_blank" rel="noopener">부럽원정대</a>
         <span>·</span>
         <a href="https://www.boolub.com/?pn=product.list&amp;cuid=769" target="_blank" rel="noopener">몽골 전체상품(51)</a>
-        <span>·</span>
-        <span>고객센터 <strong>1660-3980</strong></span>
       </div>
     </div>
   </div>
@@ -61,12 +66,18 @@
       </div>
 
       <div class="header-actions">
-        <div class="role-switch-pill" role="tablist" aria-label="이용자 및 파트너사 전환">
+        <!-- [비로그인 / 일반 로그인 고객 전용 노출] 파트너 입점신청 버튼 -->
+        <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
+          <i class="xi-briefcase"></i> 파트너 입점신청
+        </button>
+
+        <!-- [로그인한 입점 파트너 계정 & 마스터 계정 전용 노출] 파트너사 센터 스위치 -->
+        <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist" aria-label="이용자 및 파트너사 전환">
           <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
             여행자 홈
           </button>
           <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
-            파트너사 센터 <span class="role-count" id="headerBidBadge">4</span>
+            <span id="rolePartnerBtnLabel">파트너사 센터</span> <span class="role-count" id="headerBidBadge">4</span>
           </button>
         </div>
 
@@ -485,31 +496,43 @@
   </main>
 
   <!-- =========================================================================
-       [2] 파트너사 전용 센터 (현 입점 파트너 + 신규 MOKTA 회원사 실무 최적 UX)
+       [2] 파트너사 전용 센터 (로그인한 입점 파트너 계정 & 마스터 계정 전용 오픈)
   ========================================================================= -->
   <section class="partner-view-wrap" id="partnerWorkspace">
     <div class="bl-container">
       <div class="partner-top-banner">
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap;">
-            <span class="bl-mokta-tag">PARTNER CONSOLE</span>
-            <label for="activePartnerSelect" style="font-size:12.5px; font-weight:700; color:var(--bl-gray-700);">접속 파트너사 선택:</label>
-            <select id="activePartnerSelect" class="bl-select" style="width:auto; height:32px; padding:0 10px; font-size:12.5px; font-weight:700;" onchange="changeActivePartnerAccount(this.value)">
-              <option value="노라투어 (NORA TOUR)">노라투어 (현재 입점 · 17개 상품)</option>
-              <option value="BBM TOUR (비비엠투어)">BBM TOUR (현재 입점 · 17개 상품)</option>
-              <option value="하닥투어 (KHADAG TOUR)">하닥투어 (현재 입점 · 4개 상품)</option>
-              <option value="스카이 투어 몽골 (SKY TOURS)">스카이 투어 몽골 (현재 입점 · 4개 상품)</option>
-              <option value="밝은 미래 여행 (BRIGHT FUTURE)">밝은 미래 여행 (현재 입점 · 2개 상품)</option>
-              <option value="(주)두잇트래블">(주)두잇트래블 (현재 입점 · 3개 상품)</option>
-              <option value="양가투어 (YangGa Friends)">양가투어 (현재 입점 · 홉스골 특화)</option>
-            </select>
+            <span class="bl-mokta-tag" id="partnerConsoleRoleTag">PARTNER CONSOLE</span>
+
+            <!-- 입점 파트너 로그인 시 본인 계정 고정 표시 -->
+            <span class="bl-locked-partner-pill" id="partnerIdentityLockedBadge">
+              <i class="xi-shield-checked"></i> <span id="lockedPartnerNameTxt">노라투어 (anoratour) · 공식 입점 파트너</span>
+            </span>
+
+            <!-- 마스터 계정 로그인 시에만 전체 파트너 대행 선택 드롭다운 노출 -->
+            <div id="masterPartnerSelectWrap" style="display:none; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span class="bl-master-badge"><i class="xi-crown"></i> MASTER 권한</span>
+              <label for="activePartnerSelect" style="font-size:12.5px; font-weight:700; color:var(--bl-gray-700);">대행·관리 파트너 선택:</label>
+              <select id="activePartnerSelect" class="bl-select" style="width:auto; height:32px; padding:0 10px; font-size:12.5px; font-weight:700;" onchange="changeActivePartnerAccount(this.value)">
+                <option value="부럽 몽골원정대 (직영)">부럽 몽골원정대 (본사 직영 · boolub)</option>
+                <option value="노라투어 (NORA TOUR)" selected>노라투어 (anoratour · 17개 상품)</option>
+                <option value="BBM TOUR (비비엠투어)">BBM TOUR (bbm0707 · 17개 상품)</option>
+                <option value="하닥투어 (KHADAG TOUR)">하닥투어 (khadag · 4개 상품)</option>
+                <option value="스카이 투어 몽골 (SKY TOURS)">스카이 투어 몽골 (SKYTOURS · 4개 상품)</option>
+                <option value="밝은 미래 여행 (BRIGHT FUTURE)">밝은 미래 여행 (Bftour · 2개 상품)</option>
+                <option value="(주)두잇트래블">(주)두잇트래블 (doittavel · 3개 상품)</option>
+                <option value="양가투어 (YangGa Friends)">양가투어 (YangGaTour · 홉스골 특화)</option>
+                <option value="더블유아이티 (WIT)">더블유아이티 (wit77777 · 공항픽업)</option>
+              </select>
+            </div>
           </div>
           <h2 style="font-size:20px; font-weight:800; color:var(--bl-gray-900);">
-            부럽 × MOKTA 파트너사 업무 라운지
+            부럽 × MOKTA 파트너사 전용 업무 라운지
             <span class="mn-txt">/ Түншийн ажлын хэсэг</span>
           </h2>
           <p style="font-size:13px; color:var(--bl-gray-500); margin-top:3px;">
-            고객 맞춤견적 제안, 차량 잔여석 오픈조인 모집, 현장 사진 홍보, 신규 MOKTA 회원사 입점 신청을 한 곳에서 편리하게 처리하세요.
+            승인된 입점 파트너 및 마스터 관리자 전용 공간입니다. 고객 맞춤견적 발송, 출발확정 오픈조인 등록, 현장 스토리 홍보가 실시간 DB와 연동됩니다.
           </p>
         </div>
 
@@ -526,7 +549,7 @@
         </div>
       </div>
 
-      <!-- 파트너사 실무 4탭 메뉴 -->
+      <!-- 파트너사 실무 탭 메뉴 (4번 탭은 마스터 계정 전용 노출) -->
       <div class="bl-ptab-nav">
         <button type="button" class="bl-ptab-btn active" onclick="switchPartnerTab('ptab-quote', this)">
           1. 고객 견적 요청함 (<span id="ptabQuoteCnt">4</span>)
@@ -537,8 +560,8 @@
         <button type="button" class="bl-ptab-btn" onclick="switchPartnerTab('ptab-media', this)">
           3. 현장 스토리·상품 홍보
         </button>
-        <button type="button" class="bl-ptab-btn" onclick="switchPartnerTab('ptab-onboard', this)">
-          4. MOKTA 신규 회원사 입점신청
+        <button type="button" class="bl-ptab-btn" id="ptabMasterBtn" style="display:none;" onclick="switchPartnerTab('ptab-onboard', this)">
+          <i class="xi-crown" style="color:#ffb800;"></i> 4. [마스터 전용] 파트너 입점신청 관리 (<span id="ptabOnboardCnt">2</span>)
         </button>
       </div>
 
@@ -731,31 +754,18 @@
         </div>
       </div>
 
-      <!-- 파트너 탭 4: MOKTA 협회 회원사 신규 입점 신청 -->
+      <!-- 파트너 탭 4: [마스터 계정 전용] 파트너 입점신청 관리 및 승인 -->
       <div class="bl-ptab-pane" id="ptab-onboard">
-        <div class="partner-box" style="max-width:680px;">
-          <span class="bl-mokta-tag" style="margin-bottom:8px;">MOKTA 정회원 전용 패스트트랙</span>
-          <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">몽골한국관광협회(MOKTA) 회원사 신규 입점 신청</h3>
-          <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
-            MOKTA 소속 회원사는 입점비 무료 혜택과 함께 전용 미니홈·맞춤견적 컨택 권한·부럽 투어 상품 등록을 원스톱으로 지원받으실 수 있습니다.
+        <div class="partner-box">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span class="bl-master-badge"><i class="xi-crown"></i> MASTER ONLY</span>
+            <span class="bl-mokta-tag">DB 테이블: od_mokta_onboard 실시간 연동</span>
+          </div>
+          <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">신규 파트너 &amp; MOKTA 회원사 입점 신청 관리</h3>
+          <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:14px;">
+            비로그인·일반 고객 화면 상단의 <strong>[파트너 입점신청]</strong> 버튼을 통해 접수된 내역입니다. 마스터 승인 시 입점 파트너(`cp_id`) 계정 매핑 및 파트너사 센터 접근 권한이 즉시 부여됩니다.
           </p>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="bl-field">
-              <label>여행사명 (국문/영문)</label>
-              <input type="text" class="bl-input" id="obCompany" placeholder="예: 어드벤처 몽골 투어" />
-            </div>
-            <div class="bl-field">
-              <label>담당자 연락처 / 카카오톡 ID</label>
-              <input type="text" class="bl-input" id="obContact" placeholder="예: 010-0000-0000 / 카톡ID" />
-            </div>
-          </div>
-          <div class="bl-field">
-            <label>주력 운영 지역 및 보유 차량·캠프 소개</label>
-            <textarea class="bl-textarea" id="obDesc" rows="3" placeholder="예: 남고비·중부 전문 / 신형 스타렉스 8대·푸르공 10대 직영 / 한국어 가이드 12명 상주"></textarea>
-          </div>
-          <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="submitMoktaOnboarding()">
-            MOKTA 공식 파트너 입점 신청하기
-          </button>
+          <div class="bl-onboard-list" id="masterOnboardList"></div>
         </div>
       </div>
     </div>
@@ -964,8 +974,67 @@
     </div>
   </div>
 
+  <!-- ================= 모달 8: 파트너 입점신청 모달 (미로그인·일반고객 화면 노출용) ================= -->
+  <div class="bl-modal-dim" id="partnerApplyModal" onclick="bgClose(event, 'partnerApplyModal')">
+    <div class="bl-modal sm">
+      <div class="bl-modal-head">
+        <h4>부럽 × MOKTA 공식 파트너 입점 신청</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('partnerApplyModal')"><i class="xi-close"></i></button>
+      </div>
+      <div class="bl-modal-body">
+        <div style="padding:12px 14px; border-radius:10px; background:var(--bl-point-bg); border:1px solid var(--bl-point-line); margin-bottom:16px; font-size:12.5px; color:var(--bl-gray-700); line-height:1.55;">
+          <strong style="color:var(--bl-point-text); display:block; margin-bottom:2px;"><i class="xi-shield-checked"></i> 파트너사 센터 안내</strong>
+          파트너사 전용 라운지는 <strong>승인된 입점 파트너 계정 및 마스터 관리자</strong> 로그인 시에만 활성화됩니다. 신규 입점을 희망하시는 몽골 여행사 및 MOKTA 회원사는 아래 신청서를 남겨주세요.
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="bl-field">
+            <label>여행사명 (국문/영문) *</label>
+            <input type="text" class="bl-input" id="paCompany" placeholder="예: 어드벤처 몽골 투어" />
+          </div>
+          <div class="bl-field">
+            <label>협회 구분</label>
+            <select class="bl-select" id="paMoktaYn">
+              <option value="Y">몽골한국관광협회(MOKTA) 정회원</option>
+              <option value="N">일반 몽골 전문 여행사·랜드사</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="bl-field">
+            <label>담당자 연락처 / 카카오톡 ID *</label>
+            <input type="text" class="bl-input" id="paContact" placeholder="010-0000-0000 / 카톡ID" />
+          </div>
+          <div class="bl-field">
+            <label>부럽 가입 아이디 (선택 · 권한연동용)</label>
+            <input type="text" class="bl-input" id="paMemberId" placeholder="예: adventure_mn" />
+          </div>
+        </div>
+
+        <div class="bl-field">
+          <label>주력 운영 코스 및 보유 차량·캠프 소개</label>
+          <textarea class="bl-textarea" id="paDesc" rows="3" placeholder="예: 남고비·중부 전문 / 신형 스타렉스 8대·푸르공 10대 직영 / 온수 게르 캠프 제휴"></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:8px;">
+          <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="submitPartnerApplyModal()">
+            파트너 입점 심사 신청하기
+          </button>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:6px; font-size:12px; color:var(--bl-gray-500);">
+            <span>이미 승인된 입점 파트너이신가요?</span>
+            <div style="display:flex; gap:10px;">
+              <a href="https://www.boolub.com/subAdmin/" target="_blank" rel="noopener" style="color:var(--bl-point-text); font-weight:700;">입점사 관리자 로그인 ↗</a>
+              <a href="https://www.boolub.com/?pn=service.partner.form" target="_blank" rel="noopener" style="color:var(--bl-gray-700); font-weight:600;">부럽 통합 제휴폼 ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="bl-toast" id="toastEl"></div>
 
-  <script src="./app.js?v=bl_mokta_4"></script>
+  <script src="./app.js?v=bl_mokta_5"></script>
 </body>
 </html>
