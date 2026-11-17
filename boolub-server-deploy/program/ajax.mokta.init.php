@@ -1,6 +1,6 @@
 <?php
 /**
- * 전용관 초기 데이터 하이드레이션 API (실시간 DB 조회)
+ * 전용관 초기 데이터 하이드레이션 API (실시간 DB 조회 + 파트너 커스텀 미니홈 연동)
  * 서버 배포 위치: /program/ajax.mokta.init.php
  */
 include_once(dirname(__FILE__) . '/mokta.inc.php');
@@ -33,11 +33,12 @@ if (!empty($rfqRows)) {
     foreach ($bidRows as $b) {
         $k = (int)$b['mb_mr_uid'];
         if (!isset($bidsByRfq[$k])) $bidsByRfq[$k] = array();
+        $logoPath = $b['mb_logo'] !== '' ? str_replace('boolub_logo.png', 'mokta_logo.png', $b['mb_logo']) : '/customized/mokta/images/mokta_logo.png';
         $bidsByRfq[$k][] = array(
             'agency'  => $b['mb_agency'],
             'pid'     => $b['mb_pid'],
             'pcode'   => $b['mb_pcode'],
-            'logo'    => $b['mb_logo'] !== '' ? $b['mb_logo'] : '/customized/mokta/images/mokta_logo.png',
+            'logo'    => $logoPath,
             'badge'   => $b['mb_badge'],
             'price4'  => $b['mb_price4'],
             'price6'  => $b['mb_price6'],
@@ -78,7 +79,7 @@ $joinRows = mokta_q_all("
     FROM smart_mokta_join
     WHERE mj_view_yn = 'Y'
     ORDER BY mj_uid DESC
-    LIMIT 30
+    LIMIT 60
 ");
 $joins = array();
 foreach ($joinRows as $j) {
@@ -133,7 +134,47 @@ foreach ($storyRows as $s) {
     );
 }
 
-/* 4. 마스터 계정일 때만 신규 입점신청 목록(smart_mokta_onboard) 반환 */
+/* 4. 파트너사 커스텀 브랜드 미니홈 프로필(smart_mokta_partner_profile) 로드 */
+mokta_q_exec("
+    CREATE TABLE IF NOT EXISTS `smart_mokta_partner_profile` (
+      `pp_pid` VARCHAR(50) NOT NULL,
+      `pp_name` VARCHAR(100) NOT NULL DEFAULT '',
+      `pp_slogan` VARCHAR(200) NOT NULL DEFAULT '',
+      `pp_spec_badge` VARCHAR(80) NOT NULL DEFAULT '',
+      `pp_fleet` VARCHAR(160) NOT NULL DEFAULT '',
+      `pp_camp` VARCHAR(160) NOT NULL DEFAULT '',
+      `pp_career` VARCHAR(160) NOT NULL DEFAULT '',
+      `pp_desc` TEXT DEFAULT NULL,
+      `pp_perks_json` TEXT DEFAULT NULL,
+      `pp_cover_img` VARCHAR(255) NOT NULL DEFAULT '',
+      `pp_photos_json` TEXT DEFAULT NULL,
+      `pp_video_url` VARCHAR(255) NOT NULL DEFAULT '',
+      `pp_updated_by` VARCHAR(60) NOT NULL DEFAULT '',
+      `pp_udate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      PRIMARY KEY (`pp_pid`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+");
+$profRows = mokta_q_all("SELECT * FROM smart_mokta_partner_profile");
+$partnerProfiles = array();
+foreach ($profRows as $pr) {
+    $perks = json_decode((string)$pr['pp_perks_json'], true);
+    $photos = json_decode((string)$pr['pp_photos_json'], true);
+    $partnerProfiles[$pr['pp_pid']] = array(
+        'pid'       => $pr['pp_pid'],
+        'slogan'    => $pr['pp_slogan'],
+        'specBadge' => $pr['pp_spec_badge'],
+        'fleet'     => $pr['pp_fleet'],
+        'camp'      => $pr['pp_camp'],
+        'career'    => $pr['pp_career'],
+        'desc'      => $pr['pp_desc'],
+        'perks'     => is_array($perks) ? $perks : array(),
+        'coverImg'  => $pr['pp_cover_img'],
+        'photos'    => is_array($photos) ? $photos : array(),
+        'videoUrl'  => $pr['pp_video_url']
+    );
+}
+
+/* 5. 마스터 계정일 때만 신규 입점신청 목록(smart_mokta_onboard) 반환 */
 $onboardList = null;
 if ($auth['role'] === 'master') {
     $obRows = mokta_q_all("
@@ -158,10 +199,11 @@ if ($auth['role'] === 'master') {
 }
 
 mokta_json(array(
-    'ok'          => true,
-    'auth'        => $auth,
-    'rfqs'        => $rfqs,
-    'joins'       => $joins,
-    'stories'     => $stories,
-    'onboardList' => $onboardList
+    'ok'              => true,
+    'auth'            => $auth,
+    'rfqs'            => $rfqs,
+    'joins'           => $joins,
+    'stories'         => $stories,
+    'partnerProfiles' => $partnerProfiles,
+    'onboardList'     => $onboardList
 ));
