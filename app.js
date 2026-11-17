@@ -5433,6 +5433,7 @@ function filterMagazine(cat, btnEl) {
   if (row) row.querySelectorAll('.bl-chip').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   renderMagazines();
+  document.getElementById('magazineGrid')?.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
 function renderMagazines() {

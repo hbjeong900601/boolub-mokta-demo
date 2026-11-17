@@ -5640,9 +5640,57 @@ body.is-live-cms .bl-auth-sim-bar {
   .ts-store-price { font-size: 15px; }
   .ts-store-disc { font-size: 13.5px; }
 
-  /* 8. 기타 섹션 & 시네마틱 가로 배너 모바일 최적화 */
-  .bl-mokta-mag-grid, .bl-rfq-grid, .ts-helper-2col, .bl-mh-spec-grid, .partner-kpi-strip, .ts-apply-grid {
+  /* 8. 매거진 가로 슬라이더 & 기타 섹션 · 시네마틱 가로 배너 모바일 최적화 */
+  .bl-rfq-grid, .ts-helper-2col, .bl-mh-spec-grid, .partner-kpi-strip, .ts-apply-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .bl-mokta-mag-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 2px 16px 12px;
+    scrollbar-width: none;
+  }
+  .bl-mokta-mag-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .bl-mokta-mag-grid > div {
+    flex: 1 1 100%;
+  }
+  .bl-mokta-mag-card {
+    flex: 0 0 74%;
+    max-width: 276px;
+    min-width: 248px;
+    aspect-ratio: 3 / 3.8;
+    border-radius: 16px;
+    scroll-snap-align: start;
+  }
+  .bl-mokta-mag-body {
+    padding: 18px 16px 16px;
+  }
+  .bl-mokta-mag-badges {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .bl-mokta-mag-city,
+  .bl-mokta-mag-theme {
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+  .bl-mokta-mag-title {
+    font-size: 16.5px;
+    line-height: 1.36;
+    -webkit-line-clamp: 2;
+  }
+  .bl-mokta-mag-meta {
+    margin-top: 7px;
+    font-size: 11px;
   }
   .bl-top-notice-inner .bl-notice-right { display: none; }
   .bl-partner-card { flex: 0 0 86%; min-width: 268px; }

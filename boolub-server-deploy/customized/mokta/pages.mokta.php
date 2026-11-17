@@ -30,7 +30,7 @@ if (!$MOKTA_PUBLIC_OPEN && $moktaAuth['role'] !== 'partner' && $moktaAuth['role'
   }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
-<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_21" />
+<link rel="stylesheet" href="/customized/mokta/mokta.css?v=bl_mokta_22" />
 
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/customized/mokta/mokta_body.inc.html'); ?>
 
@@ -39,4 +39,4 @@ if (!$MOKTA_PUBLIC_OPEN && $moktaAuth['role'] !== 'partner' && $moktaAuth['role'
   window.BOOLUB_MOKTA_API_BASE   = '/program';
   window.BOOLUB_MOKTA_AUTH       = <?php echo json_encode($moktaAuth, JSON_UNESCAPED_UNICODE); ?>;
 </script>
-<script src="/customized/mokta/mokta.js?v=bl_mokta_21"></script>
+<script src="/customized/mokta/mokta.js?v=bl_mokta_22"></script>

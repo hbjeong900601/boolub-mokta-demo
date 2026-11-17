@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* =========================================================================
-   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_21)
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_22)
    - 본 페이지(data=mj, data=mokta)에서는 부럽 기본 상단 헤더(.sc_Header) 비노출 + MOKTA 전용 스티키 헤더 노출
    - 3-Tier CSS Specificity Guard + 30개 파트너사 도트 캘린더 + 신뢰 보증 섹션 + 미니홈 커스터마이저
    ========================================================================= */
@@ -6571,13 +6571,69 @@ body.partner-mode #bl-mokta-cms-wrap #customerSubNav {
 
 
   
-  #bl-mokta-cms-wrap .bl-mokta-mag-grid,
-#bl-mokta-cms-wrap .bl-rfq-grid,
+  #bl-mokta-cms-wrap .bl-rfq-grid,
 #bl-mokta-cms-wrap .ts-helper-2col,
 #bl-mokta-cms-wrap .bl-mh-spec-grid,
 #bl-mokta-cms-wrap .partner-kpi-strip,
 #bl-mokta-cms-wrap .ts-apply-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 2px 16px 12px;
+    scrollbar-width: none;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-grid > div {
+    flex: 1 1 100%;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-card {
+    flex: 0 0 74%;
+    max-width: 276px;
+    min-width: 248px;
+    aspect-ratio: 3 / 3.8;
+    border-radius: 16px;
+    scroll-snap-align: start;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-body {
+    padding: 18px 16px 16px;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-badges {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-city,
+#bl-mokta-cms-wrap .bl-mokta-mag-theme {
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-title {
+    font-size: 16.5px;
+    line-height: 1.36;
+    -webkit-line-clamp: 2;
+  }
+
+  #bl-mokta-cms-wrap .bl-mokta-mag-meta {
+    margin-top: 7px;
+    font-size: 11px;
   }
 
   #bl-mokta-cms-wrap .bl-top-notice-inner .bl-notice-right { display: none; }
