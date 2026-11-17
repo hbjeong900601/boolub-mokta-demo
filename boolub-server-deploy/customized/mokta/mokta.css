@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* =========================================================================
-   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_18)
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_19)
    - 본 페이지(data=mj, data=mokta)에서는 부럽 기본 상단 헤더(.sc_Header) 비노출 + MOKTA 전용 스티키 헤더 노출
    - 3-Tier CSS Specificity Guard + 30개 파트너사 도트 캘린더 + 신뢰 보증 섹션 + 미니홈 커스터마이저
    ========================================================================= */
@@ -5641,6 +5641,12 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 }
 
 
+
+#bl-mokta-cms-wrap .bl-select {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 #bl-mokta-cms-wrap .mob-short-txt {
   display: none;

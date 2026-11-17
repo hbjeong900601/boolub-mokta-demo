@@ -4861,6 +4861,11 @@ body.is-live-cms .bl-auth-sim-bar {
 }
 
 /* v18 모바일·PC 공통 시맨틱 그리드 & 텍스트 반응형 헬퍼 */
+.bl-select {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .mob-short-txt {
   display: none;
 }

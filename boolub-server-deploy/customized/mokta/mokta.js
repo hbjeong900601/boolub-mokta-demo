@@ -3201,17 +3201,21 @@ function ensureDefaultJoinComments(item) {
 function populateCompanionProductSelect(defaultPcode = '') {
   const sel = document.getElementById('cwLinkedPcode');
   if (!sel) return;
+  const fmtOptTitle = p => {
+    const clean = String(p.title || '').replace(/^\[[^\]]+\]\s*/g, '');
+    return clean.length > 22 ? clean.slice(0, 22) + '…' : clean;
+  };
   const topChoices = DIRECT_PRODUCTS.slice(0, 30);
   sel.innerHTML = [
-    `<option value="">투어 상품 미정 · 동행원들과 상의 후 선택</option>`,
-    ...topChoices.map(p => `<option value="${p.pcode}">[${p.durationKey}·${p.regionKey}] ${p.title} (${p.price})</option>`)
+    `<option value="">투어 미정 · 동행원과 상의 후 선택</option>`,
+    ...topChoices.map(p => `<option value="${p.pcode}">[${p.regionKey}·${p.durationKey}] ${fmtOptTitle(p)} (${p.price})</option>`)
   ].join('');
   if (defaultPcode && topChoices.some(p => p.pcode === defaultPcode)) {
     sel.value = defaultPcode;
   } else if (defaultPcode) {
     const extra = DIRECT_PRODUCTS.find(p => p.pcode === defaultPcode);
     if (extra) {
-      sel.insertAdjacentHTML('afterbegin', `<option value="${extra.pcode}" selected>[${extra.durationKey}·${extra.regionKey}] ${extra.title} (${extra.price})</option>`);
+      sel.insertAdjacentHTML('afterbegin', `<option value="${extra.pcode}" selected>[${extra.regionKey}·${extra.durationKey}] ${fmtOptTitle(extra)} (${extra.price})</option>`);
       sel.value = extra.pcode;
     }
   } else {
