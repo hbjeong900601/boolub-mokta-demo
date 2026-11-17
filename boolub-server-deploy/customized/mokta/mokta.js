@@ -4261,11 +4261,14 @@ function switchAgencyMinihomeTab(tabKey, btnEl) {
   });
 }
 
+let curOpenMinihomeAgId = '';
+
 function openAgencyHomeModal(agId, initialTab = 'about') {
   const ag = MOKTA_AGENCIES.find(x => x.id === agId || x.pid === agId) || MOKTA_AGENCIES[0];
-  const partnerProds = DIRECT_PRODUCTS.filter(p => p.pid === ag.pid || (ag.storeUrl && ag.storeUrl.includes(p.pid)));
+  curOpenMinihomeAgId = ag.id;
+  const partnerProds = DIRECT_PRODUCTS.filter(p => String(p.pid || '') === String(ag.pid));
   const shortName = ag.name.split('(')[0].trim();
-  const partnerJoins = JOIN_ITEMS.filter(j => String(j.agency || '').includes(shortName));
+  const partnerJoins = JOIN_ITEMS.filter(j => (j.pid && j.pid === ag.pid) || String(j.agency || '').includes(shortName));
 
   const titleEl = document.getElementById('agencyModalTitle');
   const bodyEl = document.getElementById('agencyModalBody');
@@ -5589,8 +5592,12 @@ async function hydrateFromLiveBackend() {
     refreshPartnerConsoleAll();
     restorePendingDraftIfLogged();
     handleInitialDeepLinks();
+    if (curOpenMinihomeAgId && document.getElementById('agencyHomeModal')?.classList.contains('open')) {
+      openAgencyHomeModal(curOpenMinihomeAgId, 'about');
+    }
   } catch (err) {
     console.warn('[MOKTA Init Fallback]', err);
+    handleInitialDeepLinks();
   }
 }
 
@@ -5615,9 +5622,12 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshPartnerConsoleAll();
   bindPartnerSliderEvents();
   startPartnerAutoSlide();
-  restorePendingDraftIfLogged();
-  handleInitialDeepLinks();
-  hydrateFromLiveBackend();
+  if (!API_BASE) {
+    restorePendingDraftIfLogged();
+    handleInitialDeepLinks();
+  } else {
+    hydrateFromLiveBackend();
+  }
 
   window.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
