@@ -25,7 +25,7 @@ const HERO_SLIDES = [
     eyebrow: '부럽 직영 시그니처',
     title: '1인 신청도 무조건 출발!\n2026 부럽 몽골원정대',
     sub: '유심 무료 · 특식 3회 · 게르 업그레이드 · 추가금 0원 (699,000원~)',
-    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    img: './images/green_steppe_flock.jpg',
     action: () => openProductPreviewModal('T0950-Q2923-W2496')
   },
   {
@@ -46,7 +46,7 @@ const HERO_SLIDES = [
     eyebrow: '부럽 고비원정대 베스트',
     title: '차강소브라가·홍고린엘스\n고비사막 4박5일 원정대',
     sub: '정가 115만 원 → 부럽 직영 특가 999,000원 즉시 확정',
-    img: 'https://files.boolub.com/upfiles/product/736206236.png',
+    img: './images/sand_dunes_camp.jpg',
     action: () => openProductPreviewModal('C3954-E9344-H0474')
   },
   {
@@ -60,28 +60,28 @@ const HERO_SLIDES = [
     eyebrow: '공식 파트너 9개사 미니홈',
     title: '각 여행사만의 보유 상품과\n차량·캠프 스펙 직접 비교',
     sub: '15년 업력 BBM투어·노라투어·양가투어·두잇트래블 한자리에',
-    img: 'https://files.boolub.com/upfiles/product/1688056962.png',
+    img: './images/khuvsgul_boat_sunset.jpg',
     action: () => scrollToSection('sec-partners')
   },
   {
     eyebrow: '부럽 몽골 에디터 가이드',
     title: '징기스칸 공항부터 게르 선택까지\n출국 전 필독 몽골 매거진',
     sub: '누적 조회수 8만+ 부럽 인기 몽골 여행 매거진 총정리',
-    img: 'https://files.boolub.com/upfiles/board/2422061780_1794708044.jpg',
+    img: './images/ger_interior.jpg',
     action: () => scrollToSection('sec-magazine')
   },
   {
     eyebrow: '실제 탑승객 리얼 후기',
     title: '부럽 여행자들이 직접 남긴\n생생한 몽골 포토 후기',
     sub: '가족 원정대부터 홉스골·남고비 자유여행 실제 리뷰 확인',
-    img: 'https://files.boolub.com/upfiles/board/2384413237.jpg',
+    img: './images/campfire_cheers.jpg',
     action: () => scrollToSection('sec-showcase')
   },
   {
     eyebrow: '새벽 도착도 안심 이동',
     title: '울란바토르 공항 ↔ 호텔\n단독 차량 픽업·샌딩',
     sub: '더블유아이티(WIT) 공식 운영 · 단독차량 편도 19,200원~',
-    img: 'https://files.boolub.com/upfiles/product/3283866928.jpg',
+    img: './images/vehicle_fleet.jpg',
     action: () => openProductPreviewModal('I3885-I4036-S5377')
   }
 ];
@@ -1676,6 +1676,130 @@ function updateMyActivityHeaderBadge() {
     if (myNameTxt) myNameTxt.textContent = `${displayNm}님 · 내 활동`;
     if (myCntEl) myCntEl.textContent = String(computeMyActivityTotalCount());
   }
+  syncMobMenuDot();
+}
+
+function syncMobMenuDot() {
+  const dot = document.getElementById('mobMenuDot');
+  if (!dot) return;
+  const totalBadge = WISHLIST_KEYS.length + computeMyActivityTotalCount() + (canAccessPartnerConsole() ? 1 : 0);
+  dot.style.display = totalBadge > 0 ? 'block' : 'none';
+}
+
+function syncMobileSearchPlaceholder() {
+  const inp = document.getElementById('globalSearchInput');
+  if (!inp || typeof window === 'undefined') return;
+  inp.placeholder = window.innerWidth <= 768
+    ? '몽골 투어 · 동행 검색'
+    : '고비사막, 홉스골, 동행, 노라투어, 부럽원정대 검색';
+}
+
+function jumpMobStoreCategory(cat) {
+  switchCustomerMode('store');
+  const chips = Array.from(document.querySelectorAll('#storeChipRow .bl-chip'));
+  const targetBtn = chips.find(b => (b.getAttribute('onclick') || '').includes(`'${cat}'`)) || chips[0] || null;
+  filterStoreCat(cat || 'all', targetBtn);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openMobQuickDrawer() {
+  const bodyEl = document.getElementById('mobQuickDrawerBody');
+  if (!bodyEl) return;
+
+  const loggedIn = isMemberLoggedIn();
+  const actCnt = computeMyActivityTotalCount();
+  const wishCnt = WISHLIST_KEYS.length;
+  const displayNm = AUTH_STATE.userName || AUTH_STATE.partnerName?.split('(')[0].trim() || AUTH_STATE.userId || '회원';
+  const isPartnerConsole = canAccessPartnerConsole();
+  const inPartnerMode = document.body.classList.contains('partner-mode');
+  const bidBadgeCnt = document.getElementById('headerBidBadge')?.textContent || String(RFQ_ITEMS.length);
+
+  const accountHtml = loggedIn
+    ? `
+      <div class="mob-drawer-account-card is-logged">
+        <div class="mob-drawer-acc-top">
+          <div>
+            <span class="mob-drawer-role-pill">${AUTH_STATE.role === 'master' ? 'MASTER 관리자' : (AUTH_STATE.role === 'partner' ? '공식 파트너사' : '부럽 정식회원')}</span>
+            <strong>${escapeHtml(String(displayNm))}님 반갑습니다!</strong>
+          </div>
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="closeModal('mobQuickDrawerModal'); logoutMoktaMember();">로그아웃</button>
+        </div>
+        <div class="mob-drawer-acc-btns">
+          <button type="button" class="bl-btn bl-btn-point" style="width:100%;" onclick="closeModal('mobQuickDrawerModal'); openMyActivityModal();">
+            <i class="xi-user"></i> 내 동행 · 조인 · 견적 관리함 (${actCnt})
+          </button>
+        </div>
+      </div>
+    `
+    : `
+      <div class="mob-drawer-account-card">
+        <p class="mob-drawer-acc-kicker">3초 가입으로 동행 연락처 · 실사 비교견적 잠금해제</p>
+        <button type="button" class="bl-btn bl-btn-point" style="width:100%; height:46px; font-size:14.5px;" onclick="closeModal('mobQuickDrawerModal'); openAuthQuickModal();">
+          <i class="xi-user-plus-o"></i> 로그인 · 3초 만에 시작하기
+        </button>
+      </div>
+    `;
+
+  const partnerSwitchHtml = isPartnerConsole
+    ? `
+      <div class="mob-drawer-partner-switch">
+        <div>
+          <strong>${inPartnerMode ? '현재 파트너사 센터 이용 중' : '공식 파트너사 전용 콘솔'}</strong>
+          <span>신규 맞춤견적 제안 · 미니홈 · 예약 현황 관리</span>
+        </div>
+        <button type="button" class="bl-btn ${inPartnerMode ? 'bl-btn-outline' : 'bl-btn-dark'} bl-btn-sm" onclick="closeModal('mobQuickDrawerModal'); switchSiteRole('${inPartnerMode ? 'customer' : 'partner'}');">
+          ${inPartnerMode ? '여행자 홈으로' : `센터 열기 (${escapeHtml(bidBadgeCnt)})`}
+        </button>
+      </div>
+    `
+    : '';
+
+  bodyEl.innerHTML = `
+    ${accountHtml}
+    ${partnerSwitchHtml}
+
+    <div class="mob-drawer-grid-4">
+      <button type="button" class="mob-drawer-tile" onclick="closeModal('mobQuickDrawerModal'); openWishlistModal();">
+        <span class="mob-drawer-tile-ico is-coral"><i class="xi-heart"></i></span>
+        <strong>찜 · 비교함 <em>${wishCnt}</em></strong>
+        <span>관심 투어·동행 비교</span>
+      </button>
+      <button type="button" class="mob-drawer-tile" onclick="closeModal('mobQuickDrawerModal'); openModal('rfqWizardModal');">
+        <span class="mob-drawer-tile-ico is-cyan"><i class="xi-paper-o"></i></span>
+        <strong>1:1 맞춤견적</strong>
+        <span>차량·게르 실사 제안</span>
+      </button>
+      <button type="button" class="mob-drawer-tile" onclick="closeModal('mobQuickDrawerModal'); openCompanionModalForDate();">
+        <span class="mob-drawer-tile-ico is-blue"><i class="xi-users-o"></i></span>
+        <strong>동행 모집하기</strong>
+        <span>1/N 투어비 절약</span>
+      </button>
+      <button type="button" class="mob-drawer-tile" onclick="closeModal('mobQuickDrawerModal'); openModal('trustGuaranteeModal');">
+        <span class="mob-drawer-tile-ico is-navy"><i class="xi-shield-checked"></i></span>
+        <strong>공식 안심보증</strong>
+        <span>MOKTA × 부럽 에스크로</span>
+      </button>
+    </div>
+
+    <div class="mob-drawer-nav-group">
+      <span class="mob-drawer-sec-tit">전용관 바로가기</span>
+      <div class="mob-drawer-nav-pills">
+        <button type="button" class="${!inPartnerMode && curCustomerMode === 'home' ? 'active' : ''}" onclick="closeModal('mobQuickDrawerModal'); switchCustomerMode('home');">추천 홈</button>
+        <button type="button" class="${!inPartnerMode && curCustomerMode === 'join' ? 'active' : ''}" onclick="closeModal('mobQuickDrawerModal'); switchCustomerMode('join');">동행 · 조인 (${JOIN_ITEMS.length})</button>
+        <button type="button" class="${!inPartnerMode && curCustomerMode === 'store' ? 'active' : ''}" onclick="closeModal('mobQuickDrawerModal'); switchCustomerMode('store');">투어 스토어 (${DIRECT_PRODUCTS.length})</button>
+        <button type="button" class="${!inPartnerMode && curCustomerMode === 'partner' ? 'active' : ''}" onclick="closeModal('mobQuickDrawerModal'); switchCustomerMode('partner');">맞춤견적 · 파트너 (${MOKTA_AGENCIES.length})</button>
+      </div>
+    </div>
+
+    ${!isPartnerConsole ? `
+      <div class="mob-drawer-foot-bar">
+        <span>몽골 전문 여행사 대표님이신가요?</span>
+        <button type="button" onclick="closeModal('mobQuickDrawerModal'); openModal('partnerApplyModal');">공식 파트너 입점신청 <i class="xi-angle-right-min"></i></button>
+      </div>
+    ` : ''}
+  `;
+
+  openModal('mobQuickDrawerModal');
 }
 
 function applyAuthUi() {
@@ -2029,6 +2153,9 @@ function switchSiteRole(role) {
   document.getElementById('roleCustomerBtn')?.classList.toggle('active', !isPartner);
   document.getElementById('rolePartnerBtn')?.classList.toggle('active', isPartner);
 
+  const launchpad = document.getElementById('mobBoolubLaunchpad');
+  if (launchpad) launchpad.style.display = (!isPartner && curCustomerMode === 'home') ? '' : 'none';
+
   // 2단 GNB 우측에 파트너 스위치가 위치하므로, 파트너 모드 진입 시에도 2단 GNB 바는 항상 유지!
   const subNav = document.getElementById('customerSubNav');
   if (subNav) subNav.style.display = '';
@@ -2049,8 +2176,13 @@ function switchSiteRole(role) {
 function switchCustomerMode(mode, btnEl) {
   switchSiteRole('customer');
   curCustomerMode = mode || 'home';
+  document.body.classList.toggle('mob-submode', curCustomerMode !== 'home');
 
   document.querySelectorAll('#customerSubNav .bl-gnb-item').forEach(b => {
+    const bMode = b.getAttribute('data-cmode');
+    b.classList.toggle('active', bMode === curCustomerMode);
+  });
+  document.querySelectorAll('#mobLaunchTabs .mob-ltab').forEach(b => {
     const bMode = b.getAttribute('data-cmode');
     b.classList.toggle('active', bMode === curCustomerMode);
   });
@@ -2066,6 +2198,7 @@ function switchCustomerMode(mode, btnEl) {
   // 4.대표 투어(#sec-store) -> 5.공식 파트너사(#sec-partners) -> 6.리얼 후기(#sec-showcase) ->
   // 7.매거진(#sec-magazine) -> 8.망설여지나요(#sec-bottom-helper)
   showEl('sec-hero', curCustomerMode === 'home');
+  showEl('mobBoolubLaunchpad', curCustomerMode === 'home');
   showEl('storeCollectionHero', curCustomerMode === 'store');
   showEl('unifiedFilterBar', curCustomerMode === 'join' || curCustomerMode === 'store');
 
@@ -2146,7 +2279,7 @@ let heroDragMoved = false;
 
 function getHeroVisibleSlides() {
   if (typeof window === 'undefined') return 3;
-  if (window.innerWidth <= 640) return 1;
+  if (window.innerWidth <= 768) return 1;
   if (window.innerWidth <= 1024) return 2;
   return 3;
 }
@@ -2357,6 +2490,7 @@ function isWished(key) {
 function updateWishBadge() {
   const cntEl = document.getElementById('headerWishCount');
   if (cntEl) cntEl.textContent = String(WISHLIST_KEYS.length);
+  syncMobMenuDot();
 }
 
 function toggleWishItem(key, ev) {
@@ -6473,11 +6607,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   updateWishBadge();
+  syncMobileSearchPlaceholder();
   applyAuthUi();
   initHeroTrack();
   bindHeroSliderEvents();
   startHeroAutoSlide();
   switchCustomerMode('home');
+
+  const syncMobScrollState = () => {
+    document.body.classList.toggle('mob-scrolled', window.scrollY > 200);
+  };
+  window.addEventListener('scroll', syncMobScrollState, { passive: true });
+  window.addEventListener('resize', syncMobileSearchPlaceholder, { passive: true });
+  syncMobScrollState();
   populatePartnerRfqSelect();
   refreshPartnerConsoleAll();
   bindPartnerSliderEvents();
