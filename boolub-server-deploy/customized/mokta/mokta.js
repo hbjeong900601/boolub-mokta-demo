@@ -2899,33 +2899,35 @@ function openProductPreviewModal(pcode, mode = null) {
             <strong style="font-size:13.5px; color:#0f172a;"><i class="xi-car" style="color:#0284c7;"></i> 우리 일행끼리 프라이빗 단독 출발 · 인원별 1인 예상 단가표</strong>
             <span style="font-size:11.5px; font-weight:700; color:#0284c7;">모일수록 1인 부담금이 내려갑니다!</span>
           </div>
-          <table class="ts-tier-price-table">
-            <thead>
-              <tr>
-                <th>2인 단독</th>
-                <th>3인 단독</th>
-                <th>4인 단독 (인기)</th>
-                <th>5인 단독</th>
-                <th>6인 단독 (최저가)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${spec.tierPrices.p2}</td>
-                <td>${spec.tierPrices.p3}</td>
-                <td class="is-best">${spec.tierPrices.p4}</td>
-                <td>${spec.tierPrices.p5}</td>
-                <td class="is-best">${spec.tierPrices.p6}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="ts-tier-table-scroll">
+            <table class="ts-tier-price-table">
+              <thead>
+                <tr>
+                  <th>2인 단독</th>
+                  <th>3인 단독</th>
+                  <th>4인 단독 (인기)</th>
+                  <th>5인 단독</th>
+                  <th>6인 단독 (최저가)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${spec.tierPrices.p2}</td>
+                  <td>${spec.tierPrices.p3}</td>
+                  <td class="is-best">${spec.tierPrices.p4}</td>
+                  <td>${spec.tierPrices.p5}</td>
+                  <td class="is-best">${spec.tierPrices.p6}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <p style="font-size:11.5px; color:#64748b; margin-top:7px;">* 위 단가표는 ${prod.price} 기준 인원별 예상 견적이며, 성수기 숙소 업그레이드 여부에 따라 부럽 상세페이지 또는 1:1 견적에서 최종 확정됩니다.</p>
         </div>
       `;
 
     bodyEl.innerHTML = `
-      <div style="display:grid; grid-template-columns:0.95fr 1.05fr; gap:18px; align-items:start;">
-        <div style="border-radius:14px; overflow:hidden; aspect-ratio:4/3; background:var(--bl-gray-100); position:relative;">
+      <div class="ts-prod-sheet-hero">
+        <div class="ts-prod-sheet-thumb">
           <img src="${prod.img}" alt="${prod.title}" style="width:100%; height:100%; object-fit:cover;" />
           <span class="bl-mokta-tag" style="position:absolute; left:10px; top:10px; background:rgba(15,23,42,0.84); color:#7dd3fc;">MOKTA × 부럽 에스크로 보증</span>
         </div>
@@ -3011,7 +3013,7 @@ function openProductPreviewModal(pcode, mode = null) {
         </div>
       </div>
 
-      <div style="margin-top:16px; padding:12px 14px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200); display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div class="ts-prod-cross-bar">
         <button type="button" onclick="openProductPreviewModal('I3885-I4036-S5377')" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px; text-align:left;">
           <span><strong>🚕 울란바토르 공항 단독픽업</strong> (19,200원)</span>
           <span style="color:var(--bl-point-text); font-weight:700;">상세보기 →</span>
@@ -3022,7 +3024,7 @@ function openProductPreviewModal(pcode, mode = null) {
         </a>
       </div>
 
-      <div style="margin-top:16px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+      <div class="ts-modal-foot-actions">
         <button type="button" class="bl-btn bl-btn-outline" onclick="copyMoktaShareLink('${prod.title.replace(/'/g, '')}')">
           <i class="xi-share-alt-o"></i> 동행에게 공유
         </button>
@@ -3604,8 +3606,8 @@ function renderCommunityFeed() {
           </div>
           <h5 class="ts-comp-title">${j.title}</h5>
           ${linkedProd ? `
-            <div class="ts-comp-linked-pill" onclick="event.stopPropagation(); openProductPreviewModal('${linkedProd.pcode}')">
-              <i class="xi-compass-o"></i> 연결된 희망투어: ${linkedProd.title.slice(0, 34)}${linkedProd.title.length > 34 ? '…' : ''} · <strong>${linkedProd.price}</strong>
+            <div class="ts-comp-linked-pill">
+              <i class="xi-compass-o"></i> 연결투어: ${linkedProd.title.slice(0, 28)}${linkedProd.title.length > 28 ? '…' : ''} · <strong>${linkedProd.price}</strong>
             </div>
           ` : ''}
           <div class="ts-comp-meta" style="margin-top:6px;">
@@ -3845,7 +3847,7 @@ function openJoinDetailModal(joinId, draftRestore = null) {
       ` : ''}
 
       <!-- 차량 좌석 요약 & 1/N 자동할인 가이드 (비로그인 공개) -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div class="ts-join-top-2col">
         <div style="padding:12px 14px; border-radius:12px; background:#f8fafc; border:1px solid #e2e8f0;">
           <div style="font-size:12.5px; font-weight:800; color:#0f172a;">실시간 좌석 현황 (${item.filled}/${item.max}명 확정)</div>
           <div style="font-size:12px; color:#0284c7; font-weight:700; margin-top:3px;">
@@ -3928,7 +3930,7 @@ function openJoinDetailModal(joinId, draftRestore = null) {
                 <strong style="font-size:14px; font-weight:800; color:#0f172a;"><i class="xi-check-circle" style="color:#0284c7;"></i> 이 일정에 바로 동행 · 안심 합류 신청하기</strong>
                 <span style="font-size:11.5px; color:#0284c7; font-weight:700;">신청 즉시 방장·담당 공식 파트너에게 전달됩니다</span>
               </div>
-              <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; margin-top:10px;">
+              <div class="ts-apply-4col">
                 <div>
                   <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">합류 인원</label>
                   <select class="bl-select" id="jaPaxSelect" style="height:36px; font-size:12.5px;">
@@ -3960,7 +3962,7 @@ function openJoinDetailModal(joinId, draftRestore = null) {
                   </select>
                 </div>
               </div>
-              <div style="display:grid; grid-template-columns:0.42fr 0.58fr; gap:8px; margin-top:8px;">
+              <div class="ts-apply-2col">
                 <input type="text" class="bl-input" id="jaContactInput" style="height:38px;" placeholder="휴대폰 또는 카카오톡 ID 필수 입력 *" value="${defaultContact}" />
                 <input type="text" class="bl-input" id="jaMemoInput" style="height:38px;" placeholder="간단 동행 인사말 (비흡연, 선호 스타일 등)" value="${defaultMemo}" />
               </div>
@@ -4909,8 +4911,8 @@ function openShowcaseModal(id) {
   const body = document.getElementById('reelModalBody');
   if (body) {
     body.innerHTML = `
-      <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:18px; align-items:center;">
-        <div style="border-radius:12px; overflow:hidden; aspect-ratio:4/3; background:#000;">
+      <div class="ts-prod-sheet-hero" style="align-items:center;">
+        <div class="ts-prod-sheet-thumb" style="background:#000;">
           <img src="${s.img}" alt="${s.title}" style="width:100%; height:100%; object-fit:cover;" />
         </div>
         <div>

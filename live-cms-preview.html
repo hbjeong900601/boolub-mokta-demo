@@ -20,7 +20,7 @@
   <link href="https://www.boolub.com/customized/css/waug.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" />
-  <link rel="stylesheet" href="./boolub-server-deploy/customized/mokta/mokta.css?v=bl_mokta_17" />
+  <link rel="stylesheet" href="./boolub-server-deploy/customized/mokta/mokta.css?v=bl_mokta_18" />
 </head>
 <body class="if_view is-live-cms" style="overflow-x:hidden;">
   <div class="wrap js_header_position post_hide_section" id="cert_info">
@@ -56,12 +56,12 @@
       <div class="header-actions">
         <!-- 관심 투어·동행 찜 보관함 -->
         <button type="button" class="bl-wish-header-btn" id="headerWishBtn" onclick="openWishlistModal()" title="찜한 투어·동행 비교하기">
-          <i class="xi-heart"></i> <span>찜</span> <span class="bl-wish-cnt-pill" id="headerWishCount">0</span>
+          <i class="xi-heart"></i> <span class="pc-only-txt">찜</span> <span class="bl-wish-cnt-pill" id="headerWishCount">0</span>
         </button>
 
         <!-- [미로그인 고객 전용] 이 페이지에서 이탈 없이 바로 가입·로그인 -->
         <button type="button" class="ts-header-auth-btn" id="guestLoginHeaderBtn" onclick="openAuthQuickModal()">
-          <i class="xi-user-o"></i> <span>로그인 · 3초 가입</span>
+          <i class="xi-user-o"></i> <span class="pc-only-txt">로그인 · 3초 가입</span><span class="mob-short-txt">로그인</span>
         </button>
 
         <!-- [로그인 회원(일반/파트너/마스터) 전용] 내 동행·조인·견적 관리함 -->
@@ -74,8 +74,8 @@
           파트너 입점신청
         </button>
 
-        <button type="button" class="bl-btn bl-btn-point" onclick="openModal('rfqWizardModal')">
-          맞춤견적 문의
+        <button type="button" class="bl-btn bl-btn-point ts-header-rfq-btn" onclick="openModal('rfqWizardModal')">
+          <span class="pc-only-txt">맞춤견적 문의</span><span class="mob-short-txt">견적문의</span>
         </button>
       </div>
     </div>
@@ -1095,7 +1095,7 @@
         <p style="font-size:13px; color:var(--bl-gray-500); margin-bottom:16px;">
           원하시는 여행 날짜와 조건을 남겨주시면 부럽 공식 파트너사 및 MOKTA 인증 여행사(최대 6곳)가 차량·숙소 사진과 함께 맞춤 견적을 제안해 드립니다.
         </p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-2">
           <div class="bl-field">
             <label>희망 출발일 · 기간</label>
             <input type="text" class="bl-input" id="wDates" value="8월 15일 ~ 8월 19일 (4박 5일)" />
@@ -1110,7 +1110,7 @@
             </select>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-2">
           <div class="bl-field">
             <label>희망 여행 지역</label>
             <select class="bl-select" id="wCourse">
@@ -1163,7 +1163,7 @@
           </select>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-3">
           <div class="bl-field">
             <label>희망 출발일 *</label>
             <input type="date" class="bl-input" id="cwStartDate" value="2026-08-15" />
@@ -1188,7 +1188,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-cw2">
           <div class="bl-field">
             <label>방장 본인 연령·성별</label>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
@@ -1227,7 +1227,7 @@
           <select class="bl-select" id="cwLinkedPcode"></select>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-2">
           <div class="bl-field">
             <label>찾는 동행 연령대</label>
             <select class="bl-select" id="cwAgePref">
@@ -1344,7 +1344,7 @@
           파트너사 전용 라운지는 <strong>승인된 입점 파트너 계정 및 마스터 관리자</strong> 로그인 시에만 활성화됩니다. 신규 입점을 희망하시는 몽골 여행사 및 MOKTA 회원사는 아래 신청서를 남겨주세요.
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-2">
           <div class="bl-field">
             <label>여행사명 (국문/영문) *</label>
             <input type="text" class="bl-input" id="paCompany" placeholder="예: MOKTA 정회원 여행사명 입력" />
@@ -1358,7 +1358,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="ts-form-grid-2">
           <div class="bl-field">
             <label>담당자 연락처 / 카카오톡 ID *</label>
             <input type="text" class="bl-input" id="paContact" placeholder="010-0000-0000 / 카톡ID" />
@@ -1494,7 +1494,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="ts-form-grid-2">
           <div style="padding:14px 16px; border-radius:12px; border:1px solid var(--bl-gray-200);">
             <strong style="font-size:14px; color:var(--bl-gray-900); display:block; margin-bottom:4px;">1. 관광부 &amp; MOKTA 정식 라이선스 검증</strong>
             <p style="font-size:12.5px; color:var(--bl-gray-500); line-height:1.55;">개인 SNS 무허가 알선이 아닌 정식 인가 법인·랜드사 9곳만 엄선 입점합니다.</p>
@@ -1618,6 +1618,6 @@
   <div class="bl-toast" id="toastEl"></div>
     </div>
   </div>
-  <script src="./boolub-server-deploy/customized/mokta/mokta.js?v=bl_mokta_17"></script>
+  <script src="./boolub-server-deploy/customized/mokta/mokta.js?v=bl_mokta_18"></script>
 </body>
 </html>
