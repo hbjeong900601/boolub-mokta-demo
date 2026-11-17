@@ -3201,7 +3201,7 @@ function renderPartnerSection() {
     <article class="bl-partner-card">
       <div>
         <div class="bl-pcard-cover" onclick="openAgencyHomeModal('${ag.id}')">
-          <img src="${ag.cover}" alt="${ag.name}" class="cover-img" loading="lazy" />
+          <img src="${ag.cover}" alt="${ag.name}" class="cover-img" />
           <div class="bl-pcard-cover-top">
             <span class="bl-pcard-cert">${ag.cert}</span>
             <span class="bl-pcard-rating"><i class="xi-star"></i> ${ag.rating} (${ag.reviews})</span>
@@ -3235,7 +3235,7 @@ function renderPartnerSection() {
           </div>
 
           <div class="bl-partner-thumbs">
-            ${ag.photos.map(ph => `<img src="${ph}" alt="${ag.name} 현장실사" loading="lazy" />`).join('')}
+            ${(ag.photos || []).slice(0, 3).map(ph => `<img src="${ph}" alt="${ag.name} 현장실사" />`).join('')}
           </div>
         </div>
       </div>
