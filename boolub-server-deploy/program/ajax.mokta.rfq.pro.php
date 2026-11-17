@@ -1,6 +1,6 @@
 <?php
 /**
- * 고객 맞춤견적 등록 API (od_mokta_rfq + 부럽 즉시확정 추천상품 자동 첫 매칭)
+ * 고객 맞춤견적 등록 API (smart_mokta_rfq + 부럽 즉시확정 추천상품 자동 첫 매칭)
  * 서버 배포 위치: /program/ajax.mokta.rfq.pro.php
  */
 include_once(dirname(__FILE__) . '/mokta.inc.php');
@@ -30,7 +30,7 @@ $specsArr  = array(explode('·', $paxType)[0], $infra, '공식파트너 실사�
 $specsJson = json_encode($specsArr, JSON_UNESCAPED_UNICODE);
 
 $sql = sprintf(
-    "INSERT INTO od_mokta_rfq
+    "INSERT INTO smart_mokta_rfq
         (mr_inid, mr_author, mr_cat, mr_region_tag, mr_dates, mr_pax_type, mr_title, mr_memo, mr_specs_json, mr_bid_cnt, mr_view_yn, mr_rdate)
      VALUES
         ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1, 'Y', NOW())",
@@ -57,7 +57,7 @@ $recPrice4 = ($regionTag === '홉스골') ? '1,400,000원' : '1,150,000원';
 $recPrice6 = ($regionTag === '홉스골') ? '1,184,000원' : '990,000원';
 
 $bidSql = sprintf(
-    "INSERT INTO od_mokta_bid
+    "INSERT INTO smart_mokta_bid
         (mb_mr_uid, mb_pid, mb_agency, mb_logo, mb_badge, mb_pcode, mb_price4, mb_price6, mb_veh_name, mb_ger_name, mb_veh_img, mb_ger_img, mb_comment, mb_rdate)
      VALUES
         (%d, 'boolub', '부럽 몽골원정대 · AI 빠른추천', '/customized/mokta/images/boolub_logo.png', '견적 대기 없이 즉시 예약 가능', '%s', '%s', '%s', '%s', '부럽 검증 정식 캠프 + USIM 혜택', '/customized/mokta/images/vehicle_fleet.jpg', '/customized/mokta/images/ger_interior.jpg', '파트너사 맞춤 견적이 도착하는 동안 조건이 가장 유사한 부럽 즉시확정 베스트 상품을 먼저 확인해보세요!', NOW())",

@@ -21,7 +21,7 @@ if ($mode === 'apply') {
     }
 
     $sql = sprintf(
-        "INSERT INTO od_mokta_onboard
+        "INSERT INTO smart_mokta_onboard
             (mo_company, mo_mokta_yn, mo_contact, mo_member_id, mo_desc, mo_ip, mo_status, mo_rdate)
          VALUES
             ('%s', '%s', '%s', '%s', '%s', '%s', 'pending', NOW())",
@@ -48,21 +48,21 @@ if ($mode === 'apply') {
 if ($mode === 'approve') {
     $auth = mokta_require_master();
     $obId = (int)($_POST['ob_id'] ?? 0);
-    $row  = mokta_q_one("SELECT * FROM od_mokta_onboard WHERE mo_uid = {$obId} LIMIT 1");
+    $row  = mokta_q_one("SELECT * FROM smart_mokta_onboard WHERE mo_uid = {$obId} LIMIT 1");
     if (empty($row['mo_uid'])) {
         mokta_json(array('ok' => false, 'message' => '신청 내역을 찾을 수 없습니다.'), 404);
     }
 
     $admId = mokta_esc($auth['userId']);
-    mokta_q_exec("UPDATE od_mokta_onboard SET mo_status = 'approved', mo_approved_by = '{$admId}', mo_approved_at = NOW() WHERE mo_uid = {$obId}");
+    mokta_q_exec("UPDATE smart_mokta_onboard SET mo_status = 'approved', mo_approved_by = '{$admId}', mo_approved_at = NOW() WHERE mo_uid = {$obId}");
 
-    // 신청서에 부럽 회원 ID(mo_member_id)가 기재된 경우 즉시 od_mokta_partner_map에 승인 등록하여 파트너사 센터 오픈
+    // 신청서에 부럽 회원 ID(mo_member_id)가 기재된 경우 즉시 smart_mokta_partner_map에 승인 등록하여 파트너사 센터 오픈
     if (!empty($row['mo_member_id'])) {
         $memId   = mokta_esc($row['mo_member_id']);
         $comp    = mokta_esc($row['mo_company']);
         $moktaYn = $row['mo_mokta_yn'] === 'N' ? 'N' : 'Y';
         mokta_q_exec("
-            INSERT INTO od_mokta_partner_map (mp_pid, mp_member_id, mp_name, mp_mokta_yn, mp_status, mp_rdate)
+            INSERT INTO smart_mokta_partner_map (mp_pid, mp_member_id, mp_name, mp_mokta_yn, mp_status, mp_rdate)
             VALUES ('{$memId}', '{$memId}', '{$comp}', '{$moktaYn}', 'approved', NOW())
             ON DUPLICATE KEY UPDATE mp_status = 'approved', mp_name = '{$comp}'
         ");

@@ -2119,3 +2119,5 @@ body.is-live-cms .bl-auth-sim-bar {
   .bl-top-notice-inner .bl-notice-right { display: none; }
   .bl-partner-card { flex: 0 0 86%; min-width: 268px; }
 }
+
+#bl-mokta-cms-wrap h2, #bl-mokta-cms-wrap h3, #bl-mokta-cms-wrap h4, #bl-mokta-cms-wrap p { margin: 0; }

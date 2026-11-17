@@ -28,7 +28,7 @@ $mediaUrl    = $uploadedUrl !== ''
 $tip = "{$agency} 현지 매니저가 직접 촬영해 등록한 최신 현장 컨디션입니다.";
 
 $sql = sprintf(
-    "INSERT INTO od_mokta_story
+    "INSERT INTO smart_mokta_story
         (ms_pid, ms_agency, ms_pcode, ms_prod_name, ms_price, ms_cat, ms_badge, ms_title, ms_img, ms_tip, ms_view_yn, ms_rdate)
      VALUES
         ('%s', '%s', '%s', '%s', '쿠폰특가 적용', '%s', '현장 LIVE 인증', '%s', '%s', '%s', 'Y', NOW())",

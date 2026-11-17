@@ -13,7 +13,7 @@ if ($rfqId <= 0) {
     mokta_json(array('ok' => false, 'message' => '대상 고객 요청글 번호가 올바르지 않습니다.'), 400);
 }
 
-$rfqRow = mokta_q_one("SELECT mr_uid, mr_bid_cnt FROM od_mokta_rfq WHERE mr_uid = {$rfqId} AND mr_view_yn = 'Y' LIMIT 1");
+$rfqRow = mokta_q_one("SELECT mr_uid, mr_bid_cnt FROM smart_mokta_rfq WHERE mr_uid = {$rfqId} AND mr_view_yn = 'Y' LIMIT 1");
 if (empty($rfqRow['mr_uid'])) {
     mokta_json(array('ok' => false, 'message' => '존재하지 않는 고객 요청글입니다.'), 404);
 }
@@ -31,7 +31,7 @@ if ($auth['role'] === 'master') {
 }
 
 $escPid  = mokta_esc($pid);
-$mapMeta = mokta_q_one("SELECT mp_logo_url, mp_rep_pcode FROM od_mokta_partner_map WHERE mp_pid = '{$escPid}' LIMIT 1");
+$mapMeta = mokta_q_one("SELECT mp_logo_url, mp_rep_pcode FROM smart_mokta_partner_map WHERE mp_pid = '{$escPid}' LIMIT 1");
 $logoUrl = !empty($mapMeta['mp_logo_url']) ? $mapMeta['mp_logo_url'] : '/customized/mokta/images/boolub_logo.png';
 $pcode   = !empty($_POST['pcode']) ? trim($_POST['pcode']) : (!empty($mapMeta['mp_rep_pcode']) ? $mapMeta['mp_rep_pcode'] : '');
 
@@ -47,7 +47,7 @@ $vehImg = $upVeh !== '' ? $upVeh : (!empty($_POST['veh_img']) ? trim($_POST['veh
 $gerImg = $upGer !== '' ? $upGer : (!empty($_POST['ger_img']) ? trim($_POST['ger_img']) : '/customized/mokta/images/ger_interior.jpg');
 
 $insSql = sprintf(
-    "INSERT INTO od_mokta_bid
+    "INSERT INTO smart_mokta_bid
         (mb_mr_uid, mb_pid, mb_agency, mb_logo, mb_badge, mb_pcode, mb_price4, mb_price6, mb_veh_name, mb_ger_name, mb_veh_img, mb_ger_img, mb_comment, mb_rdate)
      VALUES
         (%d, '%s', '%s', '%s', '공식 입점파트너 실사견적', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW())",
@@ -70,7 +70,7 @@ if (!mokta_q_exec($insSql)) {
 }
 
 $bidId = mokta_last_id();
-mokta_q_exec("UPDATE od_mokta_rfq SET mr_bid_cnt = mr_bid_cnt + 1 WHERE mr_uid = {$rfqId}");
+mokta_q_exec("UPDATE smart_mokta_rfq SET mr_bid_cnt = mr_bid_cnt + 1 WHERE mr_uid = {$rfqId}");
 
 mokta_json(array(
     'ok'      => true,

@@ -35,7 +35,7 @@ if ($mode === 'add_partner_join') {
     $seatsJson = json_encode($seats, JSON_UNESCAPED_UNICODE);
 
     $sql = sprintf(
-        "INSERT INTO od_mokta_join
+        "INSERT INTO smart_mokta_join
             (mj_host_type, mj_inid, mj_pid, mj_agency, mj_pcode, mj_date_key, mj_date_str, mj_region_key, mj_duration_key, mj_style_key, mj_status_badge, mj_status_cls, mj_title, mj_img, mj_cur_pax, mj_max_pax, mj_seats_json, mj_cur_price, mj_full_price, mj_tags, mj_view_yn, mj_rdate)
          VALUES
             ('partner', '%s', '%s', '%s', '%s', '08-15', '%s', '고비', '4박5일', '조인', '파트너 출발확정', 'sky', '%s', '/customized/mokta/images/gobi_camp_vans.jpg', %d, %d, '%s', '%s', '%s', '출발 100% 확정 차량 · 1/N 각자 카드결제 · 차액 자동환급', 'Y', NOW())",
@@ -76,7 +76,7 @@ if ($mode === 'add_member_join') {
     $seatsJson = json_encode($seats, JSON_UNESCAPED_UNICODE);
 
     $sql = sprintf(
-        "INSERT INTO od_mokta_join
+        "INSERT INTO smart_mokta_join
             (mj_host_type, mj_inid, mj_pid, mj_agency, mj_pcode, mj_date_key, mj_date_str, mj_region_key, mj_duration_key, mj_style_key, mj_status_badge, mj_status_cls, mj_title, mj_img, mj_cur_pax, mj_max_pax, mj_seats_json, mj_cur_price, mj_full_price, mj_tags, mj_view_yn, mj_rdate)
          VALUES
             ('member', '%s', 'boolub', '파트너 전담매칭 대기중', 'C3954-E9344-H0474', '09-05', '%s', '고비', '4박5일', '조인', '여행자 동행모집', 'amber', '%s', '/customized/mokta/images/companion_team_hands.jpg', %d, %d, '%s', '견적 매칭중', '790,000원~', '%s', 'Y', NOW())",
@@ -98,7 +98,7 @@ if ($mode === 'apply_seat') {
         mokta_json(array('ok' => false, 'requireLogin' => true, 'message' => '로그인 후 합류 신청이 가능합니다.'), 401);
     }
     $joinId = (int)($_POST['join_id'] ?? 0);
-    $row = mokta_q_one("SELECT * FROM od_mokta_join WHERE mj_uid = {$joinId} AND mj_view_yn = 'Y' LIMIT 1");
+    $row = mokta_q_one("SELECT * FROM smart_mokta_join WHERE mj_uid = {$joinId} AND mj_view_yn = 'Y' LIMIT 1");
     if (empty($row['mj_uid'])) {
         mokta_json(array('ok' => false, 'message' => '모집 방 정보를 찾을 수 없습니다.'), 404);
     }
@@ -112,7 +112,7 @@ if ($mode === 'apply_seat') {
         $seats[$idx] = $auth['userName'] !== '' ? $auth['userName'] : '신규합류';
     }
     $seatsJson = mokta_esc(json_encode($seats, JSON_UNESCAPED_UNICODE));
-    mokta_q_exec("UPDATE od_mokta_join SET mj_cur_pax = mj_cur_pax + 1, mj_seats_json = '{$seatsJson}' WHERE mj_uid = {$joinId}");
+    mokta_q_exec("UPDATE smart_mokta_join SET mj_cur_pax = mj_cur_pax + 1, mj_seats_json = '{$seatsJson}' WHERE mj_uid = {$joinId}");
     mokta_json(array('ok' => true));
 }
 

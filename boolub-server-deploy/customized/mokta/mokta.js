@@ -1,18 +1,18 @@
 /* ============================================================================
    부럽(BOOLUB) × 몽골한국관광협회(MOKTA) 공식 몽골 전용관 v4 (app.js)
-   Target Live URL: https://www.boolub.com/?pn=pages.view&type=pages&data=mokta
+   Target Live URL: https://www.boolub.com/?pn=pages.view&type=pages&data=mj
    - 부럽 실제 입점 파트너사(9곳) 로고·상점(pid)·실제 판매상품(pcode) 완벽 연동
    - MOKTA 협회 순차 입점 회원사(11곳) 슬롯 및 패스트트랙 입점 신청 지원
    - 부럽 직영 몽골원정대·쿠폰특가·공항픽업·여행자보험·eSIM 자연스러운 전환 설계
 ============================================================================ */
 
-/* 0. 데모 환경에서도 실제 적용 주소(?pn=pages.view&type=pages&data=mokta) 구조 재현 */
+/* 0. 데모 환경에서도 실제 적용 주소(?pn=pages.view&type=pages&data=mj) 구조 재현 */
 (function syncTargetQueryUrl() {
   try {
     if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
       const params = new URLSearchParams(window.location.search);
       if (!params.get('data')) {
-        const nextUrl = window.location.pathname + '?pn=pages.view&type=pages&data=mokta' + (window.location.hash || '');
+        const nextUrl = window.location.pathname + '?pn=pages.view&type=pages&data=mj' + (window.location.hash || '');
         window.history.replaceState({ page: 'mokta' }, '', nextUrl);
       }
     }
@@ -1806,7 +1806,7 @@ async function confirmJoinSeat(joinId) {
     const res = await moktaApiCall('ajax.mokta.join.pro.php', { _mode: 'apply_seat', join_id: joinId });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
         return;
       }
       showToast(res.message || '좌석 합류 처리 중 오류가 발생했습니다.');
@@ -1843,7 +1843,7 @@ async function submitCompanionPost() {
     });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
         return;
       }
       showToast(res.message || '동행글 등록에 실패했습니다.');
@@ -1999,7 +1999,7 @@ async function submitCustomerWizard() {
     });
     if (res && !res.ok) {
       if (res.requireLogin) {
-        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mokta');
+        location.href = '/?pn=member.login.form&_rurl=' + encodeURIComponent('/?pn=pages.view&type=pages&data=mj');
         return;
       }
       showToast(res.message || '맞춤견적 등록 중 오류가 발생했습니다.');

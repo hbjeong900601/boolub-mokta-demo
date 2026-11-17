@@ -1,26 +1,24 @@
 <?php
 /**
- * 부럽(BOOLUB) × MOKTA 공식전용관 공통 코어 & 권한 검증 모듈
+ * 부럽(BOOLUB) × MOKTA 공식전용관 (https://www.boolub.com/?pn=pages.view&type=pages&data=mj)
+ * HYSSENCE(원데이넷) 실서버 세션·암호화토큰·DB($con) 연동 코어 모듈
  * 서버 배포 위치: /program/mokta.inc.php
- *
- * 권한 정책:
- *  - master  : 부럽 통합관리자(totalAdmin / AuthAdmin 쿠키 / 최고관리자 회원) -> 파트너사 센터 전체 오픈 + 대행/입점승인 가능
- *  - partner : 로그인한 입점 파트너 계정(subAdmin AuthCompany 쿠키 또는 od_mokta_partner_map 승인 회원) -> 파트너사 센터 본인 계정 오픈
- *  - member  : 일반 로그인 고객 -> 파트너사 센터 비노출(차단), [파트너 입점신청] 버튼 노출
- *  - guest   : 미로그인 방문자 -> 파트너사 센터 비노출(차단), [파트너 입점신청] 버튼 노출
  */
 if (!defined('_OD_DIRECT_')) {
     include_once(dirname(__FILE__) . '/inc.php');
 }
 
-/* ---------- 안전한 DB 헬퍼 (HYSSENCE _MQ 계열 완벽 호환) ---------- */
+/* ---------- 안전한 DB 헬퍼 (실서버 $con 및 _MQ 계열 완벽 호환) ---------- */
 function mokta_esc($str) {
-    global $connect, $dbcon;
+    global $con, $connect, $dbcon;
     $val = trim((string)$str);
-    if (isset($connect) && is_object($connect)) {
+    if (isset($con) && ($con instanceof mysqli)) {
+        return mysqli_real_escape_string($con, $val);
+    }
+    if (isset($connect) && ($connect instanceof mysqli)) {
         return mysqli_real_escape_string($connect, $val);
     }
-    if (isset($dbcon) && is_object($dbcon)) {
+    if (isset($dbcon) && ($dbcon instanceof mysqli)) {
         return mysqli_real_escape_string($dbcon, $val);
     }
     return addslashes($val);
@@ -28,23 +26,25 @@ function mokta_esc($str) {
 
 function mokta_q_one($sql) {
     if (function_exists('_MQ')) {
-        return _MQ($sql);
+        $res = _MQ($sql);
+        return is_array($res) ? $res : array();
     }
-    global $connect;
-    $res = mysqli_query($connect, $sql);
-    return $res ? mysqli_fetch_assoc($res) : array();
+    global $con;
+    $r = mysqli_query($con, $sql);
+    return $r ? (mysqli_fetch_assoc($r) ?: array()) : array();
 }
 
 function mokta_q_all($sql) {
     if (function_exists('_MQ_assoc')) {
-        return _MQ_assoc($sql);
+        $res = _MQ_assoc($sql);
+        return is_array($res) ? $res : array();
     }
-    global $connect;
+    global $con;
     $rows = array();
-    $res = mysqli_query($connect, $sql);
-    if ($res) {
-        while ($r = mysqli_fetch_assoc($res)) {
-            $rows[] = $r;
+    $r = mysqli_query($con, $sql);
+    if ($r) {
+        while ($row = mysqli_fetch_assoc($r)) {
+            $rows[] = $row;
         }
     }
     return $rows;
@@ -55,16 +55,16 @@ function mokta_q_exec($sql) {
         _MQ_noreturn($sql);
         return true;
     }
-    global $connect;
-    return (bool)mysqli_query($connect, $sql);
+    global $con;
+    return (bool)mysqli_query($con, $sql);
 }
 
 function mokta_last_id() {
     if (function_exists('_MQ_insert_id')) {
         return (int)_MQ_insert_id();
     }
-    global $connect;
-    return isset($connect) ? (int)mysqli_insert_id($connect) : 0;
+    global $con;
+    return isset($con) ? (int)mysqli_insert_id($con) : 0;
 }
 
 function mokta_json($payload, $httpCode = 200) {
@@ -86,29 +86,57 @@ function mokta_mask_name($name) {
     return mb_substr($name, 0, 1, 'UTF-8') . '*' . mb_substr($name, $len - 1, 1, 'UTF-8');
 }
 
-/* ---------- HYSSENCE 세션·쿠키 기반 4단계 권한 판별 ---------- */
+/* ---------- HYSSENCE 정품 보안 토큰 검증 포함 4단계 권한 판별 ---------- */
+function mokta_verify_master_cookie() {
+    if (empty($_COOKIE['AuthAdmin'])) {
+        return false;
+    }
+    if (function_exists('get_site_info') && function_exists('get_secure_token')) {
+        if (empty($_COOKIE['AuthAdminSecureToken'])) {
+            return false;
+        }
+        $siteInfo = get_site_info();
+        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        $checksum = md5($siteInfo['s_license'] . $ua . $_COOKIE['AuthAdmin']);
+        $secureToken = get_secure_token('totalAdminLogin', $_COOKIE['AuthAdminSecureToken'], $checksum);
+        return !empty($secureToken);
+    }
+    $admCookie = mokta_esc($_COOKIE['AuthAdmin']);
+    $admRow = mokta_q_one("SELECT a_uid FROM smart_admin WHERE a_uid = '{$admCookie}' OR a_id = '{$admCookie}' LIMIT 1");
+    return !empty($admRow['a_uid']);
+}
+
+function mokta_verify_subadmin_cookie() {
+    if (empty($_COOKIE['AuthCompany'])) {
+        return '';
+    }
+    $cpId = trim((string)$_COOKIE['AuthCompany']);
+    if (function_exists('get_site_info') && function_exists('get_secure_token')) {
+        if (empty($_COOKIE['AuthSubAdminSecureToken'])) {
+            return '';
+        }
+        $siteInfo = get_site_info();
+        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        $checksum = md5($siteInfo['s_license'] . $ua . $cpId);
+        $secureToken = get_secure_token('subAdminLogin', $_COOKIE['AuthSubAdminSecureToken'], $checksum);
+        if (empty($secureToken)) {
+            return '';
+        }
+    }
+    return $cpId;
+}
+
 function mokta_resolve_auth() {
-    global $mem_info, $siteAdmin, $subAdmin;
+    global $mem_info;
 
     $isLoggedMember = (function_exists('is_login') && is_login() && !empty($mem_info['in_id']));
     $memberId   = $isLoggedMember ? trim((string)$mem_info['in_id']) : '';
     $memberName = $isLoggedMember ? trim((string)($mem_info['in_name'] ?? $memberId)) : '';
 
-    // 1. 마스터 관리자 판별 (totalAdmin 로그인 세션/쿠키 또는 최고관리자 계정)
-    $isMaster = false;
-    if ((function_exists('is_admin') && is_admin()) || (function_exists('is_master') && is_master())) {
-        $isMaster = true;
-    } elseif (!empty($siteAdmin['a_id']) || !empty($_SESSION['AuthAdmin'])) {
-        $isMaster = true;
-    } elseif (!empty($_COOKIE['AuthAdmin'])) {
-        $admCookie = mokta_esc($_COOKIE['AuthAdmin']);
-        $admRow = mokta_q_one("SELECT a_id FROM od_admin WHERE a_uid = '{$admCookie}' OR a_id = '{$admCookie}' LIMIT 1");
-        if (!empty($admRow['a_id'])) {
-            $isMaster = true;
-        }
-    }
+    // 1. 마스터 계정 (totalAdmin 보안토큰 검증 통과 또는 최고관리자 회원 로그인)
+    $isMaster = mokta_verify_master_cookie();
     if (!$isMaster && $isLoggedMember) {
-        if ($memberId === 'admin' || $memberId === 'boolub' || (isset($mem_info['in_userlevel']) && (int)$mem_info['in_userlevel'] >= 9)) {
+        if ($memberId === 'admin' || (isset($mem_info['in_userlevel']) && (int)$mem_info['in_userlevel'] >= 9)) {
             $isMaster = true;
         }
     }
@@ -123,21 +151,13 @@ function mokta_resolve_auth() {
         );
     }
 
-    // 2. 로그인한 입점 파트너 계정 판별
-    // 2-A. HYSSENCE 입점사 관리자(/subAdmin/) AuthCompany 쿠키 세션 확인
-    $subPartnerId = '';
-    if (!empty($subAdmin['cp_id'])) {
-        $subPartnerId = trim((string)$subAdmin['cp_id']);
-    } elseif (!empty($_SESSION['AuthCompany'])) {
-        $subPartnerId = trim((string)$_SESSION['AuthCompany']);
-    } elseif (!empty($_COOKIE['AuthCompany'])) {
-        $subPartnerId = trim((string)$_COOKIE['AuthCompany']);
-    }
-
-    if ($subPartnerId !== '') {
-        $escPid = mokta_esc($subPartnerId);
-        $cpRow = mokta_q_one("SELECT cp_id, cp_name FROM od_company WHERE cp_id = '{$escPid}' LIMIT 1");
-        $mapRow = mokta_q_one("SELECT mp_pid, mp_name FROM od_mokta_partner_map WHERE mp_pid = '{$escPid}' AND mp_status = 'approved' LIMIT 1");
+    // 2. 로그인한 입점 파트너 계정
+    // 2-A. 입점사 관리자(/subAdmin/) AuthCompany 보안토큰 세션 확인
+    $verifiedCpId = mokta_verify_subadmin_cookie();
+    if ($verifiedCpId !== '') {
+        $escPid = mokta_esc($verifiedCpId);
+        $cpRow  = mokta_q_one("SELECT cp_id, cp_name FROM smart_company WHERE cp_id = '{$escPid}' LIMIT 1");
+        $mapRow = mokta_q_one("SELECT mp_pid, mp_name FROM smart_mokta_partner_map WHERE mp_pid = '{$escPid}' AND mp_status = 'approved' LIMIT 1");
         if (!empty($cpRow['cp_id']) || !empty($mapRow['mp_pid'])) {
             $resolvedPid  = !empty($mapRow['mp_pid']) ? $mapRow['mp_pid'] : $cpRow['cp_id'];
             $resolvedName = !empty($mapRow['mp_name']) ? $mapRow['mp_name'] : $cpRow['cp_name'];
@@ -151,12 +171,12 @@ function mokta_resolve_auth() {
         }
     }
 
-    // 2-B. 프론트엔드 로그인 회원 ID가 승인된 입점 파트너(od_mokta_partner_map 또는 od_company)와 매칭되는지 확인
+    // 2-B. 프론트 로그인 회원 ID가 승인된 입점 파트너(smart_mokta_partner_map 또는 smart_company)와 일치하는지 확인
     if ($isLoggedMember) {
         $escMem = mokta_esc($memberId);
         $mapRow = mokta_q_one("
             SELECT mp_pid, mp_name
-            FROM od_mokta_partner_map
+            FROM smart_mokta_partner_map
             WHERE (mp_member_id = '{$escMem}' OR mp_pid = '{$escMem}')
               AND mp_status = 'approved'
             LIMIT 1
@@ -171,7 +191,7 @@ function mokta_resolve_auth() {
             );
         }
 
-        $cpRow = mokta_q_one("SELECT cp_id, cp_name FROM od_company WHERE cp_id = '{$escMem}' LIMIT 1");
+        $cpRow = mokta_q_one("SELECT cp_id, cp_name FROM smart_company WHERE cp_id = '{$escMem}' LIMIT 1");
         if (!empty($cpRow['cp_id'])) {
             return array(
                 'role'        => 'partner',
@@ -192,7 +212,7 @@ function mokta_resolve_auth() {
         );
     }
 
-    // 4. 비로그인 고객 (파트너사 센터 비오픈, 파트너 입점신청 버튼 노출)
+    // 4. 미로그인 방문자 (파트너사 센터 비오픈, 파트너 입점신청 버튼 노출)
     return array(
         'role'        => 'guest',
         'userId'      => '',
@@ -226,7 +246,7 @@ function mokta_require_master() {
     return $auth;
 }
 
-/* ---------- 안전한 이미지 업로드 처리 (/upfiles/mokta/YYYYMM/) ---------- */
+/* ---------- 안전한 이미지 업로드 처리 (/customized/mokta/uploads/YYYYMM/) ---------- */
 function mokta_upload_image($fieldKey) {
     if (empty($_FILES[$fieldKey]) || $_FILES[$fieldKey]['error'] !== UPLOAD_ERR_OK) {
         return '';
@@ -248,9 +268,14 @@ function mokta_upload_image($fieldKey) {
     if (!isset($mimeMap[$info['mime']])) {
         return '';
     }
-    $ext = $mimeMap[$info['mime']];
-    $ym  = date('Ym');
-    $relDir = "/upfiles/mokta/{$ym}";
+    $ext    = $mimeMap[$info['mime']];
+    $ym     = date('Ym');
+    $baseUp = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/customized/mokta/uploads';
+    if (!is_dir($baseUp)) {
+        @mkdir($baseUp, 0755, true);
+        @file_put_contents($baseUp . '/.htaccess', "php_flag engine off\nOptions -Indexes\n<FilesMatch \"\\.(php|php5|php7|phtml|phar|pl|py|cgi|sh)$\">\n  Require all denied\n</FilesMatch>\n");
+    }
+    $relDir = "/customized/mokta/uploads/{$ym}";
     $absDir = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $relDir;
     if (!is_dir($absDir)) {
         @mkdir($absDir, 0755, true);

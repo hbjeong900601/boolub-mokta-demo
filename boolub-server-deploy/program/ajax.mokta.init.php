@@ -7,10 +7,10 @@ include_once(dirname(__FILE__) . '/mokta.inc.php');
 
 $auth = mokta_resolve_auth();
 
-/* 1. 고객 맞춤견적(od_mokta_rfq) + 파트너 비교견적(od_mokta_bid) 로드 */
+/* 1. 고객 맞춤견적(smart_mokta_rfq) + 파트너 비교견적(smart_mokta_bid) 로드 */
 $rfqRows = mokta_q_all("
     SELECT *
-    FROM od_mokta_rfq
+    FROM smart_mokta_rfq
     WHERE mr_view_yn = 'Y'
     ORDER BY mr_uid DESC
     LIMIT 30
@@ -25,7 +25,7 @@ if (!empty($rfqRows)) {
     $idList = implode(',', $mrIds);
     $bidRows = mokta_q_all("
         SELECT *
-        FROM od_mokta_bid
+        FROM smart_mokta_bid
         WHERE mb_mr_uid IN ({$idList})
         ORDER BY mb_uid DESC
     ");
@@ -72,10 +72,10 @@ if (!empty($rfqRows)) {
     }
 }
 
-/* 2. 실시간 동행·오픈조인(od_mokta_join) 로드 */
+/* 2. 실시간 동행·오픈조인(smart_mokta_join) 로드 */
 $joinRows = mokta_q_all("
     SELECT *
-    FROM od_mokta_join
+    FROM smart_mokta_join
     WHERE mj_view_yn = 'Y'
     ORDER BY mj_uid DESC
     LIMIT 30
@@ -109,10 +109,10 @@ foreach ($joinRows as $j) {
     );
 }
 
-/* 3. 현장 LIVE 스토리(od_mokta_story) 로드 */
+/* 3. 현장 LIVE 스토리(smart_mokta_story) 로드 */
 $storyRows = mokta_q_all("
     SELECT *
-    FROM od_mokta_story
+    FROM smart_mokta_story
     WHERE ms_view_yn = 'Y'
     ORDER BY ms_uid DESC
     LIMIT 24
@@ -133,12 +133,12 @@ foreach ($storyRows as $s) {
     );
 }
 
-/* 4. 마스터 계정일 때만 신규 입점신청 목록(od_mokta_onboard) 반환 */
+/* 4. 마스터 계정일 때만 신규 입점신청 목록(smart_mokta_onboard) 반환 */
 $onboardList = null;
 if ($auth['role'] === 'master') {
     $obRows = mokta_q_all("
         SELECT *
-        FROM od_mokta_onboard
+        FROM smart_mokta_onboard
         ORDER BY FIELD(mo_status, 'pending', 'approved', 'rejected'), mo_uid DESC
         LIMIT 50
     ");
