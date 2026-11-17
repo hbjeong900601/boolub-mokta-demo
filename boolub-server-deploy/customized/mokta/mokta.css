@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* =========================================================================
-   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_20)
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_21)
    - 본 페이지(data=mj, data=mokta)에서는 부럽 기본 상단 헤더(.sc_Header) 비노출 + MOKTA 전용 스티키 헤더 노출
    - 3-Tier CSS Specificity Guard + 30개 파트너사 도트 캘린더 + 신뢰 보증 섹션 + 미니홈 커스터마이저
    ========================================================================= */
@@ -2999,8 +2999,8 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 #bl-mokta-cms-wrap .bl-hero-ctrl-bar {
   position: absolute;
   right: 18px;
-  bottom: 14px;
-  top: auto;
+  top: 14px;
+  bottom: auto;
   z-index: 20;
   display: inline-flex;
   align-items: center;
@@ -6417,8 +6417,27 @@ body.partner-mode #bl-mokta-cms-wrap #customerSubNav {
     white-space: nowrap;
   }
 
-  body:not(.mob-submode) #bl-mokta-cms-wrap #companionChipRow {
+  body:not(.mob-submode) #bl-mokta-cms-wrap #companionChipRow,
+#bl-mokta-cms-wrap #filterBarActionRight {
     display: none !important;
+  }
+
+  #bl-mokta-cms-wrap .ts-filter-pill-row,
+#bl-mokta-cms-wrap .ts-filter-pills-left {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  #bl-mokta-cms-wrap .ts-filter-pill-row::-webkit-scrollbar,
+#bl-mokta-cms-wrap .ts-filter-pills-left::-webkit-scrollbar {
+    display: none;
+  }
+
+  #bl-mokta-cms-wrap .ts-fpill,
+#bl-mokta-cms-wrap .ts-fpill-reset {
+    flex-shrink: 0;
   }
 
 

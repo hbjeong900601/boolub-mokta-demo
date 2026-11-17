@@ -2540,8 +2540,8 @@ body.is-live-cms .bl-auth-sim-bar {
 .bl-hero-ctrl-bar {
   position: absolute;
   right: 18px;
-  bottom: 14px;
-  top: auto;
+  top: 14px;
+  bottom: auto;
   z-index: 20;
   display: inline-flex;
   align-items: center;
@@ -5520,8 +5520,24 @@ body.is-live-cms .bl-auth-sim-bar {
     color: #6b7684;
     white-space: nowrap;
   }
-  body:not(.mob-submode) #companionChipRow {
+  body:not(.mob-submode) #companionChipRow,
+  #filterBarActionRight {
     display: none !important;
+  }
+  .ts-filter-pill-row,
+  .ts-filter-pills-left {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .ts-filter-pill-row::-webkit-scrollbar,
+  .ts-filter-pills-left::-webkit-scrollbar {
+    display: none;
+  }
+  .ts-fpill,
+  .ts-fpill-reset {
+    flex-shrink: 0;
   }
 
   .ts-prefix-filter-row,
