@@ -371,55 +371,71 @@ em, i { font-style: normal; }
   font-weight: 700;
 }
 
-/* ===== 부럽 메인 3단 세로형 배너 히어로 (.bl-hero 360:440 동일) ===== */
+/* ===== 부럽 메인 비주얼(#slickMainBnr · 360:440) 동일 1칸씩 무한 슬라이딩 캐러셀 ===== */
 .bl-hero-section {
   padding: 24px 0 0;
 }
 .bl-hero-slider-wrap {
   position: relative;
 }
-.bl-hero-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+.bl-hero-viewport {
+  overflow: hidden;
+  margin: 0 -6px;
+}
+.bl-hero-track {
+  display: flex;
+  will-change: transform;
+  user-select: none;
+  cursor: grab;
+}
+.bl-hero-track.is-dragging {
+  cursor: grabbing;
+}
+.bl-hero-slide {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+  padding: 0 6px;
+  box-sizing: border-box;
 }
 .bl-hero-card {
   position: relative;
-  aspect-ratio: 360 / 420;
+  aspect-ratio: 360 / 440;
   border-radius: var(--bl-radius);
   overflow: hidden;
   cursor: pointer;
   background: var(--bl-gray-100);
+  transform: translateZ(0);
 }
 .bl-hero-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.45s ease;
+  pointer-events: none;
 }
 .bl-hero-card:hover img { transform: scale(1.04); }
 .bl-hero-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.20) 40%, rgba(0,0,0,0) 65%);
+  background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0) 60%);
   transition: background 0.3s ease;
 }
 .bl-hero-card:hover::after {
-  background: linear-gradient(to top, rgba(0,0,0,0.74) 0%, rgba(0,0,0,0.26) 45%, rgba(0,0,0,0.04) 70%);
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.05) 70%);
 }
 .bl-hero-txt {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 22px 20px;
+  padding: 20px;
   z-index: 2;
   color: #ffffff;
 }
 .bl-hero-eyebrow {
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   padding: 2px 8px;
   font-size: 11px;
   font-weight: 700;
@@ -433,17 +449,23 @@ em, i { font-style: normal; }
   font-weight: 700;
   line-height: 1.32;
   letter-spacing: -0.4px;
+  color: #ffffff;
   word-break: keep-all;
 }
 .bl-hero-sub {
   margin-top: 6px;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.88);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: keep-all;
 }
 
-/* 좌우 화살표 (waug.css 흰색 원형 버튼 동일) */
+/* 좌우 화살표 (부럽 메인 waug.css .box-main-banner .slick-prev/.slick-next 동일) */
 .bl-slider-arrow {
   position: absolute;
   top: 50%;
@@ -458,27 +480,17 @@ em, i { font-style: normal; }
   justify-content: center;
   font-size: 18px;
   color: var(--bl-gray-900);
-  z-index: 10;
-  transition: transform 0.18s ease, color 0.18s ease;
+  z-index: 20;
+  opacity: 0.95;
+  transition: transform 0.18s ease, color 0.18s ease, opacity 0.18s ease;
 }
 .bl-slider-arrow:hover {
+  opacity: 1;
   color: var(--bl-point-text);
-  transform: translateY(-50%) scale(1.05);
+  transform: translateY(-50%) scale(1.04);
 }
-.bl-slider-arrow.prev { left: -14px; }
-.bl-slider-arrow.next { right: -14px; }
-.bl-hero-counter {
-  position: absolute;
-  right: 16px;
-  top: 14px;
-  z-index: 10;
-  padding: 3px 10px;
-  border-radius: 12px;
-  background: rgba(18, 22, 25, 0.55);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-}
+.bl-slider-arrow.prev { left: 8px; }
+.bl-slider-arrow.next { right: 8px; }
 
 /* ===== 부럽 메인 4개 퀵 실사 박스 (1번 영역 실사 썸네일 고도화) ===== */
 .bl-quick-4box {
@@ -2490,29 +2502,24 @@ body.is-live-cms .bl-auth-sim-bar {
   text-align: center;
 }
 
-/* ===== [v10] 히어로 메인 비주얼 자동 슬라이드 컨트롤 & 페이드 효과 ===== */
-@keyframes blHeroFadeIn {
-  from { opacity: 0.45; transform: translateY(3px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.bl-hero-card.is-anim {
-  animation: blHeroFadeIn 0.42s ease forwards;
-}
+/* ===== [v11] 부럽 메인(.box-main-banner .num-wrap) 동일 우측하단 카운터 & 컨트롤 ===== */
 .bl-hero-ctrl-bar {
   position: absolute;
-  right: 16px;
-  top: 14px;
-  z-index: 12;
+  right: 18px;
+  bottom: 14px;
+  top: auto;
+  z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 11px;
-  border-radius: 999px;
-  background: rgba(18, 22, 25, 0.62);
-  backdrop-filter: blur(6px);
+  gap: 7px;
+  padding: 3px 11px;
+  border-radius: 12px;
+  background: rgba(18, 22, 25, 0.58);
+  backdrop-filter: blur(4px);
   color: #ffffff;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 18px;
 }
 .bl-hero-dots {
   display: inline-flex;
@@ -2971,15 +2978,124 @@ body.is-live-cms .bl-auth-sim-bar {
   color: var(--bl-point-text);
 }
 
+/* ===== [v11] 부럽 몽골 여행 매거진 에디토리얼 그리드 (waug.css .bl-mag-cards 동일 규격) ===== */
+.bl-mokta-mag-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.bl-mokta-mag-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 320 / 428;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bl-gray-200);
+  box-shadow: 0 6px 20px rgba(18, 22, 25, 0.07);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  isolation: isolate;
+  color: #ffffff;
+}
+.bl-mokta-mag-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(18, 22, 25, 0.14);
+}
+.bl-mokta-mag-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+.bl-mokta-mag-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bl-mokta-mag-card:hover .bl-mokta-mag-thumb img {
+  transform: scale(1.06);
+}
+.bl-mokta-mag-thumb::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70%;
+  background: linear-gradient(180deg, rgba(12, 16, 20, 0) 0%, rgba(12, 16, 20, 0.46) 45%, rgba(12, 16, 20, 0.88) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.bl-mokta-mag-body {
+  position: relative;
+  z-index: 2;
+  padding: 26px 20px 22px;
+  color: #ffffff;
+}
+.bl-mokta-mag-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.bl-mokta-mag-city {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 30px;
+  background: #1fa8db;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.bl-mokta-mag-theme {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #121619;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.bl-mokta-mag-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.36;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: keep-all;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.bl-mokta-mag-meta {
+  margin-top: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
 /* 반응형 */
 @media (max-width: 1024px) {
-  .bl-explore-grid, .bl-waug-item-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bl-explore-grid, .bl-waug-item-grid, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bl-quick-4box { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bl-trip-finder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bl-join-grid, .bl-service-banners { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bl-join-top-bar, .bl-cal-hub-grid, .partner-grid-2col { grid-template-columns: 1fr; }
-  .bl-hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bl-hero-grid .bl-hero-card:nth-child(3) { display: none; }
+  .bl-hero-slide { flex: 0 0 50%; max-width: 50%; }
   .bl-slider-arrow.prev { left: 8px; }
   .bl-slider-arrow.next { right: 8px; }
   .bl-partner-card { flex: 0 0 calc((100% - 16px) / 2.08); min-width: 280px; }
@@ -2990,9 +3106,10 @@ body.is-live-cms .bl-auth-sim-bar {
   .bl-mokta-logo-img { height: 40px; }
   .bl-mokta-logo-sub { display: none; }
   .bl-search-box { order: 3; max-width: 100%; flex: 0 0 100%; }
-  .bl-hero-grid { grid-template-columns: 1fr; }
-  .bl-hero-grid .bl-hero-card:nth-child(2) { display: none; }
-  .bl-quick-4box, .bl-trip-finder, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: 1fr; }
+  .bl-hero-viewport { margin: 0; }
+  .bl-hero-slide { flex: 0 0 100%; max-width: 100%; padding: 0; }
+  .bl-hero-card { aspect-ratio: 4 / 5; }
+  .bl-quick-4box, .bl-trip-finder, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: 1fr; }
   .bl-rfq-grid, .bl-join-grid, .bl-service-banners { grid-template-columns: 1fr; }
   .bl-top-notice-inner .bl-notice-right { display: none; }
   .bl-partner-card { flex: 0 0 86%; min-width: 268px; }

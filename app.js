@@ -19,80 +19,74 @@
   } catch (_) {}
 })();
 
-/* 1. 상단 3단 세로형 히어로 배너 (3페이지 × 3장 = 총 9장 자동 슬라이드) */
-const HERO_PAGES = [
-  [
-    {
-      eyebrow: '부럽 직영 시그니처',
-      title: '1인 신청도 무조건 출발!\n2026 부럽 몽골원정대',
-      sub: '유심 무료 · 특식 3회 · 게르 업그레이드 · 추가금 0원',
-      img: './images/sand_dunes_camp.jpg',
-      action: () => openProductPreviewModal('T0950-Q2923-W2496')
-    },
-    {
-      eyebrow: 'MOKTA × 부럽 공식보증',
-      title: '몽골한국관광협회 공식 인증\n안심 에스크로 전용관 오픈',
-      sub: '관광부 정식 라이선스 검증 · 모객 미달 시 100% 환불 보장',
-      img: './images/hero_steppe_sunset.jpg',
-      action: () => scrollToSection('sec-trust')
-    },
-    {
-      eyebrow: '총무 없는 1/N 동행·조인',
-      title: '모일수록 내려가는 투어비\n월간 캘린더 잔여석 합류',
-      sub: '계좌이체 정산 없이 부럽에서 각자 카드로 안전 분할결제',
-      img: './images/companion_team_hands.jpg',
-      action: () => scrollToSection('sec-join')
-    }
-  ],
-  [
-    {
-      eyebrow: '부럽 단독 20% 쿠폰특가',
-      title: '노라·BBM·하닥·스카이투어\n검증된 몽골 인기투어 한눈에',
-      sub: '견적 대기 없이 지금 바로 쿠폰 할인가로 즉시 확정',
-      img: './images/milkyway_gobi.jpg',
-      action: () => scrollToSection('sec-store')
-    },
-    {
-      eyebrow: '내 일정 맞춤 비교견적',
-      title: '항공권만 끊으셨나요?\n원하는 코스 1:1 실사 비교',
-      sub: '최대 6개 공식 파트너사가 배정 차량·온수 게르 사진으로 제안',
-      img: './images/gobi_camp_vans.jpg',
-      action: () => openModal('rfqWizardModal')
-    },
-    {
-      eyebrow: '파트너 브랜드 미니홈',
-      title: '각 여행사만의 차량·캠프\n맞춤 미니홈 직접 비교',
-      sub: '보유 차량 연식·온수 샤워실·직영 캠프 스펙을 투명하게 확인',
-      img: './images/khuvsgul_island.jpg',
-      action: () => scrollToSection('sec-partners')
-    }
-  ],
-  [
-    {
-      eyebrow: '현장 LIVE 리얼 화보',
-      title: '오늘 밤 고비사막 은하수와\n따끈한 허르헉 캠프 풍경',
-      sub: '파트너 매니저가 직접 촬영한 숙소·차량 컨디션 미리보기',
-      img: './images/khorkhog_feast.jpg',
-      action: () => scrollToSection('sec-showcase')
-    },
-    {
-      eyebrow: '북부 홉스골 힐링 시즌',
-      title: '몽골의 푸른 진주 홉스골\n호수 1열 레이크뷰 캠프',
-      sub: '부모님 효도 단독투어부터 2030 힐링 오픈조인까지',
-      img: './images/khuvsgul_boat_sunset.jpg',
-      action: () => openProductPreviewModal('A9725-O5305-E2887')
-    },
-    {
-      eyebrow: '출국 전 원스톱 준비',
-      title: '새벽 공항 단독픽업부터\n여행자보험·이심까지 특가',
-      sub: '몽골 투어 불포함 필수 준비물도 부럽 회원가로 한 번에 해결',
-      img: './images/ger_interior.jpg',
-      action: () => scrollToSection('sec-essentials')
-    }
-  ]
+/* 1. 상단 세로형 메인 비주얼 배너 (부럽 메인 #slickMainBnr 동일 1장씩 부드럽게 흐르는 무한 슬라이더 · 총 9장) */
+const HERO_SLIDES = [
+  {
+    eyebrow: '부럽 직영 시그니처',
+    title: '1인 신청도 무조건 출발!\n2026 부럽 몽골원정대',
+    sub: '유심 무료 · 특식 3회 · 게르 업그레이드 · 추가금 0원 (699,000원~)',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    action: () => openProductPreviewModal('T0950-Q2923-W2496')
+  },
+  {
+    eyebrow: '총무 없는 1/N 동행·조인',
+    title: '모일수록 내려가는 투어비\n월간 캘린더 잔여석 합류',
+    sub: '실시간 커뮤니티 동행찾기부터 파트너 확정 차량까지 한눈에',
+    img: './images/companion_team_hands.jpg',
+    action: () => scrollToSection('sec-join')
+  },
+  {
+    eyebrow: 'MOKTA × 부럽 공식보증',
+    title: '몽골한국관광협회 공식 인증\n안심 에스크로 전용관',
+    sub: '부럽 검증 파트너사 9곳 · 104개 실제 투어 안전결제 보장',
+    img: './images/hero_steppe_sunset.jpg',
+    action: () => scrollToSection('sec-trust')
+  },
+  {
+    eyebrow: '부럽 고비원정대 베스트',
+    title: '차강소브라가·홍고린엘스\n고비사막 4박5일 원정대',
+    sub: '정가 115만 원 → 부럽 직영 특가 999,000원 즉시 확정',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
+    action: () => openProductPreviewModal('C3954-E9344-H0474')
+  },
+  {
+    eyebrow: '내 일정 맞춤 비교견적',
+    title: '항공권만 끊으셨나요?\n원하는 코스 1:1 실사 비교',
+    sub: 'BBM·노라·하닥·스카이·밝은미래 등 공식 파트너가 직접 제안',
+    img: './images/gobi_camp_vans.jpg',
+    action: () => openModal('rfqWizardModal')
+  },
+  {
+    eyebrow: '공식 파트너 9개사 미니홈',
+    title: '각 여행사만의 보유 상품과\n차량·캠프 스펙 직접 비교',
+    sub: '15년 업력 BBM투어·노라투어·양가투어·두잇트래블 한자리에',
+    img: 'https://files.boolub.com/upfiles/product/1688056962.png',
+    action: () => scrollToSection('sec-partners')
+  },
+  {
+    eyebrow: '부럽 몽골 에디터 가이드',
+    title: '징기스칸 공항부터 게르 선택까지\n출국 전 필독 몽골 매거진',
+    sub: '누적 조회수 8만+ 부럽 인기 몽골 여행 매거진 총정리',
+    img: 'https://files.boolub.com/upfiles/board/2422061780_1794708044.jpg',
+    action: () => scrollToSection('sec-magazine')
+  },
+  {
+    eyebrow: '실제 탑승객 리얼 후기',
+    title: '부럽 여행자들이 직접 남긴\n생생한 몽골 포토 후기',
+    sub: '가족 원정대부터 홉스골·남고비 자유여행 실제 리뷰 확인',
+    img: 'https://files.boolub.com/upfiles/board/2384413237.jpg',
+    action: () => scrollToSection('sec-showcase')
+  },
+  {
+    eyebrow: '새벽 도착도 안심 이동',
+    title: '울란바토르 공항 ↔ 호텔\n단독 차량 픽업·샌딩',
+    sub: '더블유아이티(WIT) 공식 운영 · 단독차량 편도 19,200원~',
+    img: 'https://files.boolub.com/upfiles/product/3283866928.jpg',
+    action: () => openProductPreviewModal('I3885-I4036-S5377')
+  }
 ];
 
-/* 2. 부럽 실제 판매 몽골 투어 상품 12선 (실제 pcode · 실제 입점 파트너 · 쿠폰적용가) */
+/* 2. 부럽 실제 판매 몽골 투어 대표 상품 (smart_product 실데이터 100% 일치 · 초기 로드 후 전체 104개 실시간 하이드레이션) */
 const DIRECT_PRODUCTS = [
   {
     id: 'p1',
@@ -102,16 +96,16 @@ const DIRECT_PRODUCTS = [
     regionKey: '중부',
     durationKey: '3박4일',
     styleKey: '원정대',
-    tag: '1인예약 출발확정',
-    sub: '부럽 몽골원정대 (직영) · 추가금 0원 · USIM 포함',
-    title: '[3박4일] 몽골 중부 원정대 동행 조인 투어 (테를지·미니사막·우기호수·울란바토르)',
-    rating: '4.98',
-    reviews: 142,
+    tag: '부럽 직영 원정대',
+    sub: '부럽 몽골원정대 (직영) · 추가금 없음, USIM 포함, 게르 업그레이드, 특식 3회',
+    title: '[3박4일] 몽골 중부 원정대 동행 조인 투어 (테를지 미니사막 우기호수 울란바토르 투어)',
+    rating: '5.00',
+    reviews: 20,
     discount: '30%',
     originPrice: '999,000원',
-    price: '699,000원~',
-    img: './images/orkhon_waterfall_rainbow.jpg',
-    highlights: ['1인 신청도 100% 출발확정 보장', '몽골 데이터 USIM 전 인원 무료 제공', '전통 허르헉 등 현지 특식 3회 + 게르 업그레이드', '노쇼핑·노옵션 현지 추가비용 0원']
+    price: '699,000원',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    highlights: ['포함·핵심코스: 추가금 없음, USIM 포함, 게르 업그레이드, 특식 3회', '운영 파트너: 부럽 몽골원정대 (부럽트래블 본사 직영)', '1인 예약도 모객 취소 없이 출발확정 보장']
   },
   {
     id: 'p2',
@@ -121,620 +115,485 @@ const DIRECT_PRODUCTS = [
     regionKey: '고비',
     durationKey: '4박5일',
     styleKey: '원정대',
-    tag: '부럽 직영 베스트',
-    sub: '부럽 몽골원정대 (직영) · 1인 출발확정 · USIM 포함',
-    title: '[4박5일] 몽골 고비사막 원정대 동행 조인 투어 (차강소브라가·욜링암·홍고린엘스·바양작)',
-    rating: '4.99',
-    reviews: 118,
-    discount: '15%',
-    originPrice: '1,350,000원',
-    price: '1,150,000원',
-    img: './images/sand_dunes_camp.jpg',
-    highlights: ['동행 구할 필요 없이 1인 예약도 출발확정', '차강소브라가·욜링암·홍고린엘스·바양작 핵심 정복', '모래썰매·낙타트레킹·은하수 별밤 캠프 포함', '몽골 현지 USIM 무료 증정 및 전용 차량 배정']
+    tag: '부럽 직영 원정대',
+    sub: '부럽 몽골원정대 (직영) · 추가금 없음, USIM 포함, 게르 업그레이드, 특식',
+    title: '[4박 5일] 몽골 고비사막 원정대 동행 조인 투어 (차강소브라가, 욜링암, 홍고린엘스, 바양작)',
+    rating: '5.00',
+    reviews: 10,
+    discount: '13%',
+    originPrice: '1,150,000원',
+    price: '999,000원',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
+    highlights: ['포함·핵심코스: 차강소브라가 · 욜링암 · 홍고린엘스 · 바양작 핵심 완주', '추가금 없음 · USIM 무료 포함 · 게르 업그레이드 · 특식 제공', '부럽트래블 본사 직영 1인 예약 출발확정 프로그램']
   },
   {
     id: 'p3',
+    pcode: 'A7468-J1235-Q7992',
+    pid: 'bbm0707',
+    cat: '고비',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '단독',
+    tag: '공식 파트너 투어',
+    sub: 'BBM TOUR (비비엠투어) · 차강소브락-욜링암-홍고린엘스-바양작-달란잗갇',
+    title: '[몽골] 고비사막 4박5일',
+    rating: '5.00',
+    reviews: 8,
+    discount: '',
+    originPrice: '',
+    price: '1,333,400원',
+    img: 'https://files.boolub.com/upfiles/product/3400418975.png',
+    highlights: ['포함·핵심코스: 차강소브락 - 욜링암 - 홍고린엘스 - 바양작 - 달란잗갇', '운영 파트너: BBM TOUR (2009년 설립 15년 업력 정통 여행사)', '부럽 에스크로 안전 카드결제 및 일정 맞춤 상담 가능']
+  },
+  {
+    id: 'p4',
     pcode: 'V6003-W0388-Z1928',
     pid: 'anoratour',
     cat: '고비',
     regionKey: '고비',
     durationKey: '4박5일',
     styleKey: '단독',
-    tag: '20% 쿠폰특가',
-    sub: '노라투어 (NORA TOUR) · 샤워 가능 캠프 · 단독/조인',
-    title: '[몽골] 고비사막 시그니처 코스 4박5일 (차강소브락·욜링암·홍고린엘스·바양작)',
-    rating: '4.95',
-    reviews: 64,
-    discount: '20%',
-    originPrice: '1,441,100원',
-    price: '1,152,880원',
-    img: './images/milkyway_gobi.jpg',
-    highlights: ['부럽 20% 즉시할인 쿠폰 적용 베스트셀러', '남고비 4대 핵심 포인트 여유로운 동선 설계', '전 일정 검증된 여행자 게르 캠프 및 한국어 가이드', '출발 인원별 투명한 요금제 및 공항 픽업 포함']
+    tag: '공식 파트너 투어',
+    sub: '노라투어 (NORA TOUR) · 바가가즈링촐로 - 욜링암 - 고비사막 - 바양작 - 차강소브라가',
+    title: '[몽골] 고비사막 시그니처 코스 4박5일',
+    rating: '4.83',
+    reviews: 7,
+    discount: '',
+    originPrice: '',
+    price: '1,441,100원',
+    img: 'https://files.boolub.com/upfiles/product/2082172223.png',
+    highlights: ['포함·핵심코스: 바가가즈링촐로 - 욜링암 - 고비사막 - 바양작 - 차강소브라가', '운영 파트너: 노라투어 (부럽 17개 정규 투어 운영 공식 파트너)', '부럽 안전결제 및 출발 인원별 맞춤 상담 가능']
   },
   {
-    id: 'p4',
-    pcode: 'A7468-J1235-Q7992',
-    pid: 'bbm0707',
+    id: 'p5',
+    pcode: 'I6778-W7230-M7386',
+    pid: 'Bftour',
     cat: '고비',
     regionKey: '고비',
     durationKey: '4박5일',
     styleKey: '조인',
-    tag: '15년 전통 랜드사',
-    sub: 'BBM TOUR (비비엠투어) · 직영 캠프·차량 보유',
-    title: '[몽골] 고비사막 정통 4박5일 (차강소브락·욜링암·홍고린엘스·바양작)',
-    rating: '4.92',
-    reviews: 93,
-    discount: '20%',
-    originPrice: '1,333,400원',
-    price: '1,066,720원',
-    img: './images/tsagaan_suvarga_snap.jpg',
-    highlights: ['2009년 설립 BBM투어 베테랑 기사·가이드 전담', '홍고린엘스 모래언덕 일몰 및 바양작 불타는 절벽 투어', '쾌적한 전용 차량(스타렉스/푸르공) 선택 가능', '부럽 단독 쿠폰 적용 시 106만 원대 실속 특가']
+    tag: '조인·단독 가능',
+    sub: '밝은 미래 여행 (BRIGHT FUTURE) · 낮에는 질주, 밤에는 별빛! 남고비 트립 [여행자 게르]',
+    title: '[몽골] 낮에는 질주, 밤에는 별빛 ! 남고비 4박5일 투어 패키지 조인 / 동행 / 단독 가능',
+    rating: '4.50',
+    reviews: 7,
+    discount: '',
+    originPrice: '',
+    price: '1,060,300원',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/19/uDnn/49IDVb8jV5.jpg',
+    highlights: ['포함·핵심코스: 남고비 핵심 트립 · 여행자 게르 숙박', '운영 파트너: 밝은 미래 여행 (울란바토르 직영 · 조인/동행/단독 모두 가능)', '부럽 에스크로 안전결제 지원']
   },
   {
-    id: 'p5',
+    id: 'p6',
     pcode: 'L0277-Y0435-H3099',
     pid: 'khadag',
     cat: '단기',
     regionKey: '테를지',
     durationKey: '2박3일',
     styleKey: '단독',
-    tag: '연차 1개 주말추천',
-    sub: '하닥투어 (KHADAG TOUR) · 직장인 단기 베스트',
-    title: '[몽골] 짧은일정 추천! 직장인들을 위한 알짜 테를지·초원 2박3일',
-    rating: '4.94',
-    reviews: 51,
-    discount: '20%',
-    originPrice: '675,000원',
-    price: '540,000원',
-    img: './images/terelj_resort_camp.jpg',
-    highlights: ['금~일 또는 연차 1일로 다녀오는 부담 없는 2박3일', '테를지 국립공원·승마체험·거북바위·아리야발 사원', '장거리 비포장 이동 부담을 줄인 힐링 초원 코스', '쿠폰 적용가 540,000원 가성비 최강 입문 투어']
+    tag: '공식 파트너 투어',
+    sub: '하닥투어 (KHADAG TOUR) 공식 판매 상품',
+    title: '[몽골] 짧은일정 추천! 직장인들을 위한 2박3일 (몽골/테를지)',
+    rating: '5.00',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '675,000원',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/mOrl/uJTKVYoS0I.jpg',
+    highlights: ['직장인 연차 최소화로 다녀오는 테를지·초원 2박3일 알짜 코스', '운영 파트너: 하닥투어 (평점 ★5.0 만점 기록 단기 베스트)', '부럽 에스크로 안전결제 지원']
   },
   {
-    id: 'p6',
+    id: 'p7',
     pcode: 'W0569-C8410-H2737',
     pid: 'bbm0707',
     cat: '단기',
     regionKey: '고비',
     durationKey: '2박3일',
-    styleKey: '조인',
-    tag: '실제후기 88건 ★4.8',
-    sub: 'BBM TOUR (비비엠투어) · 남부 핵심 단기투어',
-    title: '[몽골] 남부투어 (차강소브락·바가가쯔링촐로 화강암 협곡) 2박3일',
-    rating: '4.88',
-    reviews: 88,
-    discount: '20%',
-    originPrice: '800,000원',
-    price: '640,000원',
-    img: './images/baga_gazriin_sunset.jpg',
-    highlights: ['부럽 누적 리뷰 88건으로 검증된 단기 남부 스테디셀러', '짧은 2박3일 동안 대협곡 차강소브락과 별밤 완벽 체험', '바가가쯔링촐로 기암괴석 일몰 스냅 포인트 방문', '단독 및 소규모 동행 조인 모두 가능']
+    styleKey: '단독',
+    tag: '공식 파트너 투어',
+    sub: 'BBM TOUR (비비엠투어) · 차강소브락, 바가가쯔링촐로',
+    title: '[몽골] 남부투어(차강소브락-바가가쯔링촐로) 2박3일',
+    rating: '4.83',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '800,000원',
+    img: 'https://files.boolub.com/upfiles/product/3459423950.png',
+    highlights: ['포함·핵심코스: 차강소브락 대협곡 · 바가가쯔링촐로 기암괴석', '운영 파트너: BBM TOUR (15년 업력 정통 파트너)', '짧은 2박3일 동안 남부 핵심 절경을 만나는 실속 투어']
   },
   {
-    id: 'p7',
+    id: 'p8',
     pcode: 'H7863-P9594-D9241',
     pid: 'khadag',
     cat: '단기',
     regionKey: '중부',
     durationKey: '3박4일',
     styleKey: '단독',
-    tag: '사막+초원+온천',
-    sub: '하닥투어 (KHADAG TOUR) · 노천온천 힐링 포함',
-    title: '[몽골] 사막과 초원 그리고 쳉헤르 온천까지! 3박4일 속성코스',
-    rating: '4.96',
-    reviews: 47,
-    discount: '20%',
-    originPrice: '900,000원',
-    price: '720,000원',
-    img: './images/green_steppe_flock.jpg',
-    highlights: ['엘승타사르해 미니사막 낙타체험 + 모래썰매', '별을 보며 피로를 푸는 쳉헤르 천연 노천온천 숙박', '3박4일 안에 사막·초원·온천을 모두 담는 알짜 동선', '부럽 쿠폰 적용 시 720,000원 즉시 할인']
+    tag: '노천온천 힐링',
+    sub: '하닥투어 (KHADAG TOUR) 공식 판매 상품',
+    title: '[몽골] (인기) 몽골에서 온천을? 사막과 초원 그리고 온천까지! 3박4일 속성코스',
+    rating: '4.67',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '900,000원',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/ocAs/Ax10hCip2I.jpg',
+    highlights: ['미니사막 + 푸른 초원 + 천연 온천욕을 3박4일에 모두 담는 인기 속성코스', '운영 파트너: 하닥투어 (부럽 공식 입점 검증)', '부럽 에스크로 안전결제 지원']
   },
   {
-    id: 'p8',
+    id: 'p9',
     pcode: 'J8833-W9230-L2860',
     pid: 'SKYTOURS',
     cat: '단기',
     regionKey: '테를지',
     durationKey: '3박4일',
     styleKey: '단독',
-    tag: '천체망원경 별관측',
-    sub: '스카이 투어 몽골 (SKY TOURS) · 별밤 특화',
-    title: '[몽골] 미니사막·온천·테를지·천체망원경 별자리 체험 3박4일',
-    rating: '4.93',
-    reviews: 39,
-    discount: '20%',
-    originPrice: '1,051,830원',
-    price: '841,464원',
-    img: './images/starlight_ger_snap.jpg',
-    highlights: ['전문 천체망원경으로 달 크레이터와 은하수 직접 관측', '미니사막 + 온천욕 + 테를지 국립공원 핵심 코스', '아이 동반 가족 및 커플 여행객 만족도 최상위', '단독 차량 배정 및 전 일정 한국어 가이드 동행']
-  },
-  {
-    id: 'p9',
-    pcode: 'E0711-V0341-Z7774',
-    pid: 'Bftour',
-    cat: '고비',
-    regionKey: '고비',
-    durationKey: '5박6일',
-    styleKey: '조인',
-    tag: '조인/단독 겸용',
-    sub: '밝은 미래 여행 (BRIGHT FUTURE) · 관광부 정식허가',
-    title: '[몽골] 일출부터 별빛까지! 남고비·테를지 완전정복 5박6일 (조인/단독)',
-    rating: '4.95',
-    reviews: 34,
-    discount: '20%',
-    originPrice: '1,253,000원',
-    price: '1,002,400원',
-    img: './images/gobi_camp_vans.jpg',
-    highlights: ['남고비 대사막 주요 명소와 테를지 국립공원 한 번에 정복', '5박6일 일주 코스를 100만 원 초반대에 누리는 실속 구성', '동행 조인 신청 및 우리 일행 단독 출발 모두 선택 가능', '몽골 문화관광부 정식 인가 현지 직영 랜드사 진행']
+    tag: '천체망원경 체험',
+    sub: 'SKY TOURS MONGOLIA · 몽골 중부 코스',
+    title: '[몽골] 사막, 온천, 테를지, 망원경체험 3박4일',
+    rating: '5.00',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '876,525원',
+    img: 'https://files.boolub.com/upfiles/product/2135197319.jpg',
+    highlights: ['전문 천체망원경을 활용한 밤하늘 별자리 관측 체험 포함', '사막 · 온천 · 테를지 국립공원 핵심 동선 완주', '운영 파트너: SKY TOURS MONGOLIA (평점 ★5.0 기록)']
   },
   {
     id: 'p10',
-    pcode: 'A9725-O5305-E2887',
-    pid: 'anoratour',
-    cat: '홉스골·중부',
-    regionKey: '홉스골',
-    durationKey: '5박6일',
-    styleKey: '단독',
-    tag: '홉스골 시그니처',
-    sub: '노라투어 (NORA TOUR) · 국내선/호수 1열 캠프',
-    title: '[몽골] 푸른 진주 홉스골 호수 노라 단독 힐링코스 6박7일',
-    rating: '4.97',
-    reviews: 41,
-    discount: '20%',
-    originPrice: '1,750,000원',
-    price: '1,400,000원',
-    img: './images/khuvsgul_island.jpg',
-    highlights: ['몽골의 스위스라 불리는 투명한 홉스골 호수 집중 힐링', '호숫가 인접 쾌적한 레이크뷰 게르 캠프 배정', '보트 유람·승마 트레킹·순록 유목민 차탄족 문화 체험', '부모님 효도여행 및 여름 휴양형 여행객 강력 추천']
-  },
-  {
-    id: 'p11',
-    pcode: 'E4890-B3318-G7233',
-    pid: 'YangGaTour',
-    cat: '홉스골·중부',
-    regionKey: '홉스골',
-    durationKey: '5박6일',
-    styleKey: '조인',
-    tag: '60일전 100% 환불',
-    sub: '양가투어 (YangGa Friends) · 후기 22건 ★4.8',
-    title: '[몽골] 홉스골 5박6일 투어 패키지 (조인/동행/단독 · 무료취소 보장)',
-    rating: '4.86',
-    reviews: 22,
-    discount: '20%',
-    originPrice: '1,480,000원',
-    price: '1,184,000원',
-    img: './images/khuvsgul_boat_sunset.jpg',
-    highlights: ['출발 60일 전 취소 시 100% 전액 환불 안심 약관', '어르헝 폭포·차강노르·홉스골 호수 북부 핵심 완주', '2030 또래 동행 조인 및 지인 단독팀 맞춤 운영', '현지 한국어 소통 완벽 가이드 및 스냅 촬영 지원']
-  },
-  {
-    id: 'p12',
     pcode: 'G8231-V9289-H9933',
     pid: 'doittavel',
     cat: '고비',
     regionKey: '고비',
     durationKey: '4박5일',
     styleKey: '단독',
-    tag: 'A/B코스 맞춤선택',
-    sub: '(주)두잇트래블 (DO IT TRAVEL) · 맞춤형 투어',
-    title: '[몽골] 4박5일 고비사막 맞춤형 A/B코스 선택 단독·조인 투어',
-    rating: '4.91',
-    reviews: 29,
-    discount: '20%',
-    originPrice: '1,320,000원',
-    price: '1,056,000원',
-    img: './images/steppe_ger_suvs.jpg',
-    highlights: ['체력과 취향에 따라 A코스(정통 사막) / B코스(사막+테를지) 선택', '우리 일행 일정에 맞춘 유연한 출발 시간 및 식단 케어', '검증된 전용 차량 및 위생적인 침구류 제공', '부럽 안전결제 및 즉시할인 쿠폰 적용 가능']
+    tag: '공식 파트너 투어',
+    sub: '(주)두잇트래블 · A,B 코스 중 원하는 단 하나의 코스를 선택해 진행하는 맞춤형 투어',
+    title: '[몽골] 4박5일 고비사막 투어',
+    rating: '4.83',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '1,029,825원',
+    img: 'https://files.boolub.com/upfiles/product/1139873302.jpg',
+    highlights: ['포함·핵심코스: A/B 코스 중 취향에 맞는 코스를 직접 선택하는 맞춤형 투어', '운영 파트너: (주)두잇트래블 (서울 본사 정식 법인)', '부럽 에스크로 안전결제 지원']
+  },
+  {
+    id: 'p11',
+    pcode: 'Q3909-W7960-V2686',
+    pid: 'YangGaTour',
+    cat: '홉스골·중부',
+    regionKey: '중부',
+    durationKey: '4박5일',
+    styleKey: '조인',
+    tag: '조인·단독 가능',
+    sub: '양가투어 (YangGa Mongolian Fri) · 테를지, 미니사막, 온천, 울란바토르, 어기호수, 촐로트 협곡, 폭포',
+    title: '[몽골] 시그니처 투어 중부 4박5일 투어 패키지 조인 / 동행 / 단독 가능',
+    rating: '5.00',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '1,367,700원',
+    img: 'https://files.boolub.com/upfiles/product/362211901.jpg',
+    highlights: ['포함·핵심코스: 테를지 · 미니사막 · 온천 · 어기호수 · 촐로트 협곡 · 폭포', '운영 파트너: YangGa Mongolian Friends (조인/동행/단독 모두 가능)', '부럽 에스크로 안전결제 지원']
+  },
+  {
+    id: 'p12',
+    pcode: 'I3885-I4036-S5377',
+    pid: 'wit77777',
+    cat: '단기',
+    regionKey: '테를지',
+    durationKey: '2박3일',
+    styleKey: '단독',
+    tag: '단독 공항픽업',
+    sub: '더블유아이티 (WIT) · 울란바토르 공항 또는 호텔 이동을 단독 차량으로 편하게!',
+    title: '몽골 공항 픽업 (울란바토르 호텔 공항 샌딩 단독차량)',
+    rating: '5.00',
+    reviews: 6,
+    discount: '',
+    originPrice: '',
+    price: '19,200원',
+    img: 'https://files.boolub.com/upfiles/product/3283866928.jpg',
+    highlights: ['새벽·심야 도착 항공편도 걱정 없는 칭기스칸 국제공항 ↔ 호텔 단독 이동', '운영 파트너: 더블유아이티 (WIT · 평점 ★5.00)', '부럽 즉시 확정 인기 상품']
   }
 ];
 
-/* 3. 부럽 실제 입점 파트너(9곳) + MOKTA 협회 순차 입점 회원사(11곳) = 총 20개사 */
+/* 3. 부럽 실제 입점 몽골 공식 파트너사 9곳 (smart_company + smart_product 100% 실제 데이터 연동) */
 const MOKTA_AGENCIES = [
   {
     id: 'ag1',
+    pid: 'boolub',
     statusType: 'active',
-    cert: '부럽 직영 공식운영',
-    name: '부럽 몽골원정대',
+    cert: '부럽 본사 직영 · 2개 원정대 운영',
+    name: '부럽 몽골원정대 (직영)',
     en: 'BOOLUB EXPEDITION',
     cat: '고비·남부',
     spec: '1인 출발확정 직영',
-    rating: '4.99',
-    reviews: 260,
-    resp: '즉시 확정',
-    fleet: '전용 스타렉스·푸르공',
+    rating: '5.00',
+    reviews: 30,
+    prodCount: 2,
+    resp: '즉시 출발확정',
+    fleet: '원정대 전용 차량 배정',
     camp: '업그레이드 게르 보장',
-    desc: '동행을 따로 구하지 않아도 1인 신청 즉시 출발이 확정되며, 유심·특식 3회·숙소 업그레이드가 모두 포함된 부럽 대표 시그니처 프로그램입니다.',
+    career: '부럽트래블(주) 본사 직영 · 대표 김준현',
+    slogan: '동행 못 구해도 걱정 ZERO! 1인 신청 즉시 100% 출발확정 보장',
+    perks: ['1인 신청 즉시 출발확정', '몽골 데이터 USIM 포함', '게르 업그레이드 · 특식 포함', '현지 추가금 0원'],
+    desc: '부럽트래블(주)이 직영 운영하는 대표 몽골원정대 프로그램으로, 1인 신청 시에도 모객 취소 없이 출발이 확정되며 USIM 무료 제공·게르 업그레이드·특식 3회가 기본 포함됩니다.',
     logoImg: './images/mokta_logo.png',
     storeUrl: 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition',
     repPcode: 'T0950-Q2923-W2496',
-    cover: './images/sand_dunes_camp.jpg',
-    photos: ['./images/sand_dunes_camp.jpg', './images/orkhon_waterfall_rainbow.jpg', './images/campfire_cheers.jpg']
+    cover: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    photos: [
+      'https://files.boolub.com/upfiles/product/4219813096.png',
+      'https://files.boolub.com/upfiles/product/736206236.png',
+      './images/campfire_cheers.jpg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag2',
+    pid: 'bbm0707',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 17개 상품',
-    name: '노라투어',
-    en: 'NORA TOUR MONGOLIA',
-    cat: '고비·남부',
-    spec: '고비·홉스골 시그니처',
-    rating: '4.96',
-    reviews: 184,
-    resp: '평균 12분',
-    fleet: '신형 스타렉스·푸르공',
-    camp: '샤워가능 정식캠프',
-    desc: '고비사막 시그니처부터 홉스골 단독 힐링코스까지 17개 정규 라인업을 운영하며 깔끔한 캠프 배정으로 재방문율이 높은 공식 파트너사입니다.',
-    logoImg: './images/partners/anoratour.png',
-    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=anoratour',
-    repPcode: 'V6003-W0388-Z1928',
-    cover: './images/milkyway_gobi.jpg',
-    photos: ['./images/milkyway_gobi.jpg', './images/khuvsgul_island.jpg', './images/ger_interior.jpg']
-  },
-  {
-    id: 'ag3',
-    statusType: 'active',
-    cert: '부럽 공식파트너 · 15년 업력',
+    cert: '부럽 공식파트너 · 17개 상품 운영',
     name: 'BBM TOUR (비비엠투어)',
     en: 'BBM MONGOLIA TOUR',
     cat: '고비·남부',
-    spec: '남부·고비·중부 베스트',
-    rating: '4.92',
-    reviews: 215,
-    resp: '평균 15분',
-    fleet: '직영 차량 다수 보유',
-    camp: '전 일정 검증 캠프',
-    desc: '2009년 설립 이래 15년 노하우를 보유한 몽골 전문 여행사로 남부 2박3일(후기 88건)과 정통 고비 4박5일 등 17개 인기 상품을 운영 중입니다.',
+    spec: '2009년 설립 · 15년 전통',
+    rating: '4.80',
+    reviews: 107,
+    prodCount: 17,
+    resp: '빠른 현지응답',
+    fleet: '스타렉스 · 푸르공 직영운행',
+    camp: '남고비·중부·홉스골 검증캠프',
+    career: '2009년 설립 · 울란바토르 본사 · 대표 Batkhuyag',
+    slogan: '2009년 설립 15년 노하우, 울란바토르 현지 직영 베테랑 여행사',
+    perks: ['2009년 설립 15년 업력', '남부·고비·중부·홉스골 17개 코스', '한국어 능통 현지 가이드', '단독·조인 맞춤 배차'],
+    desc: '안녕하세요, BBM투어입니다. 2009년도에 설립하여 15년의 경험과 노하우를 바탕으로 안전하고 편안한 여행을 위해 최선의 서비스를 제공하고 있는 몽골 전문 여행사입니다.',
     logoImg: './images/partners/bbm0707.jpeg',
     storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=bbm0707',
     repPcode: 'A7468-J1235-Q7992',
-    cover: './images/baga_gazriin_sunset.jpg',
-    photos: ['./images/baga_gazriin_sunset.jpg', './images/tsagaan_suvarga_snap.jpg', './images/vehicle_fleet.jpg']
+    cover: 'https://files.boolub.com/upfiles/product/3400418975.png',
+    photos: [
+      'https://files.boolub.com/upfiles/product/3400418975.png',
+      'https://files.boolub.com/upfiles/product/2444534524.png',
+      'https://files.boolub.com/upfiles/product/1912992338.png'
+    ],
+    videoUrl: ''
+  },
+  {
+    id: 'ag3',
+    pid: 'anoratour',
+    statusType: 'active',
+    cert: '부럽 공식파트너 · 17개 상품 운영',
+    name: '노라투어 (NORA TOUR)',
+    en: 'NORA TOUR MONGOLIA',
+    cat: '고비·남부',
+    spec: '고비·중부·홉스골 시그니처',
+    rating: '4.81',
+    reviews: 102,
+    prodCount: 17,
+    resp: '한국·몽골 직영상담',
+    fleet: '전용 스타렉스 · 푸르공',
+    camp: '샤워 가능 여행자 게르 캠프',
+    career: '정식 국내외여행업 등록 법인 · 대표 SHINEBAYAR TSELMEG',
+    slogan: '고비사막 시그니처부터 홉스골 7박8일 단독까지 17개 정규 라인업 운영',
+    perks: ['부럽 17개 정규 투어 운영', '고비 THE자연·시그니처 전문', '한국 지사 정식 등록 여행사', '쾌적한 여행자 게르 배정'],
+    desc: '경기도 고양시 국내 지사 및 몽골 현지 네트워크를 기반으로 고비사막 시그니처 4박5일, 중부 힐링코스, 홉스골 단독코스 등 17개 정규 상품을 운영하는 부럽 공식 파트너사입니다.',
+    logoImg: './images/partners/anoratour.png',
+    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=anoratour',
+    repPcode: 'V6003-W0388-Z1928',
+    cover: 'https://files.boolub.com/upfiles/product/2082172223.png',
+    photos: [
+      'https://files.boolub.com/upfiles/product/2082172223.png',
+      'https://files.boolub.com/upfiles/product/1349546843.png',
+      'https://files.boolub.com/upfiles/product/1688056962.png'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag4',
+    pid: 'wit77777',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 단기·키즈',
-    name: '하닥투어',
-    en: 'KHADAG TOUR',
+    cert: '부럽 공식파트너 · 15개 상품 운영',
+    name: '더블유아이티 (WIT)',
+    en: 'WORLD INDIVIDUAL TRAVEL',
     cat: '홉스골·중부',
-    spec: '직장인 단기·온천·키즈',
-    rating: '4.95',
-    reviews: 112,
-    resp: '평균 14분',
-    fleet: '쾌적 단독차량 배정',
-    camp: '온천·테를지 우수캠프',
-    desc: '직장인 주말 2박3일 테를지 코스부터 사막+초원+온천 3박4일 속성코스, 어린이 체험형 키즈 투어까지 세심한 케어를 제공합니다.',
-    logoImg: './images/partners/khadag.png',
-    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=khadag',
-    repPcode: 'L0277-Y0435-H3099',
-    cover: './images/terelj_resort_camp.jpg',
-    photos: ['./images/terelj_resort_camp.jpg', './images/green_steppe_flock.jpg', './images/glamping_dome_friends.jpg']
+    spec: '공항 단독픽업 · 단기 프라이빗',
+    rating: '4.72',
+    reviews: 88,
+    prodCount: 15,
+    resp: '단독차량 즉시연결',
+    fleet: '공항 단독 세단·승합차량',
+    camp: '테를지·미니사막 단독투어',
+    career: '한국어가이드 단독투어 전문 · 대표 김광천',
+    slogan: '새벽 칭기스칸 공항 단독 픽업부터 한국어가이드 단기 프라이빗 투어까지!',
+    perks: ['울란바토르 공항 단독픽업·샌딩', '실력 검증 현지 한국어가이드', '테를지·미니사막 1박2일~2박3일', '우리 일행 프라이빗 단독 출발'],
+    desc: '더블유아이티는 몽골 현지 실력 있는 한국어 가이드 단독 투어 및 울란바토르 국제공항 ↔ 호텔 단독 픽업·샌딩을 전문 운영하는 부럽 공식 입점 여행사입니다.',
+    logoImg: './images/partners/wit77777.png',
+    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=wit77777',
+    repPcode: 'I3885-I4036-S5377',
+    cover: 'https://files.boolub.com/upfiles/product/3283866928.jpg',
+    photos: [
+      'https://files.boolub.com/upfiles/product/3283866928.jpg',
+      'https://files.boolub.com/upfiles/product/2735415753.jpg',
+      'https://files.boolub.com/upfiles/product/74394500.jpg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag5',
+    pid: 'YangGaTour',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 별밤특화',
-    name: '스카이 투어 몽골',
-    en: 'SKY TOURS MONGOLIA',
+    cert: '부럽 공식파트너 · 14개 상품 운영',
+    name: '양가투어 (YangGa Mongolian Fri)',
+    en: 'YANGGA MONGOLIAN FRIENDS',
     cat: '홉스골·중부',
-    spec: '천체망원경·홉스골',
-    rating: '4.94',
-    reviews: 96,
-    resp: '평균 16분',
-    fleet: '4WD 스타렉스·벤',
-    camp: '별관측 최적 캠프',
-    desc: '천체망원경을 활용한 밤하늘 별자리 관측 체험과 미니사막·쳉헤르 온천·홉스골 호수 정규 투어를 전문 운영하는 현지 파트너입니다.',
-    logoImg: './images/partners/SKYTOURS.jpg',
-    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=SKYTOURS',
-    repPcode: 'J8833-W9230-L2860',
-    cover: './images/starlight_ger_snap.jpg',
-    photos: ['./images/starlight_ger_snap.jpg', './images/khuvsgul_boat_sunset.jpg', './images/orkhon_canyon_top.jpg']
+    spec: '중부 시그니처 · 홉스골 전문',
+    rating: '4.76',
+    reviews: 82,
+    prodCount: 14,
+    resp: '울란바토르 직영',
+    fleet: '장거리 투어 전용 차량',
+    camp: '어기호수·온천·홉스골 캠프',
+    career: '울란바토르 현지 법인 직영 · 대표 G.Uyanga',
+    slogan: '테를지·미니사막·쳉헤르 온천부터 홉스골까지 조인·단독 시그니처 투어',
+    perks: ['중부 2박3일~6박7일 전 라인업', '조인·동행·단독 모두 가능', '쳉헤르 온천·촐로트 협곡 코스', '홉스골 5박6일 패키지 운영'],
+    desc: '울란바토르 현지 직영 법인(YangGa Mongolian Friends)으로 중부 시그니처(테를지·미니사막·온천·어기호수) 2박~6박 코스와 고비·홉스골 조인/단독 패키지 14종을 전문 운영합니다.',
+    logoImg: './images/partners/YangGaTour.png',
+    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=YangGaTour',
+    repPcode: 'Q3909-W7960-V2686',
+    cover: 'https://files.boolub.com/upfiles/product/362211901.jpg',
+    photos: [
+      'https://files.boolub.com/upfiles/product/362211901.jpg',
+      'https://files.boolub.com/upfiles/product/1654587418.jpg',
+      'https://files.boolub.com/upfiles/product/822342166.jpg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag6',
+    pid: 'Bftour',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 관광부인가',
-    name: '밝은 미래 여행',
+    cert: '부럽 공식파트너 · 13개 상품 운영',
+    name: '밝은 미래 여행 (BRIGHT FUTURE)',
     en: 'BRIGHT FUTURE TOUR',
     cat: '고비·남부',
-    spec: '남고비 일주·조인',
-    rating: '4.95',
-    reviews: 78,
-    resp: '평균 15분',
-    fleet: '푸르공·스타렉스 완비',
-    camp: '남고비 직영 제휴캠프',
-    desc: '몽골 문화관광부 정식 허가 법인으로 일출부터 별빛까지 즐기는 남고비·테를지 4박5일 및 5박6일 조인·단독 투어를 운영합니다.',
+    spec: '은하수 헌팅 · 샤워가능 게르',
+    rating: '4.72',
+    reviews: 77,
+    prodCount: 13,
+    resp: '현지 직영 상담',
+    fleet: '남고비·홉스골 오프로드 차량',
+    camp: '매일 샤워 가능 여행자 게르',
+    career: '울란바토르 메트로비즈니스센터 본사 · 대표 ALTANCHIMEG',
+    slogan: '매일 샤워 가능한 게르 숙박 & 삼겹살·허르헉·은하수 헌팅 풀패키지!',
+    perks: ['매일 샤워 가능한 게르 코스 보유', '삼겹살+허르헉 특식 패키지', '천체망원경 · 은하수 헌팅 테마', '남고비 & 홉스골 13개 상품 운영'],
+    desc: '울란바토르 중심가 메트로 비즈니스센터에 위치한 직영 여행사로, 매일 샤워 가능한 게르 숙박 고비사막 투어와 홉스골 은하수 헌팅·천체망원경 체험 투어 13종을 운영합니다.',
     logoImg: './images/partners/Bftour.png',
     storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=Bftour',
-    repPcode: 'E0711-V0341-Z7774',
-    cover: './images/gobi_camp_vans.jpg',
-    photos: ['./images/gobi_camp_vans.jpg', './images/sand_dunes_camp.jpg', './images/khorkhog_feast.jpg']
+    repPcode: 'I6778-W7230-M7386',
+    cover: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/19/uDnn/49IDVb8jV5.jpg',
+    photos: [
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/19/uDnn/49IDVb8jV5.jpg',
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/20/Izi6/PwPz5BkKu0.jpeg',
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/25/s2oV/Xxd6D7M9g2.jpeg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag7',
+    pid: 'doittavel',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 맞춤코스',
+    cert: '부럽 공식파트너 · 12개 상품 운영',
     name: '(주)두잇트래블',
     en: 'DO IT TRAVEL',
     cat: '고비·남부',
-    spec: 'A/B 선택형 맞춤투어',
-    rating: '4.91',
-    reviews: 67,
-    resp: '평균 18분',
-    fleet: '맞춤형 전용차량',
-    camp: '일정별 최적 숙소',
-    desc: '고비사막 4박5일·5박6일 A/B 선택형 코스를 통해 여행자 체력과 선호도에 딱 맞는 동행·단독 맞춤 일정을 설계해 드립니다.',
+    spec: 'A/B 선택형 맞춤코스 전문',
+    rating: '4.84',
+    reviews: 71,
+    prodCount: 12,
+    resp: '서울 본사 빠른상담',
+    fleet: '일정별 전용 차량 배정',
+    camp: '고비·중부·홉스골 정식 캠프',
+    career: '서울 동대문구 정식 법인 여행사 · 대표 정상국',
+    slogan: '원하는 동선대로 고르는 고비 A/B 선택형 투어 & 홉스골 풀패키지',
+    perks: ['고비 A/B 코스 맞춤형 선택', '5박6일~7박8일 홉스골 일주', '모래썰매·낙타·승마·보트 포함', '서울 본사 직통 안전 케어'],
+    desc: '서울 동대문구 소재 (주)두잇트래블 법인이 직접 운영하며, A/B 코스 중 원하는 코스를 선택하는 4박5일 고비사막 투어와 5박~7박 홉스골 조인·단독 패키지 12종을 제공합니다.',
     logoImg: null,
     c1: '#0284c7',
     c2: '#38bdf8',
     abbr: 'DOIT',
     storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=doittavel',
     repPcode: 'G8231-V9289-H9933',
-    cover: './images/steppe_ger_suvs.jpg',
-    photos: ['./images/steppe_ger_suvs.jpg', './images/erdene_zuu_monastery.jpg', './images/campfire_cheers.jpg']
+    cover: 'https://files.boolub.com/upfiles/product/1139873302.jpg',
+    photos: [
+      'https://files.boolub.com/upfiles/product/1139873302.jpg',
+      'https://files.boolub.com/upfiles/product/4229358534.jpg',
+      'https://files.boolub.com/upfiles/product/1778519022.jpg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag8',
+    pid: 'SKYTOURS',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 무료취소보장',
-    name: '양가투어',
-    en: 'YANGGA MONGOLIAN FRIENDS',
+    cert: '부럽 공식파트너 · 9개 상품 운영',
+    name: 'SKY TOURS MONGOLIA (스카이투어)',
+    en: 'SKY TOURS MONGOLIA',
     cat: '홉스골·중부',
-    spec: '홉스골 5박6일 전문',
-    rating: '4.88',
-    reviews: 64,
-    resp: '평균 15분',
-    fleet: '북부 장거리 특화차량',
-    camp: '홉스골 레이크 캠프',
-    desc: '출발 60일 전 100% 환불 보장과 탄탄한 북부 코스로 호평받는 홉스골·어르헝폭포 조인 및 단독 투어 전문 파트너사입니다.',
-    logoImg: './images/partners/YangGaTour.png',
-    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=YangGaTour',
-    repPcode: 'E4890-B3318-G7233',
-    cover: './images/khuvsgul_boat_sunset.jpg',
-    photos: ['./images/khuvsgul_boat_sunset.jpg', './images/terkhiin_lake_forest.jpg', './images/companion_team_hands.jpg']
+    spec: '천체망원경 별관측 · 중부·고비',
+    rating: '4.90',
+    reviews: 51,
+    prodCount: 9,
+    resp: '현지 직영 확정',
+    fleet: '전용 투어 차량 배정',
+    camp: '별자리 관측 최적 게르 캠프',
+    career: '울란바토르 직영 · 평균평점 ★4.90 · 대표 MUNKHTULGA BAATAR',
+    slogan: '사막·온천·테를지 핵심 동선에 천체망원경 별자리 관측까지 더한 감동 투어',
+    perks: ['천체망원경 별자리 체험 포함', '테를지 1박2일 단기부터 6박7일까지', '고비사막 · 홉스골 정규 9개 상품', '부럽 고객 평점 ★4.90 우수 파트너'],
+    desc: '울란바토르 현지 직영 랜드사(SKY TOURS MONGOLIA)로 천체망원경 별자리 체험 3박4일, 테를지 1박2일 단기코스, 고비사막 및 홉스골 정규 투어 9종을 높은 만족도로 운영합니다.',
+    logoImg: './images/partners/SKYTOURS.jpg',
+    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=SKYTOURS',
+    repPcode: 'J8833-W9230-L2860',
+    cover: 'https://files.boolub.com/upfiles/product/2135197319.jpg',
+    photos: [
+      'https://files.boolub.com/upfiles/product/2135197319.jpg',
+      'https://files.boolub.com/upfiles/product/4227422819.jpg',
+      'https://files.boolub.com/upfiles/product/1399185027.jpg'
+    ],
+    videoUrl: ''
   },
   {
     id: 'ag9',
+    pid: 'khadag',
     statusType: 'active',
-    cert: '부럽 공식파트너 · 평점 5.0',
-    name: '더블유아이티 (WIT)',
-    en: 'WORLD INDIVIDUAL TRAVEL',
+    cert: '부럽 공식파트너 · 5개 상품 운영',
+    name: '하닥투어 (KHADAG TOUR)',
+    en: 'KHADAG TOUR MONGOLIA',
     cat: '홉스골·중부',
-    spec: '울란바토르 공항픽업',
-    rating: '5.00',
-    reviews: 52,
-    resp: '즉시 확정',
-    fleet: '공항 단독 세단·벤',
-    camp: '시내 호텔 안전연결',
-    desc: '새벽·심야 도착 항공편도 걱정 없는 울란바토르 칭기스칸 국제공항 ↔ 시내 호텔 단독 차량 픽업·샌딩 서비스를 제공합니다.',
-    logoImg: './images/partners/wit77777.png',
-    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=wit77777',
-    repPcode: 'I3885-I4036-S5377',
-    cover: './images/vehicle_fleet.jpg',
-    photos: ['./images/vehicle_fleet.jpg', './images/hero_steppe_sunset.jpg', './images/terelj_resort_camp.jpg']
-  },
-  /* --- MOKTA(몽골한국관광협회) 순차 입점 진행 회원사 슬롯 (10 ~ 20번) --- */
-  {
-    id: 'ag10',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '어드벤처 몽골 투어',
-    en: 'ADVENTURE MONGOLIA',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.95',
-    reviews: 82,
-    resp: '협회 연동중',
-    fleet: '스타렉스 9대·푸르공 14대',
-    camp: '홍고린 온수캠프 제휴',
-    desc: '몽골한국관광협회(MOKTA) 소속 정회원사로 드론 영상 촬영 및 남고비 사막 종단 코스를 부럽 전용관에 순차 오픈합니다.',
-    logoImg: null, c1: '#0ea5e9', c2: '#2563eb', abbr: 'AM',
-    cover: './images/tsagaan_suvarga_snap.jpg',
-    photos: ['./images/tsagaan_suvarga_snap.jpg', './images/milkyway_gobi.jpg', './images/khorkhog_feast.jpg']
-  },
-  {
-    id: 'ag11',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '고비 스타 글램핑',
-    en: 'GOBI STAR GLAMPING',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.97',
-    reviews: 74,
-    resp: '협회 연동중',
-    fleet: '리무진 벤 7대',
-    camp: '개별욕실 글램핑 직영',
-    desc: '전 일정 호텔식 침구와 개별 온수 샤워실이 완비된 럭셔리 글램핑 캠프를 운영하는 MOKTA 인증 회원사입니다.',
-    logoImg: null, c1: '#f59e0b', c2: '#ea580c', abbr: 'GS',
-    cover: './images/ger_interior.jpg',
-    photos: ['./images/ger_interior.jpg', './images/glamping_dome_friends.jpg', './images/terelj_resort_camp.jpg']
-  },
-  {
-    id: 'ag12',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '홉스골 블루펄 트래블',
-    en: 'KHUVSGUL BLUE PEARL',
-    cat: '홉스골·중부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.94',
-    reviews: 68,
-    resp: '협회 연동중',
-    fleet: '스프린터 4대·스타렉스',
-    camp: '홉스골 호수 1열 캠프',
-    desc: '북부 홉스골 호수 레이크뷰 캠프 블럭과 국내선 연계 효도·가족 단독투어를 전문으로 하는 MOKTA 정회원사입니다.',
-    logoImg: null, c1: '#06b6d4', c2: '#0d9488', abbr: 'BP',
-    cover: './images/khuvsgul_island.jpg',
-    photos: ['./images/khuvsgul_island.jpg', './images/khuvsgul_boat_sunset.jpg', './images/terkhiin_lake_forest.jpg']
-  },
-  {
-    id: 'ag13',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '노마드 스냅 익스페디션',
-    en: 'NOMAD SNAP EXPEDITION',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.96',
-    reviews: 91,
-    resp: '협회 연동중',
-    fleet: '루프랙 감성 푸르공 16대',
-    camp: '별밤 포토존 전용캠프',
-    desc: '전 가이드 미러리스 스냅 촬영 장비를 보유하여 2030 동행 조인 만족도가 높은 MOKTA 협회 소속 여행사입니다.',
-    logoImg: null, c1: '#6366f1', c2: '#8b5cf6', abbr: 'NS',
-    cover: './images/companion_team_hands.jpg',
-    photos: ['./images/companion_team_hands.jpg', './images/starlight_ger_snap.jpg', './images/campfire_cheers.jpg']
-  },
-  {
-    id: 'ag14',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '몽골 헤리티지 VIP',
-    en: 'MONGOL HERITAGE VIP',
-    cat: '홉스골·중부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.98',
-    reviews: 59,
-    resp: '협회 연동중',
-    fleet: '랜드크루저 12대·렉서스',
-    camp: '5성 호텔 + 특급 리조트',
-    desc: '부모님 칠순 가족여행, 기업 워크샵 의전, 몽골 골프·승마 프라이빗 투어를 전담하는 MOKTA 프리미엄 회원사입니다.',
-    logoImg: null, c1: '#0f172a', c2: '#334155', abbr: 'MH',
-    cover: './images/orkhon_canyon_top.jpg',
-    photos: ['./images/orkhon_canyon_top.jpg', './images/erdene_zuu_monastery.jpg', './images/ger_interior.jpg']
-  },
-  {
-    id: 'ag15',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '스텝 오아시스 캠프',
-    en: 'STEPPE OASIS CAMP',
-    cat: '홉스골·중부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.93',
-    reviews: 63,
-    resp: '협회 연동중',
-    fleet: '4WD 스타렉스 11대',
-    camp: '쳉헤르 노천온천 직영',
-    desc: '쳉헤르 천연 노천온천과 어르헝 폭포 인근 직영 게르 캠프를 운영하는 중부 힐링 전문 MOKTA 회원사입니다.',
-    logoImg: null, c1: '#10b981', c2: '#059669', abbr: 'SO',
-    cover: './images/orkhon_waterfall_rainbow.jpg',
-    photos: ['./images/orkhon_waterfall_rainbow.jpg', './images/green_steppe_flock.jpg', './images/steppe_ger_suvs.jpg']
-  },
-  {
-    id: 'ag16',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '울란 럭셔리 벤 투어',
-    en: 'ULAAN LUXURY VAN',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.95',
-    reviews: 48,
-    resp: '협회 연동중',
-    fleet: '벤츠 스프린터·하이에이스',
-    camp: '전 일정 고급 캠프',
-    desc: '장거리 비포장 도로에서도 피로감이 적은 최신형 리무진 벤과 베테랑 운전기사를 배정하는 MOKTA 회원사입니다.',
-    logoImg: null, c1: '#1d4ed8', c2: '#3b82f6', abbr: 'UL',
-    cover: './images/vehicle_fleet.jpg',
-    photos: ['./images/vehicle_fleet.jpg', './images/baga_gazriin_sunset.jpg', './images/ger_interior.jpg']
-  },
-  {
-    id: 'ag17',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '알타이 이글 익스페디션',
-    en: 'ALTAI EAGLE EXPEDITION',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.96',
-    reviews: 44,
-    resp: '협회 연동중',
-    fleet: '오프로드 랜드크루저 10대',
-    camp: '서부 바얀울기 베이스캠프',
-    desc: '서부 알타이 만년설 트레킹과 카자흐족 검독수리 사냥꾼 축제를 전문 진행하는 MOKTA 특수지역 회원사입니다.',
-    logoImg: null, c1: '#b45309', c2: '#d97706', abbr: 'AE',
-    cover: './images/hero_steppe_sunset.jpg',
-    photos: ['./images/hero_steppe_sunset.jpg', './images/gobi_camp_vans.jpg', './images/orkhon_canyon_top.jpg']
-  },
-  {
-    id: 'ag18',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '칭기즈칸 호스 트레킹',
-    en: 'CHINGGIS HORSE TREK',
-    cat: '홉스골·중부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.92',
-    reviews: 55,
-    resp: '협회 연동중',
-    fleet: '스타렉스 8대 + 승마교관',
-    camp: '테를지 초원 승마캠프',
-    desc: '초보자 안전 강습부터 대초원 외승 종주까지 한국어 가능 전문 승마 교관이 동행하는 MOKTA 회원사입니다.',
-    logoImg: null, c1: '#15803d', c2: '#22c55e', abbr: 'CH',
-    cover: './images/green_steppe_flock.jpg',
-    photos: ['./images/green_steppe_flock.jpg', './images/terelj_resort_camp.jpg', './images/campfire_cheers.jpg']
-  },
-  {
-    id: 'ag19',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '테를지 리버사이드 투어',
-    en: 'TERELJ RIVERSIDE',
-    cat: '홉스골·중부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.94',
-    reviews: 71,
-    resp: '협회 연동중',
-    fleet: '최신형 스타렉스·대형버스',
-    camp: '톨강 리버뷰 리조트 게르',
-    desc: '울란바토르 근교 테를지 국립공원 단기 힐링투어 및 기업·단체 연수 행사를 전문 운영하는 MOKTA 회원사입니다.',
-    logoImg: null, c1: '#0369a1', c2: '#0ea5e9', abbr: 'TR',
-    cover: './images/terelj_resort_camp.jpg',
-    photos: ['./images/terelj_resort_camp.jpg', './images/glamping_dome_friends.jpg', './images/khorkhog_feast.jpg']
-  },
-  {
-    id: 'ag20',
-    statusType: 'mokta_soon',
-    cert: 'MOKTA 정회원 · 순차입점',
-    name: '고비 사파리 랜드',
-    en: 'GOBI SAFARI LAND',
-    cat: '고비·남부',
-    spec: 'MOKTA 협회 회원사',
-    rating: '4.93',
-    reviews: 62,
-    resp: '협회 연동중',
-    fleet: '개조 푸르공 15대·스타렉스',
-    camp: '바양작·욜링암 제휴캠프',
-    desc: '합리적인 비용의 오픈조인 차량 쉐어와 정통 사막 캠핑 프로그램을 운영하는 MOKTA 협회 정회원사입니다.',
-    logoImg: null, c1: '#be123c', c2: '#f43f5e', abbr: 'GS',
-    cover: './images/sand_dunes_camp.jpg',
-    photos: ['./images/sand_dunes_camp.jpg', './images/baga_gazriin_sunset.jpg', './images/starlight_ger_snap.jpg']
+    spec: '직장인 단기 · 온천 · 키즈 특화',
+    rating: '4.86',
+    reviews: 29,
+    prodCount: 5,
+    resp: '한국·몽골 전담케어',
+    fleet: '단독 프라이빗 쾌적 차량',
+    camp: '테를지·쳉헤르 온천 우수캠프',
+    career: '울란바토르 본사 · 한국인 전담케어 · 대표 Yadam suren',
+    slogan: '직장인 알짜 2박3일 테를지부터 사막+온천 3박4일, 어린이 키즈 투어까지!',
+    perks: ['직장인 추천 테를지 2박3일 베스트', '사막+초원+온천 3박4일 속성코스', '초원 체험형 키즈 전용 3박4일', '버킷리스트 5박6일 고비사막·홉스골'],
+    desc: '직장인을 위한 짧은 2박3일 테를지 투어, 사막·초원·온천을 한 번에 즐기는 3박4일 속성코스, 아이 동반 가족을 위한 키즈 몽골 여행 등 특색 있는 알짜 투어를 운영합니다.',
+    logoImg: './images/partners/khadag.png',
+    storeUrl: 'https://www.boolub.com/?pn=partner.view&pid=khadag',
+    repPcode: 'L0277-Y0435-H3099',
+    cover: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/mOrl/uJTKVYoS0I.jpg',
+    photos: [
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/mOrl/uJTKVYoS0I.jpg',
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/ocAs/Ax10hCip2I.jpg',
+      'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/hWIh/GEBFLDb7FX.jpg'
+    ],
+    videoUrl: ''
   }
 ];
-
-/* 3-B. 각 파트너사 브랜드 미니홈 커스터마이징 기본 메타데이터 보강 (pid · 슬로건 · 핵심 어필 배지 · 업력) */
-const PARTNER_DEFAULT_CUSTOM_META = {
-  ag1: { pid: 'boolub', slogan: '동행 못 구해도 걱정 끝! 1인 신청도 100% 출발확정 보장', career: '부럽 본사 직영 · 안전보증 1위', perks: ['1인 신청 즉시 출발확정', '몽골 데이터 USIM 무료증정', '전통 허르헉 등 특식 3회', '노쇼핑·노옵션 추가금 0원'] },
-  ag2: { pid: 'anoratour', slogan: '전 일정 온수 샤워 정식 캠프 & 17개 정규 베스트셀러 운영', career: '부럽 최다 상품 운영 · 재방문 1위', perks: ['전 일정 온수샤워 캠프', '신형 스타렉스·푸르공 직영', '한국어 능통 베테랑 가이드', '공항 무료 단독 픽업·샌딩'] },
-  ag3: { pid: 'bbm0707', slogan: '2009년 설립 15년 정통 노하우 · 직영 차량과 검증된 캠프', career: '15년 무사고 업력 · 후기 215건', perks: ['15년 전통 직영 랜드사', '신형 스타렉스·푸르공 직영', '전 일정 검증 여행자캠프', '노쇼핑·노옵션 추가금 0원'] },
-  ag4: { pid: 'khadag', slogan: '연차 1일 직장인 단기코스 & 가족·키즈 온천 힐링 스페셜리스트', career: '단기·가족 만족도 최상위', perks: ['직장인 주말 2박3일 특화', '쳉헤르 노천온천 우수캠프', '가족·효도 프라이빗 맞춤케어', '한국어 능통 베테랑 가이드'] },
-  ag5: { pid: 'SKYTOURS', slogan: '전문 천체망원경으로 만나는 고비·테를지 밤하늘 은하수 관측', career: '천체관측 장비 완비 · 별밤 특화', perks: ['천체망원경 별자리 체험', '드론·은하수 스냅 무료촬영', '전 일정 온수샤워 캠프', '4WD 전용 벤 쾌적배정'] },
-  ag6: { pid: 'Bftour', slogan: '몽골 문화관광부 정식 인가 법인 · 남고비 일주 정통 투어', career: '관광부 정식 라이선스 직영법인', perks: ['몽골 관광부 정식 인가법인', '남고비+테를지 통합 완주', '전 일정 온수샤워 캠프', '노쇼핑·노옵션 추가금 0원'] },
-  ag7: { pid: 'doittavel', slogan: '내 체력과 취향대로 고르는 A/B 선택형 맞춤 고비사막 투어', career: '일행 맞춤형 코스 설계 전문', perks: ['A/B 코스 자유 선택형', '우리 일행 맞춤 동선케어', '호텔식 침구·위생 철저 보장', '공항 무료 단독 픽업·샌딩'] },
-  ag8: { pid: 'YangGaTour', slogan: '출발 60일 전 100% 무료취소 보장 · 북부 홉스골 집중 힐링', career: '홉스골·어르헝 북부 전문', perks: ['출발 60일전 100% 환불보장', '홉스골 호수 1열 레이크캠프', '드론·은하수 스냅 무료촬영', '2030 또래 오픈조인 강점'] },
-  ag9: { pid: 'wit77777', slogan: '새벽·심야 도착도 안심! 평점 5.0 만점 울란바토르 공항 단독픽업', career: '공항 의전·픽업 평점 ★5.00', perks: ['새벽·심야 항공편 100% 대응', '기사님 네임피켓 안심미팅', '단독 세단·벤 쾌적 이동', '시내 호텔 문앞 안전연결'] }
-};
-MOKTA_AGENCIES.forEach((ag, idx) => {
-  const m = PARTNER_DEFAULT_CUSTOM_META[ag.id] || {
-    pid: `mokta_ag${idx + 1}`,
-    slogan: `${ag.spec} · 몽골한국관광협회(MOKTA) 품질 보증 정회원사`,
-    career: 'MOKTA 정회원 · 관광부 정식인가',
-    perks: ['MOKTA 협회 정식 보증', ag.fleet, ag.camp, '한국어 전문 가이드 동행']
-  };
-  ag.pid = m.pid;
-  ag.slogan = m.slogan;
-  ag.career = m.career;
-  ag.perks = m.perks.slice();
-  ag.videoUrl = ag.videoUrl || '';
-});
 
 /* 4. 실시간 출발확정 동행·조인 데이터 (5월~10월 월간 캘린더 연동 · 파트너 오픈조인 + 여행자 모집 + 원정대 통합) */
 const KR_HOLIDAYS_2026 = {
@@ -755,6 +614,121 @@ const KR_HOLIDAYS_2026 = {
 
 const JOIN_ITEMS = [
   {
+    id: 'bbs_1602',
+    dateKey: '2026-08-06',
+    dateStr: '8.06(목) ~ 8.09(일) · 3박4일',
+    regionKey: '중부',
+    durationKey: '3박4일',
+    styleKey: '조인',
+    statusBadge: '실제 커뮤니티 동행',
+    statusCls: 'amber',
+    subBadge: '4자리 모집중',
+    subCls: 'sky',
+    agency: '부럽 동행커뮤니티 · 윤*지',
+    pcode: 'T0950-Q2923-W2496',
+    title: '8월6일-8월9일 중부지역 동행 구함 2명 모집완 / 4명 모집 중',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    filled: 2,
+    max: 6,
+    seats: ['윤*지(방장)', '동행확정', '빈좌석', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '699,000원',
+    fullPrice: '699,000원',
+    tags: '부럽 실제 동행찾기 · 조회 3,124회',
+    bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1602'
+  },
+  {
+    id: 'bbs_1599',
+    dateKey: '2026-08-12',
+    dateStr: '8.12 출발 · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '조인',
+    statusBadge: '실제 커뮤니티 동행',
+    statusCls: 'amber',
+    subBadge: '4자리 모집중',
+    subCls: 'sky',
+    agency: '부럽 동행커뮤니티 · 선*슬',
+    pcode: 'C3954-E9344-H0474',
+    title: '고비사막 4박5일★ 같이 떠나실 동행분 구합니다',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
+    filled: 2,
+    max: 6,
+    seats: ['선*슬(방장)', '동행확정', '빈좌석', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '999,000원',
+    fullPrice: '999,000원',
+    tags: '부럽 실제 동행찾기 · 조회 3,502회',
+    bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1599'
+  },
+  {
+    id: 'bbs_1515',
+    dateKey: '2026-08-04',
+    dateStr: '8.04(화) 출발 · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '조인',
+    statusBadge: '실제 커뮤니티 동행',
+    statusCls: 'amber',
+    subBadge: '3자리 모집중',
+    subCls: 'sky',
+    agency: '부럽 동행커뮤니티 · 부럽트래블',
+    pcode: 'V6003-W0388-Z1928',
+    title: '8월4일 출발 몽골 동행구해요~ (일정 조인 환영)',
+    img: 'https://files.boolub.com/upfiles/product/2082172223.png',
+    filled: 3,
+    max: 6,
+    seats: ['확정1', '확정2', '확정3', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '1,441,100원',
+    fullPrice: '1,250,000원',
+    tags: '부럽 실제 동행찾기 · 조회 8,080회',
+    bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1515'
+  },
+  {
+    id: 'bbs_1392',
+    dateKey: '2026-08-09',
+    dateStr: '8.09(일) 출발 · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
+    styleKey: '조인',
+    statusBadge: '실제 커뮤니티 동행',
+    statusCls: 'amber',
+    subBadge: '4자리 모집중',
+    subCls: 'sky',
+    agency: '부럽 동행커뮤니티 · 부럽트래블',
+    pcode: 'C3954-E9344-H0474',
+    title: '[동행찾기] 8월9일 2인 대기중 // 4명 추가모집(성별무관)',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
+    filled: 2,
+    max: 6,
+    seats: ['대기1', '대기2', '빈좌석', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '999,000원',
+    fullPrice: '999,000원',
+    tags: '부럽 실제 동행찾기 · 조회 9,636회',
+    bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1392'
+  },
+  {
+    id: 'bbs_1390',
+    dateKey: '2026-06-18',
+    dateStr: '6.18(목) 출발 · 3박4일',
+    regionKey: '중부',
+    durationKey: '3박4일',
+    styleKey: '조인',
+    statusBadge: '실제 커뮤니티 동행',
+    statusCls: 'amber',
+    subBadge: '3자리 모집중',
+    subCls: 'sky',
+    agency: '부럽 동행커뮤니티 · 부럽트래블',
+    pcode: 'T0950-Q2923-W2496',
+    title: '6월18일 초여름 몽골 동행찾습니다~',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
+    filled: 3,
+    max: 6,
+    seats: ['확정1', '확정2', '확정3', '빈좌석', '빈좌석', '빈좌석'],
+    curPrice: '699,000원',
+    fullPrice: '699,000원',
+    tags: '부럽 실제 동행찾기 · 조회 8,987회',
+    bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1390'
+  },
+  {
     id: 'j_may1',
     dateKey: '2026-05-02',
     dateStr: '5.02(토) ~ 5.05(화) · 3박4일',
@@ -768,11 +742,11 @@ const JOIN_ITEMS = [
     agency: '부럽 몽골원정대 (직영)',
     pcode: 'T0950-Q2923-W2496',
     title: '[5월 황금연휴] 중부 미니사막·테를지·우기호수 3박4일 원정대 조인',
-    img: './images/orkhon_waterfall_rainbow.jpg',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
     filled: 4,
     max: 6,
     seats: ['20대여', '20대여', '30대남', '30대여', '빈좌석', '빈좌석'],
-    curPrice: '799,000원',
+    curPrice: '699,000원',
     fullPrice: '699,000원',
     tags: '연차 1일 황금연휴 · USIM 무료 · 특식 3회'
   },
@@ -780,7 +754,7 @@ const JOIN_ITEMS = [
     id: 'j_may2',
     dateKey: '2026-05-23',
     dateStr: '5.23(토) ~ 5.26(화) · 3박4일',
-    regionKey: '고비',
+    regionKey: '중부',
     durationKey: '3박4일',
     styleKey: '조인',
     statusBadge: '출발확정 오픈조인',
@@ -790,12 +764,12 @@ const JOIN_ITEMS = [
     agency: '하닥투어 (KHADAG TOUR)',
     pcode: 'H7863-P9594-D9241',
     title: '[대체휴일 연휴] 사막+초원+쳉헤르 노천온천 3박4일 마지막 1분 모십니다',
-    img: './images/green_steppe_flock.jpg',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/ocAs/Ax10hCip2I.jpg',
     filled: 5,
     max: 6,
     seats: ['20대여', '30대여', '30대남', '20대남', '30대여', '빈좌석'],
-    curPrice: '720,000원',
-    fullPrice: '660,000원',
+    curPrice: '900,000원',
+    fullPrice: '810,000원',
     tags: '석가탄신일 대체휴일 · 노천온천 캠프 포함'
   },
   {
@@ -812,35 +786,13 @@ const JOIN_ITEMS = [
     agency: '하닥투어 (KHADAG TOUR)',
     pcode: 'L0277-Y0435-H3099',
     title: '[현충일 주말] 직장인 연차 1개! 테를지·승마·초원 힐링 2박3일 조인팀',
-    img: './images/terelj_resort_camp.jpg',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/mOrl/uJTKVYoS0I.jpg',
     filled: 4,
     max: 6,
     seats: ['20대여', '20대여', '30대남', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '540,000원',
-    fullPrice: '490,000원',
+    curPrice: '675,000원',
+    fullPrice: '610,000원',
     tags: '직장인 주말추천 · 온수 샤워 게르 · 승마 포함'
-  },
-  {
-    id: 'j_jun2',
-    dateKey: '2026-06-20',
-    dateStr: '6.20(토) ~ 6.24(수) · 4박5일',
-    regionKey: '고비',
-    durationKey: '4박5일',
-    styleKey: '조인',
-    statusBadge: '여행자 동행모집',
-    statusCls: 'amber',
-    subBadge: '3자리 모집중',
-    subCls: 'sky',
-    agency: '노라투어 전담매칭',
-    pcode: 'V6003-W0388-Z1928',
-    title: '6월 말 초여름 푸른 초원+고비사막 은하수 4박5일 동행 3분 구해요!',
-    img: './images/milkyway_gobi.jpg',
-    filled: 3,
-    max: 6,
-    seats: ['20대여(방장)', '20대여', '30대남', '빈좌석', '빈좌석', '빈좌석'],
-    curPrice: '1,050,000원',
-    fullPrice: '890,000원',
-    tags: '성수기 전 쾌적한 날씨 · 신형 스타렉스 · 스냅촬영'
   },
   {
     id: 'j5',
@@ -856,13 +808,13 @@ const JOIN_ITEMS = [
     agency: 'BBM TOUR (비비엠투어)',
     pcode: 'W0569-C8410-H2737',
     title: '[연차 1일] 차강소브락 대협곡·바가가쯔링촐로 남부 핵심 2박3일 조인팀',
-    img: './images/baga_gazriin_sunset.jpg',
+    img: 'https://files.boolub.com/upfiles/product/3459423950.png',
     filled: 4,
     max: 6,
     seats: ['20대남', '20대여', '30대여', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '640,000원',
-    fullPrice: '580,000원',
-    tags: '후기 88건 검증 코스 · 감성 푸르공 · 별밤 스냅'
+    curPrice: '800,000원',
+    fullPrice: '720,000원',
+    tags: 'BBM투어 베스트 단기코스 · 감성 푸르공 · 별밤 스냅'
   },
   {
     id: 'j2',
@@ -878,35 +830,13 @@ const JOIN_ITEMS = [
     agency: '노라투어 (NORA TOUR)',
     pcode: 'V6003-W0388-Z1928',
     title: '[출발확정] 고비사막 시그니처 4박5일 샤워 가능 캠프팀 마지막 1분 모십니다',
-    img: './images/milkyway_gobi.jpg',
+    img: 'https://files.boolub.com/upfiles/product/2082172223.png',
     filled: 5,
     max: 6,
     seats: ['20대여', '20대여', '30대여', '20대남', '30대남', '빈좌석'],
-    curPrice: '920,000원',
-    fullPrice: '840,000원',
-    tags: '신형 스타렉스 · 온수 샤워 캠프 · 6인 마감 시 전원 할인'
-  },
-  {
-    id: 'j_jul3',
-    dateKey: '2026-07-29',
-    dateStr: '7.29(수) ~ 8.03(월) · 5박6일',
-    regionKey: '홉스골',
-    durationKey: '5박6일',
-    styleKey: '조인',
-    statusBadge: '출발확정 오픈조인',
-    statusCls: 'sky',
-    subBadge: '2자리 남음',
-    subCls: 'coral',
-    agency: '노라투어 (NORA TOUR)',
-    pcode: 'A9725-O5305-E2887',
-    title: '[여름 성수기] 푸른 진주 홉스골 호수 1열 캠프 힐링 5박6일 조인 모집',
-    img: './images/khuvsgul_island.jpg',
-    filled: 4,
-    max: 6,
-    seats: ['30대여', '30대여', '30대남', '40대여', '빈좌석', '빈좌석'],
-    curPrice: '1,320,000원',
-    fullPrice: '1,180,000원',
-    tags: '호숫가 레이크뷰 캠프 · 보트 유람 · 승마 트레킹'
+    curPrice: '1,441,100원',
+    fullPrice: '1,280,000원',
+    tags: '노라투어 대표 시그니처 · 6인 마감 시 인원별 할인'
   },
   {
     id: 'j3',
@@ -922,11 +852,11 @@ const JOIN_ITEMS = [
     agency: '부럽 몽골원정대 (직영)',
     pcode: 'T0950-Q2923-W2496',
     title: '[여름휴가 피크] 중부 미니사막·테를지·우기호수 3박4일 원정대 조인',
-    img: './images/orkhon_waterfall_rainbow.jpg',
+    img: 'https://files.boolub.com/upfiles/product/4219813096.png',
     filled: 4,
     max: 6,
     seats: ['20대여', '30대여', '30대남', '20대남', '빈좌석', '빈좌석'],
-    curPrice: '799,000원',
+    curPrice: '699,000원',
     fullPrice: '699,000원',
     tags: '게르 업그레이드 · 유심 제공 · 허르헉 특식 포함'
   },
@@ -941,16 +871,16 @@ const JOIN_ITEMS = [
     statusCls: 'sky',
     subBadge: '마지막 1자리!',
     subCls: 'coral',
-    agency: '양가투어 (YangGa Friends)',
+    agency: '양가투어 (YangGa Mongolian Fri)',
     pcode: 'E4890-B3318-G7233',
-    title: '한여름 시원한 홉스골 호수 + 어르헝폭포 5박6일 마지막 1자리 합류하세요',
-    img: './images/khuvsgul_boat_sunset.jpg',
+    title: '한여름 시원한 홉스골 호수 5박6일 패키지 조인 마지막 1자리 합류하세요',
+    img: 'https://files.boolub.com/upfiles/product/1740762828.jpg',
     filled: 5,
     max: 6,
     seats: ['30대여', '30대여', '30대남', '40대여', '30대남', '빈좌석'],
-    curPrice: '1,120,000원',
-    fullPrice: '1,050,000원',
-    tags: '60일전 100% 환불 · 보트체험 · 호숫가 게르 숙박'
+    curPrice: '1,588,300원',
+    fullPrice: '1,390,000원',
+    tags: '양가투어 홉스골 정규코스 · 보트체험 · 호숫가 게르'
   },
   {
     id: 'j1',
@@ -966,13 +896,13 @@ const JOIN_ITEMS = [
     agency: '부럽 몽골원정대 (직영)',
     pcode: 'C3954-E9344-H0474',
     title: '[광복절 대체휴일] 고비사막 원정대 4박5일 (홍고린엘스·바양작·유심 무료)',
-    img: './images/sand_dunes_camp.jpg',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
     filled: 4,
     max: 6,
     seats: ['20대여', '20대여', '30대남', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '1,150,000원',
-    fullPrice: '990,000원',
-    tags: '추가금 0원 · USIM 무료 · 특식 3회 · 각자 카드결제'
+    curPrice: '999,000원',
+    fullPrice: '999,000원',
+    tags: '추가금 0원 · USIM 무료 · 특식 포함 · 각자 카드결제'
   },
   {
     id: 'j_aug_sub',
@@ -987,43 +917,21 @@ const JOIN_ITEMS = [
     subCls: 'coral',
     agency: '밝은 미래 여행 (BRIGHT FUTURE)',
     pcode: 'E0711-V0341-Z7774',
-    title: '[광복절 연휴] 일출부터 별빛까지 남고비·테를지 5박6일 확정차량 잔여 1석',
-    img: './images/gobi_camp_vans.jpg',
+    title: '[광복절 연휴] 몽골 일출부터 별빛까지! 남고비·테를지 5박6일 확정차량 잔여 1석',
+    img: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/19/GkH4/MQu03BafWf.jpg',
     filled: 5,
     max: 6,
     seats: ['20대남', '20대여', '20대여', '30대남', '30대여', '빈좌석'],
-    curPrice: '1,002,400원',
-    fullPrice: '890,000원',
-    tags: '몽골 관광부 정식인가 · 남고비+테를지 완주'
-  },
-  {
-    id: 'j_aug15_nora',
-    dateKey: '2026-08-15',
-    dateStr: '8.15(토) ~ 8.19(수) · 4박5일',
-    regionKey: '고비',
-    durationKey: '4박5일',
-    styleKey: '조인',
-    statusBadge: '출발확정 오픈조인',
-    statusCls: 'sky',
-    subBadge: '2자리 남음',
-    subCls: 'coral',
-    agency: '노라투어 (NORA TOUR)',
-    pcode: 'V6003-W0388-Z1928',
-    title: '[광복절 연휴 확정] 노라투어 고비사막 시그니처 온수캠프팀 2분 모십니다',
-    img: './images/milkyway_gobi.jpg',
-    filled: 4,
-    max: 6,
-    seats: ['20대여', '30대여', '30대남', '30대여', '빈좌석', '빈좌석'],
-    curPrice: '1,080,000원',
-    fullPrice: '950,000원',
-    tags: '전 일정 온수샤워 캠프 · 25년식 신형 스타렉스'
+    curPrice: '1,253,000원',
+    fullPrice: '1,120,000원',
+    tags: '밝은미래여행 정식 패키지 · 남고비+테를지 완주'
   },
   {
     id: 'j_aug15_bbm',
     dateKey: '2026-08-15',
-    dateStr: '8.15(토) ~ 8.18(화) · 3박4일',
-    regionKey: '중부',
-    durationKey: '3박4일',
+    dateStr: '8.15(토) ~ 8.19(수) · 4박5일',
+    regionKey: '고비',
+    durationKey: '4박5일',
     styleKey: '조인',
     statusBadge: '출발확정 오픈조인',
     statusCls: 'sky',
@@ -1031,129 +939,19 @@ const JOIN_ITEMS = [
     subCls: 'coral',
     agency: 'BBM TOUR (비비엠투어)',
     pcode: 'A7468-J1235-Q7992',
-    title: '[광복절 연휴] BBM투어 미니사막+쳉헤르 노천온천 3박4일 마지막 1석!',
-    img: './images/tsagaan_suvarga_snap.jpg',
+    title: '[광복절 연휴] BBM투어 고비사막 4박5일 (차강소브락·홍고린엘스) 마지막 1석!',
+    img: 'https://files.boolub.com/upfiles/product/3400418975.png',
     filled: 5,
     max: 6,
     seats: ['20대남', '20대여', '30대남', '30대여', '20대여', '빈좌석'],
-    curPrice: '790,000원',
-    fullPrice: '720,000원',
-    tags: '15년 전통 랜드사 · 감성 푸르공 · 별밤 스냅'
+    curPrice: '1,333,400원',
+    fullPrice: '1,180,000원',
+    tags: '2009년 설립 15년 전통 · 차강소브락·욜링암·홍고린엘스'
   },
   {
-    id: 'j_aug15_khadag',
-    dateKey: '2026-08-15',
-    dateStr: '8.15(토) ~ 8.17(월) · 2박3일',
-    regionKey: '테를지',
-    durationKey: '2박3일',
-    styleKey: '조인',
-    statusBadge: '연차0일 연휴확정',
-    statusCls: 'sky',
-    subBadge: '2자리 남음',
-    subCls: 'coral',
-    agency: '하닥투어 (KHADAG TOUR)',
-    pcode: 'L0277-Y0435-H3099',
-    title: '[연차 없이 광복절 2박3일] 테를지 리조트 게르·승마·별밤 힐링 조인',
-    img: './images/terelj_resort_camp.jpg',
-    filled: 4,
-    max: 6,
-    seats: ['20대여', '20대여', '30대여', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '560,000원',
-    fullPrice: '490,000원',
-    tags: '연차 0개 꽉 찬 연휴 · 현대식 리조트 게르'
-  },
-  {
-    id: 'j_aug15_sky',
+    id: 'j_aug12_doit',
     dateKey: '2026-08-15',
     dateStr: '8.15(토) ~ 8.19(수) · 4박5일',
-    regionKey: '홉스골',
-    durationKey: '4박5일',
-    styleKey: '조인',
-    statusBadge: '여행자 동행모집',
-    statusCls: 'amber',
-    subBadge: '3자리 모집중',
-    subCls: 'sky',
-    agency: '스카이 투어 몽골 (SKY TOURS)',
-    pcode: 'J8833-W9230-L2860',
-    title: '[광복절 연휴] 천체망원경 은하수 관측 + 홉스골 호수 동행 3분 구해요',
-    img: './images/starlight_ger_snap.jpg',
-    filled: 3,
-    max: 6,
-    seats: ['30대남(방장)', '30대여', '20대여', '빈좌석', '빈좌석', '빈좌석'],
-    curPrice: '980,000원',
-    fullPrice: '860,000원',
-    tags: '천체망원경 보유 · 레이크뷰 캠프'
-  },
-  {
-    id: 'j_aug01_nora',
-    dateKey: '2026-08-01',
-    dateStr: '8.01(토) ~ 8.05(수) · 4박5일',
-    regionKey: '고비',
-    durationKey: '4박5일',
-    styleKey: '조인',
-    statusBadge: '출발확정 오픈조인',
-    statusCls: 'sky',
-    subBadge: '1자리 남음!',
-    subCls: 'coral',
-    agency: '노라투어 (NORA TOUR)',
-    pcode: 'V6003-W0388-Z1928',
-    title: '[8월 첫째주 휴가] 남고비 4대 핵심 포인트 4박5일 확정차량 잔여 1석',
-    img: './images/sand_dunes_camp.jpg',
-    filled: 5,
-    max: 6,
-    seats: ['20대여', '20대남', '30대여', '30대남', '20대여', '빈좌석'],
-    curPrice: '1,050,000원',
-    fullPrice: '940,000원',
-    tags: '여름휴가 황금주간 · 전 일정 샤워 가능 캠프'
-  },
-  {
-    id: 'j_aug01_khadag',
-    dateKey: '2026-08-01',
-    dateStr: '8.01(토) ~ 8.04(화) · 3박4일',
-    regionKey: '중부',
-    durationKey: '3박4일',
-    styleKey: '조인',
-    statusBadge: '출발확정',
-    statusCls: 'sky',
-    subBadge: '2자리 남음',
-    subCls: 'coral',
-    agency: '하닥투어 (KHADAG TOUR)',
-    pcode: 'H7863-P9594-D9241',
-    title: '[8월 휴가] 미니사막 낙타체험 + 쳉헤르 노천온천 3박4일 힐링 조인팀',
-    img: './images/green_steppe_flock.jpg',
-    filled: 4,
-    max: 6,
-    seats: ['30대여', '30대여', '20대남', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '720,000원',
-    fullPrice: '650,000원',
-    tags: '노천온천 리조트 숙박 · 쾌적 스타렉스'
-  },
-  {
-    id: 'j_aug08_bbm',
-    dateKey: '2026-08-08',
-    dateStr: '8.08(토) ~ 8.12(수) · 4박5일',
-    regionKey: '고비',
-    durationKey: '4박5일',
-    styleKey: '조인',
-    statusBadge: '출발확정 오픈조인',
-    statusCls: 'sky',
-    subBadge: '2자리 남음',
-    subCls: 'coral',
-    agency: 'BBM TOUR (비비엠투어)',
-    pcode: 'A7468-J1235-Q7992',
-    title: '[8월 성수기] 정통 고비사막 홍고린엘스·바양작 4박5일 확정팀 2석 오픈',
-    img: './images/baga_gazriin_sunset.jpg',
-    filled: 4,
-    max: 6,
-    seats: ['20대남', '20대여', '30대남', '20대여', '빈좌석', '빈좌석'],
-    curPrice: '980,000원',
-    fullPrice: '860,000원',
-    tags: '모래썰매 · 낙타체험 · 은하수 스냅 포함'
-  },
-  {
-    id: 'j_aug12_mid',
-    dateKey: '2026-08-12',
-    dateStr: '8.12(수) ~ 8.16(일) · 4박5일',
     regionKey: '고비',
     durationKey: '4박5일',
     styleKey: '조인',
@@ -1163,14 +961,14 @@ const JOIN_ITEMS = [
     subCls: 'sky',
     agency: '(주)두잇트래블',
     pcode: 'G8231-V9289-H9933',
-    title: '광복절 연휴 끼고 수~일 고비사막 A코스 맞춤 조인 가실 2분 찾아요!',
-    img: './images/steppe_ger_suvs.jpg',
+    title: '[광복절 연휴] 두잇트래블 4박5일 고비사막 A코스 맞춤 조인 가실 2분!',
+    img: 'https://files.boolub.com/upfiles/product/1139873302.jpg',
     filled: 4,
     max: 6,
     seats: ['20대여(방장)', '20대여', '30대남', '30대여', '빈좌석', '빈좌석'],
-    curPrice: '990,000원',
-    fullPrice: '880,000원',
-    tags: '맞춤형 여유 동선 · 공항 픽업 포함'
+    curPrice: '1,029,825원',
+    fullPrice: '920,000원',
+    tags: 'A/B 코스 선택형 · 서울 본사 법인 케어'
   },
   {
     id: 'j6',
@@ -1183,16 +981,16 @@ const JOIN_ITEMS = [
     statusCls: 'amber',
     subBadge: '3자리 모집중',
     subCls: 'sky',
-    agency: '스카이 투어 몽골 전담',
+    agency: 'SKY TOURS MONGOLIA (스카이투어)',
     pcode: 'J8833-W9230-L2860',
-    title: '8월 말 사막+쳉헤르 온천+천체망원경 별 관측 3박4일 같이 가실 분!',
-    img: './images/starlight_ger_snap.jpg',
+    title: '8월 말 사막+온천+테를지+천체망원경 체험 3박4일 같이 가실 분!',
+    img: 'https://files.boolub.com/upfiles/product/2135197319.jpg',
     filled: 3,
     max: 6,
     seats: ['20대여(방장)', '20대여', '30대여', '빈좌석', '빈좌석', '빈좌석'],
-    curPrice: '841,464원',
-    fullPrice: '750,000원',
-    tags: '천체망원경 은하수 관측 · 노천온천 힐링 · 비흡연 환영'
+    curPrice: '876,525원',
+    fullPrice: '780,000원',
+    tags: '전문 천체망원경 별자리 관측 · 노천온천 힐링'
   },
   {
     id: 'j_sep1',
@@ -1208,19 +1006,19 @@ const JOIN_ITEMS = [
     agency: '부럽 몽골원정대 (직영)',
     pcode: 'C3954-E9344-H0474',
     title: '[추석 황금연휴] 고비사막 은하수 원정대 4박5일 (연차 1일 · 출발확정)',
-    img: './images/campfire_cheers.jpg',
+    img: 'https://files.boolub.com/upfiles/product/736206236.png',
     filled: 4,
     max: 6,
     seats: ['20대여', '30대여', '30대남', '30대남', '빈좌석', '빈좌석'],
-    curPrice: '1,150,000원',
-    fullPrice: '990,000원',
+    curPrice: '999,000원',
+    fullPrice: '999,000원',
     tags: '추석연휴 조기마감 주의 · USIM 포함 · 추가금 0원'
   },
   {
     id: 'j_oct1',
     dateKey: '2026-10-03',
     dateStr: '10.03(토) ~ 10.06(화) · 3박4일',
-    regionKey: '고비',
+    regionKey: '중부',
     durationKey: '3박4일',
     styleKey: '조인',
     statusBadge: '개천절 연휴모집',
@@ -1229,18 +1027,18 @@ const JOIN_ITEMS = [
     subCls: 'sky',
     agency: 'BBM TOUR (비비엠투어)',
     pcode: 'Z6438-S8935-G7323',
-    title: '[10월 개천절 대체휴일] 가을 황금빛 초원+미니사막+온천 3박4일 동행 모집',
-    img: './images/tsagaan_suvarga_snap.jpg',
+    title: '[10월 개천절 대체휴일] 중부투어(미니사막+온천+호수) 3박4일 동행 모집',
+    img: 'https://files.boolub.com/upfiles/product/551185861.png',
     filled: 3,
     max: 6,
     seats: ['30대여(방장)', '30대여', '30대남', '빈좌석', '빈좌석', '빈좌석'],
-    curPrice: '853,360원',
-    fullPrice: '760,000원',
+    curPrice: '1,066,700원',
+    fullPrice: '940,000원',
     tags: '연차 1일 알짜코스 · 쳉헤르 온천 숙박'
   }
 ];
 
-/* 5. 고객 맞춤 일정 요청 & 파트너사 비교견적 (순수 고객 친화 UX) */
+/* 5. 고객 맞춤 일정 요청 & 공식 파트너사 실데이터 비교견적 */
 const RFQ_ITEMS = [
   {
     id: 'r1',
@@ -1252,50 +1050,50 @@ const RFQ_ITEMS = [
     dates: '8월 15일 ~ 8월 19일 (4박 5일)',
     paxType: '단독투어 · 직장인 친구 4명 확정',
     title: '광복절 연휴 친구 4명 고비사막 4박5일 단독투어 (온수 샤워 캠프 희망)',
-    desc: '대한항공 오후 도착 항공권 발권 완료했습니다. 차강소브락·홍고린엘스·바양작 코스로 희망하며, 전 일정 샤워 가능한 깔끔한 게르와 신형 스타렉스 조건으로 비교해보고 싶습니다.',
-    specs: ['4명 단독차량', '신형 스타렉스 희망', '샤워 가능 캠프 필수', '현지 추가금 0원 조건'],
+    desc: '대한항공 오후 도착 항공권 발권 완료했습니다. 차강소브락·홍고린엘스·바양작 코스로 희망하며, 전 일정 샤워 가능한 깔끔한 게르와 전용 차량 조건으로 비교해보고 싶습니다.',
+    specs: ['4명 단독차량', '전용 스타렉스·푸르공', '샤워 가능 캠프 필수', '현지 추가금 0원 조건'],
     quotes: [
       {
         agency: '노라투어 (NORA TOUR)',
         pid: 'anoratour',
         pcode: 'V6003-W0388-Z1928',
         logo: './images/partners/anoratour.png',
-        badge: '부럽 공식파트너 · 쿠폰적용 가능',
-        price4: '1,152,880원',
-        price6: '960,000원',
-        veh: '2024년형 현대 스타렉스 4WD 단독 배정',
-        ger: '전 일정 온수 샤워 가능 투어리스트 캠프 (2인 1실 가능)',
-        vehImg: './images/vehicle_fleet.jpg',
-        gerImg: './images/ger_interior.jpg',
-        comment: '대한항공 도착 시간에 맞춰 칭기스칸 공항 단독 픽업 무료 포함해 드립니다. 부럽 고비 시그니처 상품과 동일 스펙으로 쿠폰 즉시할인 결제 가능합니다!'
+        badge: '부럽 공식파트너 · 고비 시그니처',
+        price4: '1,441,100원',
+        price6: '1,250,000원',
+        veh: '전용 현대 스타렉스 4WD 단독 배정',
+        ger: '전 일정 온수 샤워 가능 투어리스트 캠프',
+        vehImg: 'https://files.boolub.com/upfiles/product/2082172223.png',
+        gerImg: 'https://files.boolub.com/upfiles/product/1688056962.png',
+        comment: '대한항공 도착 시간에 맞춰 칭기스칸 공항 단독 픽업 포함해 드립니다. 부럽 등록 [고비사막 시그니처 코스 4박5일]과 동일 스펙으로 안전결제 가능합니다!'
       },
       {
         agency: 'BBM TOUR (비비엠투어)',
         pid: 'bbm0707',
         pcode: 'A7468-J1235-Q7992',
         logo: './images/partners/bbm0707.jpeg',
-        badge: '15년 업력 · 직영 캠프 보유',
-        price4: '1,066,720원',
-        price6: '890,000원',
+        badge: '2009년 설립 · 15년 업력 베테랑',
+        price4: '1,333,400원',
+        price6: '1,150,000원',
         veh: '직영 정비 스타렉스 또는 감성 푸르공 선택',
-        ger: '남고비 검증 여행자 캠프 + 마지막 날 특식 허르헉 포함',
-        vehImg: './images/gobi_camp_vans.jpg',
-        gerImg: './images/sand_dunes_camp.jpg',
-        comment: '15년 경력 한국어 능통 가이드 배정 확정 가능합니다. 모래썰매·낙타체험·별밤 스냅 촬영 모두 추가금 없이 포함해 모시겠습니다.'
+        ger: '남고비 검증 여행자 캠프 + 특식 허르헉 포함',
+        vehImg: 'https://files.boolub.com/upfiles/product/3400418975.png',
+        gerImg: 'https://files.boolub.com/upfiles/product/2444534524.png',
+        comment: '15년 경력 한국어 능통 가이드 배정 확정 가능합니다. 차강소브락-욜링암-홍고린엘스-바양작 정규 코스로 추가금 없이 모시겠습니다.'
       },
       {
         agency: '밝은 미래 여행 (BRIGHT FUTURE)',
         pid: 'Bftour',
-        pcode: 'E0711-V0341-Z7774',
+        pcode: 'I6778-W7230-M7386',
         logo: './images/partners/Bftour.png',
-        badge: '몽골 관광부 정식인가',
-        price4: '1,040,000원',
-        price6: '870,000원',
-        veh: '단독 4WD 승합차량 (차량 내 생수·간식 상시 비치)',
-        ger: '홍고린엘스 사막 인접 정식 캠프 배정',
-        vehImg: './images/steppe_ger_suvs.jpg',
-        gerImg: './images/terelj_resort_camp.jpg',
-        comment: '친구 4분 프라이빗 일정에 맞춰 여유로운 출발 시간과 캠프파이어 불멍 세팅을 서비스로 준비해 드립니다.'
+        badge: '울란바토르 직영 · 남고비 베스트',
+        price4: '1,060,300원',
+        price6: '950,000원',
+        veh: '단독 4WD 승합차량 (차량 내 생수 상시 비치)',
+        ger: '남고비 여행자 게르 캠프 배정',
+        vehImg: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/19/uDnn/49IDVb8jV5.jpg',
+        gerImg: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2025/02/20/Izi6/PwPz5BkKu0.jpeg',
+        comment: '친구 4분 프라이빗 일정에 맞춰 여유로운 출발 시간과 은하수 별빛 스냅 촬영을 정성껏 챙겨드립니다.'
       }
     ]
   },
@@ -1309,35 +1107,35 @@ const RFQ_ITEMS = [
     dates: '7월 28일 ~ 8월 02일 (5박 6일)',
     paxType: '가족 단독투어 · 부모님 동반 5명',
     title: '부모님 칠순 기념 여름 홉스골 호수 + 온천 편안한 가족 단독투어 문의',
-    desc: '60대 부모님 두 분 포함 성인 5명 가족여행입니다. 비포장 이동이 너무 힘들지 않게 국내선 왕복 또는 리무진 벤 차량과 깨끗한 호숫가 숙소 위주로 제안 부탁드립니다.',
-    specs: ['부모님 동반 5인', '홉스골+온천 힐링', '개별 욕실 리조트 선호', '한식·특식 케어'],
+    desc: '60대 부모님 두 분 포함 성인 5명 가족여행입니다. 비포장 이동이 너무 힘들지 않게 쾌적한 전용 승합차량과 깨끗한 호숫가 숙소 위주로 제안 부탁드립니다.',
+    specs: ['부모님 동반 5인', '홉스골+온천 힐링', '레이크뷰 게르 선호', '한식·특식 케어'],
     quotes: [
       {
         agency: '노라투어 (NORA TOUR)',
         pid: 'anoratour',
         pcode: 'A9725-O5305-E2887',
         logo: './images/partners/anoratour.png',
-        badge: '홉스골 단독코스 베스트',
-        price4: '1,400,000원',
-        price6: '1,280,000원',
+        badge: '홉스골 노라단독 코스',
+        price4: '1,750,000원',
+        price6: '1,580,000원',
         veh: '여유로운 전용 벤 단독 배정 (장거리 구간 휴식 케어)',
-        ger: '홉스골 호수 1열 레이크뷰 업그레이드 게르 리조트',
-        vehImg: './images/vehicle_fleet.jpg',
-        gerImg: './images/khuvsgul_island.jpg',
+        ger: '홉스골 호수 인접 업그레이드 게르 리조트',
+        vehImg: 'https://files.boolub.com/upfiles/product/1610571861.png',
+        gerImg: 'https://files.boolub.com/upfiles/product/1349546843.png',
         comment: '부모님 동반 가족팀 전담 베테랑 가이드가 배정되며, 보트 유람과 따뜻한 한식 스타일 식단을 세심하게 챙겨드립니다.'
       },
       {
-        agency: '양가투어 (YangGa Friends)',
+        agency: '양가투어 (YangGa Mongolian Fri)',
         pid: 'YangGaTour',
         pcode: 'E4890-B3318-G7233',
         logo: './images/partners/YangGaTour.png',
-        badge: '60일전 100% 환불 보장',
-        price4: '1,240,000원',
-        price6: '1,120,000원',
-        veh: '북부 노선 특화 대형 승합차 단독 운행',
-        ger: '어르헝·홉스골 온수 샤워 완비 정식 캠프',
-        vehImg: './images/steppe_ger_suvs.jpg',
-        gerImg: './images/khuvsgul_boat_sunset.jpg',
+        badge: '홉스골 5박6일 전문',
+        price4: '1,588,300원',
+        price6: '1,390,000원',
+        veh: '북부 노선 특화 전용 승합차 단독 운행',
+        ger: '홉스골 온수 샤워 완비 정식 캠프',
+        vehImg: 'https://files.boolub.com/upfiles/product/1740762828.jpg',
+        gerImg: 'https://files.boolub.com/upfiles/product/362211901.jpg',
         comment: '가족 5분 오붓하게 다녀오실 수 있도록 여유로운 일정표와 칠순 기념 전통 허르헉 만찬 상차림을 준비해 드립니다.'
       }
     ]
@@ -1351,37 +1149,37 @@ const RFQ_ITEMS = [
     regionTag: '고비',
     dates: '9월 04일 ~ 9월 07일 (3박 4일)',
     paxType: '동행조인 · 20대 커플 2명 확정 (추가동행 희망)',
-    title: '9월 초 사막+쳉헤르 노천온천+별밤 스냅 3박4일 조인 가능한 투어 찾아요',
+    title: '9월 초 사막+쳉헤르 노천온천+별자리 관측 3박4일 조인 가능한 투어 찾아요',
     desc: '연차 2개 쓰고 가는 커플 2명입니다! 단독으로 가기엔 비용이 부담되어 총 4~6명 조인 가능한 팀이나 사막·온천 알짜 코스 제안 기다립니다.',
-    specs: ['2명 확정 (조인희망)', '미니사막+쳉헤르온천', '별밤 사진촬영 선호', '1/N 각자결제 희망'],
+    specs: ['2명 확정 (조인희망)', '미니사막+쳉헤르온천', '별자리 관측 선호', '1/N 각자결제 희망'],
     quotes: [
+      {
+        agency: 'SKY TOURS MONGOLIA (스카이투어)',
+        pid: 'SKYTOURS',
+        pcode: 'J8833-W9230-L2860',
+        logo: './images/partners/SKYTOURS.jpg',
+        badge: '천체망원경 별관측 포함 ★5.0',
+        price4: '876,525원',
+        price6: '780,000원',
+        veh: '전용 투어 차량 + 천체망원경 장비 탑재',
+        ger: '온천 캠프 + 테를지 정식 게르 캠프',
+        vehImg: 'https://files.boolub.com/upfiles/product/2135197319.jpg',
+        gerImg: 'https://files.boolub.com/upfiles/product/4227422819.jpg',
+        comment: '사막·온천·테를지 동선에 밤하늘 천체망원경 별자리 체험까지 포함된 스카이투어 대표 인기 3박4일 코스입니다.'
+      },
       {
         agency: '하닥투어 (KHADAG TOUR)',
         pid: 'khadag',
         pcode: 'H7863-P9594-D9241',
         logo: './images/partners/khadag.png',
-        badge: '3박4일 사막+온천 베스트',
-        price4: '720,000원',
-        price6: '650,000원',
+        badge: '3박4일 사막+초원+온천 인기코스',
+        price4: '900,000원',
+        price6: '810,000원',
         veh: '스타렉스 4WD 쾌적 운행',
         ger: '쳉헤르 노천온천 리조트 캠프 숙박 포함',
-        vehImg: './images/vehicle_fleet.jpg',
-        gerImg: './images/glamping_dome_friends.jpg',
-        comment: '해당 날짜 이미 2분 문의가 있어 합류 시 바로 4인 출발확정 요금(72만 원)으로 진행 가능합니다!'
-      },
-      {
-        agency: '스카이 투어 몽골 (SKY TOURS)',
-        pid: 'SKYTOURS',
-        pcode: 'J8833-W9230-L2860',
-        logo: './images/partners/SKYTOURS.jpg',
-        badge: '천체망원경 별관측 포함',
-        price4: '841,464원',
-        price6: '740,000원',
-        veh: '전용 투어 차량 + 천체망원경 장비 탑재',
-        ger: '온천 캠프 + 테를지 정식 게르 캠프',
-        vehImg: './images/baga_gazriin_sunset.jpg',
-        gerImg: './images/starlight_ger_snap.jpg',
-        comment: '밤하늘 천체망원경 관측과 커플 은하수 인생샷 촬영까지 포함된 인기 3박4일 코스입니다.'
+        vehImg: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/ocAs/Ax10hCip2I.jpg',
+        gerImg: 'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2024/11/25/mOrl/uJTKVYoS0I.jpg',
+        comment: '사막 낙타체험과 초원, 천연 노천온천 힐링을 3박4일 만에 모두 즐기는 하닥투어 인기 속성코스입니다!'
       }
     ]
   },
@@ -1404,159 +1202,263 @@ const RFQ_ITEMS = [
         pcode: 'T0950-Q2923-W2496',
         logo: './images/mokta_logo.png',
         badge: '1인 신청 즉시 100% 출발확정',
-        price4: '799,000원',
+        price4: '699,000원',
         price6: '699,000원',
         veh: '원정대 전용 차량 배정',
         ger: '업그레이드 게르 캠프 (남/여 성별 분리 배정)',
-        vehImg: './images/gobi_camp_vans.jpg',
-        gerImg: './images/orkhon_waterfall_rainbow.jpg',
-        comment: '부럽 직영 몽골원정대는 1인 신청 시에도 모객 취소 없이 무조건 출발 확정됩니다! USIM 무료 증정 및 특식 3회 포함 조건으로 바로 예약 가능합니다.'
+        vehImg: 'https://files.boolub.com/upfiles/product/4219813096.png',
+        gerImg: 'https://files.boolub.com/upfiles/product/736206236.png',
+        comment: '부럽 직영 몽골원정대는 1인 신청 시에도 모객 취소 없이 무조건 출발 확정됩니다! USIM 무료 증정 및 특식 3회 포함 699,000원 정찰가로 바로 예약 가능합니다.'
       }
     ]
   }
 ];
 
-/* 6. 파트너사 현장 LIVE 스토리 (부럽 실제 상품 pcode 직결) */
+/* 6. 부럽 실제 여행자 포토후기(smart_bbs) & 공식 파트너 현장 LIVE (실제 상품 pcode 직결) */
 const SHOWCASE_ITEMS = [
   {
-    id: 's1',
-    cat: '은하수·스냅',
-    agency: '노라투어 (NORA TOUR)',
-    pcode: 'V6003-W0388-Z1928',
-    prodName: '[몽골] 고비사막 시그니처 코스 4박5일',
-    price: '1,152,880원',
-    badge: '실제 캠프 야경',
-    title: '어젯밤 홍고린엘스 캠프 앞마당에서 육안으로 쏟아진 은하수 현장입니다',
-    img: './images/milkyway_gobi.jpg',
-    tip: '달빛이 약한 음력 그믐 전후로 오시면 휴대폰 야간모드로도 선명한 은하수를 남기실 수 있어요.'
-  },
-  {
-    id: 's2',
+    id: 'rev_1611',
     cat: '게르·샤워실',
-    agency: '하닥투어 (KHADAG TOUR)',
-    pcode: 'L0277-Y0435-H3099',
-    prodName: '[몽골] 직장인 추천 테를지 핵심 2박3일',
-    price: '540,000원',
-    badge: '숙소 내부 실사',
-    title: '호텔식 화이트 침구와 따뜻한 온수 샤워가 보장되는 업그레이드 게르 내부',
-    img: './images/ger_interior.jpg',
-    tip: '몽골 게르가 불편할까 걱정하시는 분들을 위해 매트리스와 청결도를 직접 점검한 캠프만 배정합니다.'
-  },
-  {
-    id: 's3',
-    cat: '푸르공·스타렉스',
     agency: 'BBM TOUR (비비엠투어)',
-    pcode: 'A7468-J1235-Q7992',
-    prodName: '[몽골] 고비사막 정통 4박5일',
-    price: '1,066,720원',
-    badge: '출발 전 차량점검',
-    title: '비포장 사막길도 든든하게! 출고 점검 마친 스타렉스 & 감성 푸르공 라인업',
-    img: './images/vehicle_fleet.jpg',
-    tip: '승차감이 중요하시면 신형 스타렉스를, 인생샷 감성을 원하시면 루프랙 푸르공을 추천해 드립니다.'
+    pcode: 'S5960-N2570-O4021',
+    prodName: '[몽골] 중부(미니사막,온천)+홉스골 6박7일',
+    price: '1,866,700원',
+    badge: '실제후기 · 조회 829',
+    title: '자유여행, 훕스골, BBM투어 호이가 대표님 덕분에 완벽했던 몽골!',
+    img: 'https://files.boolub.com/upfiles/board/2819314248.jpg',
+    tip: '몽골은 미지의 땅, 신비로운 이미지! 국내선 항공, 기차, 이동수단과 기사님까지 완벽하게 케어해주신 실제 고객 후기입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1611'
   },
   {
-    id: 's4',
+    id: 'rev_1609',
+    cat: '게르·샤워실',
+    agency: 'BBM TOUR (비비엠투어)',
+    pcode: 'S5960-N2570-O4021',
+    prodName: '[몽골] 중부(미니사막,온천)+홉스골 6박7일',
+    price: '1,866,700원',
+    badge: '실제후기 · 조회 2,918',
+    title: '슬로우슬로우 편안한 몽골 홉스골 여행 (새벽 공항픽업 감동 후기)',
+    img: 'https://files.boolub.com/upfiles/board/2384413237.jpg',
+    tip: '기차도 타고 국내선 비행기도 타고 긴 여정을 다채롭게! 새벽 공항 픽업까지 손수 챙겨주신 BBM투어 실제 탑승 후기입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1609'
+  },
+  {
+    id: 'rev_1566',
     cat: '음식·불멍파티',
     agency: '부럽 몽골원정대 (직영)',
     pcode: 'T0950-Q2923-W2496',
-    prodName: '[3박4일] 부럽 몽골 중부 원정대',
-    price: '699,000원~',
-    badge: '특식 3회 포함',
-    title: '달군 강돌과 함께 푹 익힌 잡내 제로 정통 양갈비 허르헉 만찬과 불멍 파티!',
-    img: './images/khorkhog_feast.jpg',
-    tip: '부럽 원정대는 현지 추가금 없이 허르헉·샤슬릭 등 엄선된 특식 3회가 기본 포함되어 있습니다.'
+    prodName: '[3박4일] 몽골 중부 원정대 동행 조인 투어',
+    price: '699,000원',
+    badge: '실제후기 · 조회 5,637',
+    title: '모든 풍경이 다 아름다웠던 몽골!! 음식도 숙소 화장실도 대만족',
+    img: 'https://files.boolub.com/upfiles/board/139392422.jpeg',
+    tip: '다시 가고 싶을 만큼 좋았어요! 매 끼니 음식도 맛있었고 걱정했던 숙소 화장실들도 깔끔하게 관리되어 있었습니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1566'
   },
   {
-    id: 's5',
-    cat: '은하수·스냅',
-    agency: '스카이 투어 몽골',
-    pcode: 'J8833-W9230-L2860',
-    prodName: '[몽골] 사막·온천·천체망원경 3박4일',
-    price: '841,464원',
-    badge: '천체망원경 관측',
-    title: '가이드가 직접 세팅해드리는 천체망원경 별자리 관측과 게르 라이트페인팅 스냅',
-    img: './images/starlight_ger_snap.jpg',
-    tip: '밤하늘 토성 고리와 달 분화구까지 직접 눈으로 확인하는 특별한 밤을 선물해 드려요.'
-  },
-  {
-    id: 's6',
+    id: 'rev_1557',
     cat: '푸르공·스타렉스',
-    agency: '밝은 미래 여행',
-    pcode: 'E0711-V0341-Z7774',
-    prodName: '[몽골] 남고비·테를지 5박6일',
-    price: '1,002,400원',
-    badge: '남고비 현장',
-    title: '끝없는 초원과 사막 경계를 달리는 남고비 오프로드 투어 현장 스케치',
-    img: './images/gobi_camp_vans.jpg',
-    tip: '차량 내 멀티 충전기와 넉넉한 생수를 매일 기본 비치해 쾌적하게 이동합니다.'
-  },
-  {
-    id: 's7',
-    cat: '게르·샤워실',
-    agency: '양가투어 (YangGa Friends)',
-    pcode: 'E4890-B3318-G7233',
-    prodName: '[몽골] 홉스골 5박6일 투어 패키지',
-    price: '1,184,000원',
-    badge: '홉스골 호수 실사',
-    title: '문을 열면 바다 같은 푸른 호수가 펼쳐지는 한여름 홉스골 보트 선셋',
-    img: './images/khuvsgul_boat_sunset.jpg',
-    tip: '7~8월에도 선선한 가을 날씨라 얇은 경량패딩이나 바람막이를 챙기시면 딱 좋습니다.'
-  },
-  {
-    id: 's8',
-    cat: '음식·불멍파티',
-    agency: '부럽 몽골원정대 (직영)',
+    agency: '부럽 고비원정대 · 공식파트너',
     pcode: 'C3954-E9344-H0474',
-    prodName: '[4박5일] 부럽 고비사막 원정대',
-    price: '1,150,000원',
-    badge: '2030 동행파티',
-    title: '처음 만난 동행들과 캠프파이어 둘러앉아 별 보며 건배하는 몽골의 밤',
-    img: './images/campfire_cheers.jpg',
-    tip: '혼자 오시는 분이 절반 이상! 첫날 저녁 허르헉 파티면 모두 단짝 친구가 됩니다.'
+    prodName: '[4박5일] 몽골 고비사막 원정대 동행 조인 투어',
+    price: '999,000원',
+    badge: '실제후기 · 조회 10,476',
+    title: '남고비사막으로의 4박 5일 여행 생생 포토 리뷰',
+    img: 'https://files.boolub.com/upfiles/board/4214017257.jpeg',
+    tip: '끝없이 펼쳐진 남고비 사막과 모래언덕 일몰, 동행들과 함께한 별밤의 감동을 부럽 커뮤니티 원문에서 확인해보세요.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1557'
+  },
+  {
+    id: 'rev_1551',
+    cat: '은하수·스냅',
+    agency: '부럽 몽골원정대 (직영)',
+    pcode: 'T0950-Q2923-W2496',
+    prodName: '[3박4일] 몽골 중부 원정대 동행 조인 투어',
+    price: '699,000원',
+    badge: '실제후기 · 조회 9,992',
+    title: '아들 둘과 함께한 잊지 못할 부럽 몽골원정대 가족 후기',
+    img: 'https://files.boolub.com/upfiles/board/676491296.jpg',
+    tip: '아이들과 함께 초원을 달리고 별을 보며 잊지 못할 추억을 남긴 부럽 몽골원정대 실제 가족 참가자 리뷰입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1551'
+  },
+  {
+    id: 'rev_1549',
+    cat: '은하수·스냅',
+    agency: '노라투어 · 공식파트너',
+    pcode: 'V6003-W0388-Z1928',
+    prodName: '[몽골] 고비사막 시그니처 코스 4박5일',
+    price: '1,441,100원',
+    badge: '실제후기 · 조회 10,113',
+    title: '엄마와 단둘이 떠나는 설레는 첫 몽골여행 기록',
+    img: 'https://files.boolub.com/upfiles/board/3736057564.jpg',
+    tip: '부모님과 함께 떠나도 편안하고 안전했던 몽골 초원·사막 투어 실제 여행기입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1549'
+  },
+  {
+    id: 'rev_1534',
+    cat: '은하수·스냅',
+    agency: '부럽 몽골원정대 (직영)',
+    pcode: 'T0950-Q2923-W2496',
+    prodName: '[3박4일] 몽골 중부 원정대 동행 조인 투어',
+    price: '699,000원',
+    badge: '실제후기 · 조회 10,606',
+    title: '한여름 몽골 원정대 3박4일 리얼 후기 (테를지·미니사막·어기호수)',
+    img: 'https://files.boolub.com/upfiles/board/1685379338.jpg',
+    tip: '혼자 신청해도 또래·동행들과 금방 친해지는 부럽 직영 몽골원정대 여름 시즌 실제 탑승 후기입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1534'
+  },
+  {
+    id: 'rev_1503',
+    cat: '푸르공·스타렉스',
+    agency: '밝은 미래 여행 (BRIGHT FUTURE)',
+    pcode: 'C2252-F3651-S1415',
+    prodName: '[몽골] 고비사막 5박6일 샤워 가능 게르 풀패키지',
+    price: '1,250,000원',
+    badge: '실제후기 · 조회 46,486',
+    title: '드디어 고비사막 홍고린엘스 정상에 오르다!! (누적 조회 4.6만 베스트)',
+    img: 'https://files.boolub.com/upfiles/board/1921806417.jpg',
+    tip: '출발 전 걱정이 무색할 만큼 압도적인 대자연의 감동을 선사한 부럽 커뮤니티 대표 베스트 후기입니다.',
+    postUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1503'
   }
 ];
 
-/* 7. 적재적소 부럽 자사 연관상품 크로스셀링 (출국 전 필수 준비물 4선) */
-const ESSENTIALS_DATA = [
+/* 7. 부럽 실제 몽골 여행 매거진 (smart_bbs b_menu='cityguide' 실데이터 100% 연동) */
+const MAGAZINE_ITEMS = [
   {
-    badge: '평점 ★5.0 · 새벽도착 필수',
-    title: '울란바토르 공항 ↔ 시내 호텔 단독 픽업·샌딩',
-    desc: '새벽 1~3시 칭기스칸 공항 도착편도 기사님 피켓 미팅으로 안전하고 편하게 숙소까지 이동하세요.',
-    priceLabel: '단독차량 1대 특가',
-    cta: '공항픽업 예약하기',
-    img: './images/vehicle_fleet.jpg',
-    url: 'https://www.boolub.com/?pn=product.view&pcode=I3885-I4036-S5377'
+    uid: '1644',
+    title: '몽골 여행 필수 일정과 체험 추천 코스',
+    city: '몽골',
+    theme: '추천일정',
+    filterCat: '동행·일정',
+    img: 'https://files.boolub.com/upfiles/board/2422061780_1794708044.jpg',
+    hit: 242,
+    rdate: '2026-11-15',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1644'
   },
   {
-    badge: '전 투어 불포함 · 필수가입',
-    title: '트래블메딕 해외여행자보험 1분 간편가입',
-    desc: '몽골 현지 투어는 여행자보험이 개별 가입 조건입니다. 승마·사막 액티비티 대비 출국 전 꼭 챙기세요.',
-    priceLabel: '부럽 제휴 실속보험료',
-    cta: '보험료 조회·가입',
-    img: './images/companion_team_hands.jpg',
-    url: 'https://www.boolub.com/?pn=product.list&cuid=575'
+    uid: '1554',
+    title: '몽골 동행구하기 A부터 Z까지',
+    city: '몽골',
+    theme: '추천일정',
+    filterCat: '동행·일정',
+    img: 'https://files.boolub.com/upfiles/board/1786807039.jpg',
+    hit: 68088,
+    rdate: '2025-09-18',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1554'
   },
   {
-    badge: 'QR 즉시개통 · 로밍특가',
-    title: '몽골 고비·초원 데이터 eSIM & 유심 할인전',
-    desc: '공항 수령 줄 설 필요 없이 출국 전 QR 스캔 한 번으로 울란바토르 도착 즉시 데이터 연결!',
-    priceLabel: '부럽 회원 즉시할인',
-    cta: '몽골 eSIM·유심 보기',
-    img: './images/starlight_ger_snap.jpg',
-    url: 'https://www.boolub.com/?pn=product.list&cuid=555'
+    uid: '1513',
+    title: '[몽골] 남은시간 울란바토르에서 뭘하면 좋을까?',
+    city: '몽골',
+    theme: '추천일정',
+    filterCat: '동행·일정',
+    img: 'https://files.boolub.com/upfiles/board/3209440322.jpg',
+    hit: 69572,
+    rdate: '2025-07-14',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1513'
   },
   {
-    badge: '유심+특식+숙소 올인원',
-    title: '따로 챙기기 귀찮다면? 부럽 직영 몽골원정대',
-    desc: 'USIM 무료 증정 + 현지 추가금 0원 + 1인 신청도 100% 출발 확정되는 부럽 올인원 패키지',
-    priceLabel: '최저 699,000원~',
-    cta: '원정대 전용관 이동',
-    img: './images/sand_dunes_camp.jpg',
-    url: 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition'
+    uid: '1477',
+    title: '몽골 여행자라면 꼭 알아야 할 몽골공항 정보',
+    city: '몽골',
+    theme: '교통&여행팁',
+    filterCat: '공항·교통·날씨',
+    img: 'https://files.boolub.com/upfiles/board/1083167974.jpg',
+    hit: 72560,
+    rdate: '2025-07-04',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1477'
+  },
+  {
+    uid: '1467',
+    title: '몽골 징기스칸 공항 ↔ 울란바토르 시내 버스 이용 가이드',
+    city: '몽골',
+    theme: '교통&여행팁',
+    filterCat: '공항·교통·날씨',
+    img: 'https://files.boolub.com/upfiles/board/3719315085.png',
+    hit: 73748,
+    rdate: '2025-06-18',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1467'
+  },
+  {
+    uid: '1428',
+    title: '[몽골] 더 완벽한 몽골여행을 위한 준비물',
+    city: '몽골',
+    theme: '필수준비물',
+    filterCat: '준비물·게르',
+    img: 'https://files.boolub.com/upfiles/board/4228987703.jpg',
+    hit: 80026,
+    rdate: '2025-05-23',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1428'
+  },
+  {
+    uid: '1373',
+    title: '몽골여행에 필요한 계절별 · 지역별 준비물',
+    city: '몽골',
+    theme: '필수준비물',
+    filterCat: '준비물·게르',
+    img: 'https://files.boolub.com/upfiles/board/2668804338.jpg',
+    hit: 86328,
+    rdate: '2025-04-17',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1373'
+  },
+  {
+    uid: '987',
+    title: '몽골 게르 똑똑하게 선택하는 방법 💡',
+    city: '몽골',
+    theme: '숙소·게르',
+    filterCat: '준비물·게르',
+    img: 'https://files.boolub.com/upfiles/board/4182726144.jpg',
+    hit: 33217,
+    rdate: '2024-09-23',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=987'
+  },
+  {
+    uid: '1247',
+    title: '[몽골] 고비사막을 계획한다면!',
+    city: '몽골',
+    theme: '액티비티&투어',
+    filterCat: '고비·온천·체험',
+    img: 'https://files.boolub.com/upfiles/board/3439522857.png',
+    hit: 56946,
+    rdate: '2025-01-22',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1247'
+  },
+  {
+    uid: '1248',
+    title: '[몽골] 울란바토르 몽골시내 투어!',
+    city: '몽골',
+    theme: '액티비티&투어',
+    filterCat: '고비·온천·체험',
+    img: 'https://files.boolub.com/upfiles/board/1881892143.png',
+    hit: 56857,
+    rdate: '2025-01-22',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1248'
+  },
+  {
+    uid: '993',
+    title: '몽골 대자연 노천 온천 체험 가이드 ♨',
+    city: '몽골',
+    theme: '액티비티&투어',
+    filterCat: '고비·온천·체험',
+    img: 'https://files.boolub.com/upfiles/board/977492562.png',
+    hit: 29850,
+    rdate: '2024-09-25',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=993'
+  },
+  {
+    uid: '990',
+    title: '몽골 월별 날씨 & 여행 최적기 총정리 🔆',
+    city: '몽골',
+    theme: '교통&여행팁',
+    filterCat: '공항·교통·날씨',
+    img: 'https://files.boolub.com/upfiles/board/1696871606.jpg',
+    hit: 26596,
+    rdate: '2024-09-24',
+    url: 'https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=990'
   }
 ];
 
-/* ================= 권한(Auth) & 백엔드 API 상태 변수 (v5) ================= */
+/* ================= 권한(Auth) & 백엔드 API 상태 변수 (v11) ================= */
 const API_BASE = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_API_BASE)
   ? window.BOOLUB_MOKTA_API_BASE.replace(/\/$/, '')
   : '';
@@ -1574,33 +1476,16 @@ if (typeof window !== 'undefined' && window.BOOLUB_MOKTA_AUTH) {
   AUTH_STATE = Object.assign(AUTH_STATE, window.BOOLUB_MOKTA_AUTH);
 }
 
-let ONBOARD_ITEMS = [
-  {
-    id: 'ob1',
-    company: '어드벤처 몽골 투어 (ADVENTURE MONGOLIA)',
-    moktaYn: 'Y',
-    contact: '010-8241-**** / 카톡 adv_mn',
-    memberId: 'adventure_mn',
-    desc: '남고비·중부 전문 / 신형 스타렉스 9대·푸르공 14대 직영 / 홍고린 온수캠프 제휴',
-    status: 'pending',
-    rdate: '2026-11-16 18:20'
-  },
-  {
-    id: 'ob2',
-    company: '고비 스타 글램핑 (GOBI STAR)',
-    moktaYn: 'Y',
-    contact: '010-5390-**** / 카톡 gobistar',
-    memberId: 'gobistar_kr',
-    desc: '전 일정 호텔식 침구 및 개별 샤워실 완비 직영 글램핑 캠프 2곳 운영',
-    status: 'pending',
-    rdate: '2026-11-17 08:45'
-  }
-];
+let ONBOARD_ITEMS = [];
 
-let curHeroPage = 0;
+const HERO_CLONE_COUNT = 3;
+let heroTrackIdx = HERO_CLONE_COUNT;
+let heroIsTransitioning = false;
+let heroFallbackTimer = null;
 let heroAutoTimer = null;
 let isHeroAutoPlaying = true;
 let curStoreCat = 'all';
+let storeVisibleCount = 12;
 let curCalYear = 2026;
 let curCalMonth = 8;    // 기본 8월 성수기 월간 캘린더 표시 (0이면 전체 월 보기)
 let curJoinDate = 'all'; // 특정 일자 클릭 시 'YYYY-MM-DD', 미선택 시 'all' (선택 월 전체)
@@ -1608,6 +1493,7 @@ let calSubFilters = { partner: 'all', status: 'all' };
 let curRfqFilter = 'all';
 let curShowcaseFilter = 'all';
 let curAgencyFilter = 'all';
+let curMagFilter = 'all';
 let globalKeyword = '';
 let quickFinder = { region: 'all', duration: 'all', style: 'all' };
 
@@ -1842,54 +1728,128 @@ function filterPageView(targetId, btnEl) {
 
 function handleGlobalSearch(val) {
   globalKeyword = (val || '').trim().toLowerCase();
+  storeVisibleCount = 12;
   renderStoreProducts();
   renderJoinCards();
   renderRfqBoard();
   renderShowcase();
   renderPartnerSection();
+  renderMagazines();
 }
 
-/* ================= 히어로 자동 슬라이더 & 고객 관심 찜·비교 보관함 ================= */
-function renderHeroBanners() {
-  const grid = document.getElementById('heroBannerGrid');
-  const counter = document.getElementById('heroCounterText');
-  const dotsWrap = document.getElementById('heroDotsWrap');
-  if (!grid) return;
-  const cards = HERO_PAGES[curHeroPage] || HERO_PAGES[0];
-  if (counter) counter.textContent = `${curHeroPage + 1} / ${HERO_PAGES.length}`;
-  if (dotsWrap) {
-    dotsWrap.innerHTML = HERO_PAGES.map((_, i) => `
-      <button type="button" class="bl-hero-dot ${i === curHeroPage ? 'active' : ''}" onclick="setHeroPage(${i})" aria-label="배너 ${i + 1}페이지"></button>
-    `).join('');
-  }
+/* ================= 히어로 1칸씩 무한 슬라이더 (부럽 메인 #slickMainBnr 동일 규격) & 찜·비교 ================= */
+let heroDragMoved = false;
 
-  grid.innerHTML = cards.map((c, idx) => `
-    <article class="bl-hero-card is-anim" data-hidx="${idx}">
-      <img src="${c.img}" alt="${c.title.replace(/\n/g, ' ')}" />
-      <div class="bl-hero-txt">
-        <span class="bl-hero-eyebrow">${c.eyebrow}</span>
-        <h2 class="bl-hero-title">${c.title.replace(/\n/g, '<br/>')}</h2>
-        <p class="bl-hero-sub">${c.sub}</p>
-      </div>
-    </article>
+function getHeroVisibleSlides() {
+  if (typeof window === 'undefined') return 3;
+  if (window.innerWidth <= 640) return 1;
+  if (window.innerWidth <= 1024) return 2;
+  return 3;
+}
+
+function getHeroRealIndex() {
+  const total = HERO_SLIDES.length;
+  if (!total) return 0;
+  return (((heroTrackIdx - HERO_CLONE_COUNT) % total) + total) % total;
+}
+
+function updateHeroCounter() {
+  const counter = document.getElementById('heroCounterText');
+  if (!counter || !HERO_SLIDES.length) return;
+  counter.textContent = `${getHeroRealIndex() + 1} / ${HERO_SLIDES.length}`;
+}
+
+function syncHeroTrackPosition(animate = false, extraPx = 0) {
+  const track = document.getElementById('heroBannerTrack');
+  if (!track) return;
+  const visible = getHeroVisibleSlides();
+  const stepPct = 100 / visible;
+  track.style.transition = animate ? 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none';
+  if (extraPx) {
+    track.style.transform = `translate3d(calc(-${(heroTrackIdx * stepPct).toFixed(5)}% + ${extraPx}px), 0, 0)`;
+  } else {
+    track.style.transform = `translate3d(-${(heroTrackIdx * stepPct).toFixed(5)}%, 0, 0)`;
+  }
+  updateHeroCounter();
+}
+
+function snapHeroCloneIfNeeded() {
+  const total = HERO_SLIDES.length;
+  const track = document.getElementById('heroBannerTrack');
+  if (!track || !total) return;
+  let snapped = false;
+  if (heroTrackIdx >= HERO_CLONE_COUNT + total) {
+    heroTrackIdx -= total;
+    snapped = true;
+  } else if (heroTrackIdx < HERO_CLONE_COUNT) {
+    heroTrackIdx += total;
+    snapped = true;
+  }
+  if (snapped) {
+    syncHeroTrackPosition(false);
+    void track.offsetWidth;
+  }
+  heroIsTransitioning = false;
+}
+
+function initHeroTrack() {
+  const track = document.getElementById('heroBannerTrack');
+  if (!track || !HERO_SLIDES.length) return;
+
+  const total = HERO_SLIDES.length;
+  const headClones = HERO_SLIDES.slice(-HERO_CLONE_COUNT).map((s, i) => ({
+    slide: s,
+    realIdx: total - HERO_CLONE_COUNT + i
+  }));
+  const realItems = HERO_SLIDES.map((s, i) => ({ slide: s, realIdx: i }));
+  const tailClones = HERO_SLIDES.slice(0, HERO_CLONE_COUNT).map((s, i) => ({
+    slide: s,
+    realIdx: i
+  }));
+
+  const fullTrack = [...headClones, ...realItems, ...tailClones];
+  track.innerHTML = fullTrack.map(item => `
+    <div class="bl-hero-slide" data-real-idx="${item.realIdx}">
+      <article class="bl-hero-card">
+        <img src="${item.slide.img}" alt="${item.slide.title.replace(/\n/g, ' ')}" draggable="false" />
+        <div class="bl-hero-txt">
+          <span class="bl-hero-eyebrow">${item.slide.eyebrow}</span>
+          <h2 class="bl-hero-title">${item.slide.title.replace(/\n/g, '<br/>')}</h2>
+          <p class="bl-hero-sub">${item.slide.sub}</p>
+        </div>
+      </article>
+    </div>
   `).join('');
 
-  grid.querySelectorAll('.bl-hero-card').forEach(el => {
-    el.addEventListener('click', () => {
-      const idx = Number(el.getAttribute('data-hidx'));
-      if (cards[idx] && cards[idx].action) cards[idx].action();
+  track.querySelectorAll('.bl-hero-slide').forEach(el => {
+    el.addEventListener('click', e => {
+      if (heroDragMoved) {
+        e.preventDefault();
+        return;
+      }
+      const rIdx = Number(el.getAttribute('data-real-idx'));
+      const target = HERO_SLIDES[rIdx];
+      if (target && target.action) target.action();
     });
   });
+
+  heroTrackIdx = HERO_CLONE_COUNT;
+  heroIsTransitioning = false;
+  syncHeroTrackPosition(false);
 }
 
 function slideHero(dir) {
-  curHeroPage = (curHeroPage + dir + HERO_PAGES.length) % HERO_PAGES.length;
-  renderHeroBanners();
-}
-
-function setHeroPage(idx) {
-  curHeroPage = ((idx % HERO_PAGES.length) + HERO_PAGES.length) % HERO_PAGES.length;
-  renderHeroBanners();
+  const total = HERO_SLIDES.length;
+  if (!total) return;
+  if (heroIsTransitioning) {
+    clearTimeout(heroFallbackTimer);
+    snapHeroCloneIfNeeded();
+  }
+  heroIsTransitioning = true;
+  heroTrackIdx += (dir >= 0 ? 1 : -1);
+  syncHeroTrackPosition(true);
+  clearTimeout(heroFallbackTimer);
+  heroFallbackTimer = setTimeout(snapHeroCloneIfNeeded, 530);
 }
 
 function startHeroAutoSlide() {
@@ -1898,7 +1858,7 @@ function startHeroAutoSlide() {
     if (isHeroAutoPlaying && !document.body.classList.contains('partner-mode')) {
       slideHero(1);
     }
-  }, 4200);
+  }, 3000);
 }
 
 function toggleHeroAutoSlide() {
@@ -1912,11 +1872,76 @@ function toggleHeroAutoSlide() {
 }
 
 function bindHeroSliderEvents() {
-  const wrap = document.querySelector('.bl-hero-slider-wrap');
-  if (!wrap) return;
+  const wrap = document.getElementById('heroSliderWrap') || document.querySelector('.bl-hero-slider-wrap');
+  const viewport = document.getElementById('heroBannerViewport');
+  const track = document.getElementById('heroBannerTrack');
+  if (!wrap || !viewport || !track) return;
+
+  track.addEventListener('transitionend', e => {
+    if (e.target !== track) return;
+    clearTimeout(heroFallbackTimer);
+    snapHeroCloneIfNeeded();
+  });
+
   wrap.addEventListener('mouseenter', () => clearInterval(heroAutoTimer));
   wrap.addEventListener('mouseleave', () => {
     if (isHeroAutoPlaying) startHeroAutoSlide();
+  });
+
+  let dragging = false;
+  let startX = 0;
+  let deltaX = 0;
+
+  const onDragStart = clientX => {
+    if (heroIsTransitioning) {
+      clearTimeout(heroFallbackTimer);
+      snapHeroCloneIfNeeded();
+    }
+    dragging = true;
+    heroDragMoved = false;
+    startX = clientX;
+    deltaX = 0;
+    track.classList.add('is-dragging');
+    clearInterval(heroAutoTimer);
+  };
+
+  const onDragMove = clientX => {
+    if (!dragging) return;
+    deltaX = clientX - startX;
+    if (Math.abs(deltaX) > 8) heroDragMoved = true;
+    syncHeroTrackPosition(false, deltaX);
+  };
+
+  const onDragEnd = () => {
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('is-dragging');
+    const threshold = Math.max(44, viewport.clientWidth * 0.08);
+    if (deltaX <= -threshold) {
+      slideHero(1);
+    } else if (deltaX >= threshold) {
+      slideHero(-1);
+    } else {
+      syncHeroTrackPosition(true);
+    }
+    if (isHeroAutoPlaying) startHeroAutoSlide();
+    setTimeout(() => { heroDragMoved = false; }, 60);
+  };
+
+  track.addEventListener('mousedown', e => onDragStart(e.clientX));
+  window.addEventListener('mousemove', e => onDragMove(e.clientX));
+  window.addEventListener('mouseup', onDragEnd);
+
+  track.addEventListener('touchstart', e => {
+    if (e.touches && e.touches[0]) onDragStart(e.touches[0].clientX);
+  }, { passive: true });
+  track.addEventListener('touchmove', e => {
+    if (e.touches && e.touches[0]) onDragMove(e.touches[0].clientX);
+  }, { passive: true });
+  track.addEventListener('touchend', onDragEnd);
+
+  window.addEventListener('resize', () => {
+    syncHeroTrackPosition(false);
   });
 }
 
@@ -2057,26 +2082,36 @@ function resetQuickFinder() {
   if (s) s.value = 'all';
   quickFinder = { region: 'all', duration: 'all', style: 'all' };
   globalKeyword = '';
+  storeVisibleCount = 12;
   const gInput = document.getElementById('globalSearchInput');
   if (gInput) gInput.value = '';
   renderStoreProducts();
+  renderJoinCalendar();
   renderJoinCards();
   renderRfqBoard();
   renderShowcase();
   renderPartnerSection();
+  renderMagazines();
   showToast('모든 검색 조건이 초기화되었습니다.');
 }
 
-/* ================= 섹션 1: 부럽 실제 판매 투어 스토어 & 미리보기 모달 ================= */
+/* ================= 섹션 2: 부럽 실제 판매 투어 스토어(104개) & 미리보기 모달 ================= */
 function filterStoreCat(cat, btnEl) {
   curStoreCat = cat;
+  storeVisibleCount = 12;
   document.querySelectorAll('#storeChipRow .bl-chip').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   renderStoreProducts();
 }
 
+function loadMoreStoreProducts() {
+  storeVisibleCount += 16;
+  renderStoreProducts();
+}
+
 function renderStoreProducts() {
   const grid = document.getElementById('productStoreGrid');
+  const moreWrap = document.getElementById('storeMoreBtnWrap');
   if (!grid) return;
 
   const list = DIRECT_PRODUCTS.filter(p => {
@@ -2084,7 +2119,7 @@ function renderStoreProducts() {
     if (quickFinder.region !== 'all' && p.regionKey !== quickFinder.region) return false;
     if (quickFinder.duration !== 'all') {
       if (quickFinder.duration === '5박6일') {
-        if (!p.title.includes('5박6일') && !p.title.includes('6박7일')) return false;
+        if (!p.title.includes('5박') && !p.title.includes('6박') && !p.title.includes('7박') && p.durationKey !== '5박6일') return false;
       } else if (p.durationKey !== quickFinder.duration) {
         return false;
       }
@@ -2112,12 +2147,16 @@ function renderStoreProducts() {
         </div>
       </div>
     `;
+    if (moreWrap) moreWrap.innerHTML = '';
     return;
   }
 
-  grid.innerHTML = list.map(p => {
+  const visibleList = list.slice(0, storeVisibleCount);
+
+  grid.innerHTML = visibleList.map(p => {
     const wishKey = `prod:${p.pcode}`;
     const wished = isWished(wishKey);
+    const hasDiscount = Boolean(p.originPrice && p.discount);
     return `
       <article class="bl-item-box" onclick="openProductPreviewModal('${p.pcode}')">
         <div class="bl-item-thumb">
@@ -2135,15 +2174,27 @@ function renderStoreProducts() {
             <span>${p.rating}</span>
             <span style="color:var(--bl-gray-400);">(${p.reviews})</span>
           </div>
-          <div class="bl-price-origin">정가 ${p.originPrice}</div>
+          ${hasDiscount ? `<div class="bl-price-origin">정가 ${p.originPrice}</div>` : `<div style="height:17px;"></div>`}
           <div class="bl-item-price" style="margin-top:2px;">
-            <span class="bl-item-discount">${p.discount}</span>
+            ${hasDiscount ? `<span class="bl-item-discount">${p.discount}</span>` : ''}
             <span class="bl-item-won">${p.price}</span>
           </div>
         </div>
       </article>
     `;
   }).join('');
+
+  if (moreWrap) {
+    if (list.length > visibleList.length) {
+      moreWrap.innerHTML = `
+        <button type="button" class="bl-btn bl-btn-outline" style="height:44px; padding:0 26px; border-radius:999px;" onclick="loadMoreStoreProducts()">
+          부럽 몽골 투어 더보기 (${visibleList.length} / ${list.length}개) <i class="xi-plus-min"></i>
+        </button>
+      `;
+    } else {
+      moreWrap.innerHTML = '';
+    }
+  }
 }
 
 function openProductPreviewModal(pcode) {
@@ -2152,10 +2203,11 @@ function openProductPreviewModal(pcode) {
   const partnerUrl = prod.pid === 'boolub'
     ? 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition'
     : `https://www.boolub.com/?pn=partner.view&pid=${prod.pid}`;
+  const hasDiscount = Boolean(prod.originPrice && prod.discount);
 
   const titleEl = document.getElementById('prodModalTitle');
   const bodyEl = document.getElementById('prodModalBody');
-  if (titleEl) titleEl.textContent = '부럽 공식 판매 투어 상세 및 쿠폰 혜택';
+  if (titleEl) titleEl.textContent = '부럽 공식 판매 투어 상세 및 예약 안내';
 
   if (bodyEl) {
     bodyEl.innerHTML = `
@@ -2173,34 +2225,34 @@ function openProductPreviewModal(pcode) {
 
           <div style="margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--bl-point-bg); border:1px solid var(--bl-point-line); display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <div style="font-size:11.5px; color:var(--bl-gray-500); text-decoration:line-through;">정가 ${prod.originPrice}</div>
-              <div style="font-size:12px; font-weight:700; color:var(--bl-point-text);">부럽 쿠폰 적용 특가</div>
+              ${hasDiscount ? `<div style="font-size:11.5px; color:var(--bl-gray-500); text-decoration:line-through;">정가 ${prod.originPrice}</div>` : ''}
+              <div style="font-size:12px; font-weight:700; color:var(--bl-point-text);">${hasDiscount ? '부럽 직영 할인 특가' : '부럽 공식 판매가 (에스크로 보호)'}</div>
             </div>
             <div style="text-align:right;">
-              <span style="font-size:16px; font-weight:800; color:var(--bl-point-text); margin-right:4px;">${prod.discount}</span>
+              ${hasDiscount ? `<span style="font-size:16px; font-weight:800; color:var(--bl-point-text); margin-right:4px;">${prod.discount}</span>` : ''}
               <strong style="font-size:21px; font-weight:800; color:var(--bl-gray-900);">${prod.price}</strong>
             </div>
           </div>
 
           <ul style="margin-top:12px; display:grid; gap:6px; font-size:13px; color:var(--bl-gray-700);">
-            ${prod.highlights.map(h => `<li><i class="xi-check-min" style="color:var(--bl-point-dark); font-weight:700;"></i> ${h}</li>`).join('')}
+            ${(prod.highlights || []).map(h => `<li><i class="xi-check-min" style="color:var(--bl-point-dark); font-weight:700;"></i> ${h}</li>`).join('')}
           </ul>
         </div>
       </div>
 
-      <!-- 부럽 연관 필수상품 자연스러운 체크박스 추천 (크로스셀링 핵심 구간) -->
+      <!-- 부럽 실제 공항픽업 & 몽골 매거진 자연스러운 연결 -->
       <div style="margin-top:18px; padding:14px 16px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200);">
         <div style="font-size:13px; font-weight:800; color:var(--bl-gray-900); margin-bottom:8px;">
-          <i class="xi-briefcase" style="color:var(--bl-point-dark);"></i> 이 투어 예약 고객님이 부럽에서 함께 챙긴 필수 준비물
+          <i class="xi-compass-o" style="color:var(--bl-point-dark);"></i> 출국 전 부럽에서 함께 확인하면 좋은 공항픽업 &amp; 매거진
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <a href="https://www.boolub.com/?pn=product.view&pcode=I3885-I4036-S5377" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
-            <span><strong>울란바토르 공항 단독픽업</strong> (평점 ★5.0)</span>
+            <span><strong>울란바토르 공항 단독픽업</strong> (19,200원)</span>
             <span style="color:var(--bl-point-text); font-weight:700;">함께보기 <i class="xi-external-link"></i></span>
           </a>
-          <a href="https://www.boolub.com/?pn=product.list&cuid=575" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
-            <span><strong>트래블메딕 해외여행자보험</strong> (필수가입)</span>
-            <span style="color:var(--bl-point-text); font-weight:700;">1분 가입 <i class="xi-external-link"></i></span>
+          <a href="https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1428" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
+            <span><strong>[매거진] 완벽한 몽골여행 준비물</strong></span>
+            <span style="color:var(--bl-point-text); font-weight:700;">읽어보기 <i class="xi-external-link"></i></span>
           </a>
         </div>
       </div>
@@ -2672,13 +2724,19 @@ function openJoinDetailModal(joinId) {
 
       <div style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
-          <span style="font-size:12px; color:var(--bl-gray-500);">현재 합류 시 1인 결제금</span>
+          <span style="font-size:12px; color:var(--bl-gray-500);">현재 합류 시 1인 기준 요금</span>
           <strong style="display:block; font-size:20px; font-weight:800; color:var(--bl-gray-900);">${item.curPrice}</strong>
         </div>
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="bl-btn bl-btn-soft" onclick="confirmJoinSeat('${item.id}')">
-            빈 좌석 합류 신청하기
-          </button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          ${item.bbsUrl ? `
+            <a href="${item.bbsUrl}" target="_blank" rel="noopener" class="bl-btn bl-btn-outline">
+              부럽 동행모집 원문 보기 <i class="xi-external-link"></i>
+            </a>
+          ` : `
+            <button type="button" class="bl-btn bl-btn-soft" onclick="confirmJoinSeat('${item.id}')">
+              빈 좌석 합류 신청하기
+            </button>
+          `}
           <a href="${prodLink}" target="_blank" rel="noopener" class="bl-btn bl-btn-point">
             연결된 부럽 투어 상품 보기 <i class="xi-external-link"></i>
           </a>
@@ -3056,7 +3114,7 @@ function renderShowcase() {
 }
 
 function openShowcaseModal(id) {
-  const s = SHOWCASE_ITEMS.find(x => x.id === id) || SHOWCASE_ITEMS[0];
+  const s = SHOWCASE_ITEMS.find(x => String(x.id) === String(id)) || SHOWCASE_ITEMS[0];
   const body = document.getElementById('reelModalBody');
   if (body) {
     body.innerHTML = `
@@ -3068,16 +3126,24 @@ function openShowcaseModal(id) {
           <span class="bl-mokta-tag">${s.agency} · ${s.badge}</span>
           <h3 style="font-size:18px; font-weight:800; color:var(--bl-gray-900); margin-top:8px; line-height:1.4;">${s.title}</h3>
           <p style="margin-top:10px; padding:12px; border-radius:10px; background:var(--bl-gray-50); font-size:13px; color:var(--bl-gray-700); line-height:1.55;">
-            <strong>현지 매니저 TIP:</strong> ${s.tip}
+            <strong>${s.postUrl ? '실제 여행자 후기 요약:' : '현지 매니저 TIP:'}</strong> ${s.tip}
           </p>
 
-          <div style="margin-top:14px; padding:12px 14px; border-radius:10px; border:1px solid var(--bl-point-line); background:var(--bl-point-bg);">
-            <div style="font-size:11.5px; font-weight:700; color:var(--bl-point-text);">이 사진 속 캠프·차량을 이용하는 부럽 실제 투어</div>
+          ${s.postUrl ? `
+            <div style="margin-top:10px;">
+              <a href="${s.postUrl}" target="_blank" rel="noopener" class="bl-btn bl-btn-outline bl-btn-sm" style="width:100%;">
+                부럽 실제 후기 원문 전체보기 <i class="xi-external-link"></i>
+              </a>
+            </div>
+          ` : ''}
+
+          <div style="margin-top:12px; padding:12px 14px; border-radius:10px; border:1px solid var(--bl-point-line); background:var(--bl-point-bg);">
+            <div style="font-size:11.5px; font-weight:700; color:var(--bl-point-text);">연결된 부럽 실제 판매 투어</div>
             <strong style="display:block; font-size:14px; color:var(--bl-gray-900); margin-top:2px;">${s.prodName}</strong>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
               <strong style="font-size:16px; color:var(--bl-gray-900);">${s.price}</strong>
               <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="closeModal('reelModal'); openProductPreviewModal('${s.pcode}')">
-                투어 상세·쿠폰 보기 <i class="xi-angle-right-min"></i>
+                투어 상세·예약 보기 <i class="xi-angle-right-min"></i>
               </button>
             </div>
           </div>
@@ -3088,7 +3154,7 @@ function openShowcaseModal(id) {
   openModal('reelModal');
 }
 
-/* ================= 섹션 5: 20개 공식 파트너 로고 마키 & 가로 캐러셀 ================= */
+/* ================= 섹션 5: 부럽 실제 입점 공식 파트너사 로고 마키 & 가로 캐러셀 ================= */
 function filterAgencies(cat, btnEl) {
   curAgencyFilter = cat;
   const row = btnEl?.parentElement;
@@ -3099,8 +3165,6 @@ function filterAgencies(cat, btnEl) {
 
 function getFilteredAgencies() {
   return MOKTA_AGENCIES.filter(ag => {
-    if (curAgencyFilter === 'active' && ag.statusType !== 'active') return false;
-    if (curAgencyFilter === 'mokta_soon' && ag.statusType !== 'mokta_soon') return false;
     if ((curAgencyFilter === '고비·남부' || curAgencyFilter === '홉스골·중부') && ag.cat !== curAgencyFilter) return false;
     if (globalKeyword) {
       const hay = `${ag.name} ${ag.en} ${ag.desc} ${ag.spec}`.toLowerCase();
@@ -3113,22 +3177,22 @@ function getFilteredAgencies() {
 function renderPartnerSection() {
   const marqueeTrack = document.getElementById('logoMarqueeTrack');
   const cardsTrack = document.getElementById('agencyCardsGrid');
+  const tabPartnerCnt = document.getElementById('tabPartnerCount');
+  const chipPartnerCnt = document.getElementById('chipPartnerTotal');
+  if (tabPartnerCnt) tabPartnerCnt.textContent = String(MOKTA_AGENCIES.length);
+  if (chipPartnerCnt) chipPartnerCnt.textContent = String(MOKTA_AGENCIES.length);
   if (!marqueeTrack || !cardsTrack) return;
 
   const list = getFilteredAgencies();
   const marqueeSource = list.length >= 6 ? list : MOKTA_AGENCIES;
-  const doubled = [...marqueeSource, ...marqueeSource];
+  const doubled = [...marqueeSource, ...marqueeSource, ...marqueeSource];
 
   marqueeTrack.innerHTML = doubled.map(ag => `
     <div class="bl-logo-chip" onclick="openAgencyHomeModal('${ag.id}')">
       <div class="bl-logo-chip-svg">${renderPartnerBadgeMedia(ag, 34)}</div>
       <div class="bl-logo-chip-meta">
         <strong>${ag.name}</strong>
-        <span>
-          ${ag.statusType === 'active'
-            ? `<i class="xi-star"></i> ${ag.rating} · 즉시예약 가능`
-            : `MOKTA 정회원 · 입점진행`}
-        </span>
+        <span><i class="xi-star"></i> ${ag.rating} · ${ag.prodCount || ''}개 투어 운영</span>
       </div>
     </div>
   `).join('');
@@ -3423,25 +3487,55 @@ function openAgencyHomeModal(agId, initialTab = 'about') {
   openModal('agencyHomeModal');
 }
 
-/* ================= 섹션 6: 부럽 필수 준비물 크로스셀링 렌더 ================= */
-function renderEssentials() {
-  const grid = document.getElementById('essentialsGrid');
+/* ================= 섹션 6: 부럽 실제 몽골 여행 매거진 (smart_bbs cityguide 연동 · waug.css .bl-mag-card 동일 규격) ================= */
+function filterMagazine(cat, btnEl) {
+  curMagFilter = cat;
+  const row = document.getElementById('magazineChipRow') || btnEl?.parentElement;
+  if (row) row.querySelectorAll('.bl-chip').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  renderMagazines();
+}
+
+function renderMagazines() {
+  const grid = document.getElementById('magazineGrid');
   if (!grid) return;
-  grid.innerHTML = ESSENTIALS_DATA.map(e => `
-    <a href="${e.url}" target="_blank" rel="noopener" class="bl-essential-card">
-      <div>
-        <div class="bl-ess-top">
-          <img src="${e.img}" alt="${e.title}" class="bl-ess-img" loading="lazy" />
-          <div>
-            <span class="bl-mokta-tag" style="margin-bottom:4px;">${e.badge}</span>
-            <strong style="display:block; font-size:14.5px; color:var(--bl-gray-900); line-height:1.35;">${e.title}</strong>
-          </div>
+
+  const list = MAGAZINE_ITEMS.filter(m => {
+    if (curMagFilter !== 'all' && m.filterCat !== curMagFilter) return false;
+    if (globalKeyword) {
+      const hay = `${m.title} ${m.theme} ${m.filterCat}`.toLowerCase();
+      if (!hay.includes(globalKeyword)) return false;
+    }
+    return true;
+  });
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1; padding:32px; text-align:center; background:var(--bl-gray-50); border-radius:12px; border:1px dashed var(--bl-gray-200);">
+        <strong style="font-size:14.5px; color:var(--bl-gray-900);">해당 주제의 몽골 매거진을 불러오는 중입니다.</strong>
+        <div style="margin-top:10px;">
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="filterMagazine('all', document.querySelector('#magazineChipRow .bl-chip'))">몽골 매거진 전체보기</button>
         </div>
-        <p style="font-size:12.5px; color:var(--bl-gray-500); line-height:1.5; margin-top:10px;">${e.desc}</p>
       </div>
-      <div style="padding-top:10px; border-top:1px solid var(--bl-gray-100); display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:12.5px; font-weight:800; color:var(--bl-point-text);">${e.priceLabel}</span>
-        <span style="font-size:12.5px; font-weight:700; color:var(--bl-gray-900);">${e.cta} <i class="xi-angle-right-min"></i></span>
+    `;
+    return;
+  }
+
+  grid.innerHTML = list.slice(0, 8).map(m => `
+    <a href="${m.url}" target="_blank" rel="noopener" class="bl-mokta-mag-card">
+      <div class="bl-mokta-mag-thumb">
+        <img src="${m.img}" alt="${m.title}" loading="lazy" />
+      </div>
+      <div class="bl-mokta-mag-body">
+        <div class="bl-mokta-mag-badges">
+          <span class="bl-mokta-mag-city">${m.city || '몽골'}</span>
+          <span class="bl-mokta-mag-theme">${m.theme || '추천일정'}</span>
+        </div>
+        <h4 class="bl-mokta-mag-title">${m.title}</h4>
+        <div class="bl-mokta-mag-meta">
+          <span>조회 ${Number(m.hit || 0).toLocaleString()}</span>
+          <span>매거진 읽기 <i class="xi-angle-right-min"></i></span>
+        </div>
       </div>
     </a>
   `).join('');
@@ -4130,6 +4224,18 @@ async function hydrateFromLiveBackend() {
     if (Array.isArray(data.products) && data.products.length) {
       DIRECT_PRODUCTS.splice(0, DIRECT_PRODUCTS.length, ...data.products);
     }
+    if (Array.isArray(data.partners) && data.partners.length) {
+      MOKTA_AGENCIES.splice(0, MOKTA_AGENCIES.length, ...data.partners);
+    } else if (data.partnerProfiles && typeof data.partnerProfiles === 'object') {
+      Object.values(data.partnerProfiles).forEach(prof => {
+        if (!prof || !prof.pid) return;
+        const targetAg = MOKTA_AGENCIES.find(a => a.pid === prof.pid);
+        if (targetAg) applyProfileToAgencyObj(targetAg, prof);
+      });
+    }
+    if (Array.isArray(data.magazines) && data.magazines.length) {
+      MAGAZINE_ITEMS.splice(0, MAGAZINE_ITEMS.length, ...data.magazines);
+    }
     if (Array.isArray(data.rfqs) && data.rfqs.length) {
       data.rfqs.forEach(r => {
         if (Array.isArray(r.quotes)) {
@@ -4145,21 +4251,22 @@ async function hydrateFromLiveBackend() {
       RFQ_ITEMS.splice(0, RFQ_ITEMS.length, ...mergedRfqs);
     }
     if (Array.isArray(data.joins) && data.joins.length) {
+      const existingJoinIds = new Set(data.joins.map(x => String(x.id)));
       const existingJoinTitles = new Set(data.joins.map(x => x.title));
-      const mergedJoins = [...data.joins, ...JOIN_ITEMS.filter(x => !existingJoinTitles.has(x.title))];
+      const mergedJoins = [
+        ...data.joins,
+        ...JOIN_ITEMS.filter(x => !existingJoinIds.has(String(x.id)) && !existingJoinTitles.has(x.title))
+      ];
       JOIN_ITEMS.splice(0, JOIN_ITEMS.length, ...mergedJoins);
     }
     if (Array.isArray(data.stories) && data.stories.length) {
+      const existingStoryIds = new Set(data.stories.map(x => String(x.id)));
       const existingStoryTitles = new Set(data.stories.map(x => x.title));
-      const mergedStories = [...data.stories, ...SHOWCASE_ITEMS.filter(x => !existingStoryTitles.has(x.title))];
+      const mergedStories = [
+        ...data.stories,
+        ...SHOWCASE_ITEMS.filter(x => !existingStoryIds.has(String(x.id)) && !existingStoryTitles.has(x.title))
+      ];
       SHOWCASE_ITEMS.splice(0, SHOWCASE_ITEMS.length, ...mergedStories);
-    }
-    if (data.partnerProfiles && typeof data.partnerProfiles === 'object') {
-      Object.values(data.partnerProfiles).forEach(prof => {
-        if (!prof || !prof.pid) return;
-        const targetAg = MOKTA_AGENCIES.find(a => a.pid === prof.pid);
-        if (targetAg) applyProfileToAgencyObj(targetAg, prof);
-      });
     }
     if (Array.isArray(data.onboardList)) {
       ONBOARD_ITEMS = data.onboardList;
@@ -4172,6 +4279,7 @@ async function hydrateFromLiveBackend() {
     renderRfqBoard();
     renderShowcase();
     renderPartnerSection();
+    renderMagazines();
     populatePartnerRfqSelect();
   } catch (err) {
     console.warn('[MOKTA Init Fallback]', err);
@@ -4181,7 +4289,7 @@ async function hydrateFromLiveBackend() {
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE) {
     const base = window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '');
-    [HERO_PAGES, DIRECT_PRODUCTS, MOKTA_AGENCIES, JOIN_ITEMS, RFQ_ITEMS, SHOWCASE_ITEMS, ESSENTIALS_DATA, selectedBidPhoto].forEach(d => applyExternalAssetBase(d, base));
+    [HERO_SLIDES, DIRECT_PRODUCTS, MOKTA_AGENCIES, JOIN_ITEMS, RFQ_ITEMS, SHOWCASE_ITEMS, MAGAZINE_ITEMS, selectedBidPhoto].forEach(d => applyExternalAssetBase(d, base));
     if (selectedShowcaseImg.startsWith('./images/')) {
       selectedShowcaseImg = base + selectedShowcaseImg.slice(1);
     }
@@ -4191,7 +4299,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   updateWishBadge();
   applyAuthUi();
-  renderHeroBanners();
+  initHeroTrack();
   bindHeroSliderEvents();
   startHeroAutoSlide();
   renderStoreProducts();
@@ -4200,7 +4308,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRfqBoard();
   renderShowcase();
   renderPartnerSection();
-  renderEssentials();
+  renderMagazines();
   populatePartnerRfqSelect();
   bindPartnerSliderEvents();
   startPartnerAutoSlide();

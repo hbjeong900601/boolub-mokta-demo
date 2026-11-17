@@ -62,35 +62,36 @@
         <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-rfq', this)">
           내 일정 맞춤견적 <span class="gnb-dot" id="tabRfqCount">4</span>
         </button>
-        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-showcase', this)">현지 LIVE 스토리</button>
-        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-partners', this)">공식 파트너사 (20)</button>
-        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-essentials', this)">몽골 필수 준비물</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-showcase', this)">실제 후기·현장 LIVE</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-partners', this)">공식 파트너사 (<span id="tabPartnerCount">9</span>)</button>
+        <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-magazine', this)">몽골 여행 매거진</button>
       </div>
     </nav>
   </header>
 
   <!-- =========================================================================
-       [1] 여행자(고객) 화면 — 메인 전면 동행·조인 달력 + 부럽 실제 상품 연결
+       [1] 여행자(고객) 화면 — 메인 전면 동행·조인 달력 + 부럽 실제 상품·매거진 연결
   ========================================================================= -->
   <main class="customer-view-wrap">
 
-    <!-- 상단 히어로 배너 + 4단 실사 퀵메뉴 + 빠른 조건 검색 바 -->
+    <!-- 상단 히어로 배너 (부럽 메인 #slickMainBnr 동일 1칸씩 무한 슬라이딩) + 4단 퀵메뉴 + 조건 검색 -->
     <section class="bl-hero-section">
       <div class="bl-container">
-        <div class="bl-hero-slider-wrap">
+        <div class="bl-hero-slider-wrap" id="heroSliderWrap">
           <button type="button" class="bl-slider-arrow prev" onclick="slideHero(-1)" aria-label="이전 배너">
             <i class="xi-angle-left"></i>
           </button>
 
-          <div class="bl-hero-grid" id="heroBannerGrid"></div>
+          <div class="bl-hero-viewport" id="heroBannerViewport">
+            <div class="bl-hero-track" id="heroBannerTrack"></div>
+          </div>
 
           <button type="button" class="bl-slider-arrow next" onclick="slideHero(1)" aria-label="다음 배너">
             <i class="xi-angle-right"></i>
           </button>
 
           <div class="bl-hero-ctrl-bar">
-            <div class="bl-hero-dots" id="heroDotsWrap"></div>
-            <span id="heroCounterText">1 / 3</span>
+            <span id="heroCounterText">1 / 9</span>
             <button type="button" class="bl-hero-play-btn" id="heroPlayToggleBtn" onclick="toggleHeroAutoSlide()" aria-label="자동 슬라이드 재생/정지" title="자동 슬라이드 재생/일시정지">
               <i class="xi-pause"></i>
             </button>
@@ -208,7 +209,7 @@
         <div class="bl-sec-head">
           <div>
             <h3>한눈에 보는 몽골 동행·조인 월간 캘린더</h3>
-            <p>30여 개 파트너사의 출발확정·모집 현황이 날짜별 컬러 도트(•)로 깔끔하게 표시됩니다. 원하는 날짜를 클릭해 잔여석에 바로 합류해보세요</p>
+            <p>부럽 공식 파트너사의 확정 차량과 실제 커뮤니티 동행모집 현황이 날짜별 컬러 도트(•)로 표시됩니다. 원하는 날짜를 클릭해 잔여석에 합류해보세요</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="selectCalendarDate('all')">
@@ -248,15 +249,17 @@
           <div class="bl-cal-filter-row">
             <div class="bl-cal-filter-selects">
               <select id="calPartnerFilter" class="bl-cal-mini-select" onchange="applyCalendarSubFilters()" aria-label="파트너사별 달력 필터">
-                <option value="all">전체 파트너사 일정 보기 (30+ 통합)</option>
+                <option value="all">전체 공식 파트너 · 커뮤니티 일정 보기</option>
                 <option value="부럽 몽골원정대">부럽 몽골원정대 (직영)</option>
+                <option value="부럽 동행커뮤니티">부럽 커뮤니티 동행찾기</option>
                 <option value="노라투어">노라투어 (NORA TOUR)</option>
                 <option value="BBM">BBM TOUR (비비엠투어)</option>
                 <option value="하닥투어">하닥투어 (KHADAG TOUR)</option>
-                <option value="스카이 투어">스카이 투어 몽골</option>
+                <option value="SKY">SKY TOURS MONGOLIA</option>
                 <option value="밝은 미래">밝은 미래 여행</option>
-                <option value="양가투어">양가투어 (홉스골 특화)</option>
+                <option value="양가투어">양가투어 (YangGa Friends)</option>
                 <option value="두잇트래블">(주)두잇트래블</option>
+                <option value="더블유아이티">더블유아이티 (WIT)</option>
               </select>
 
               <select id="calStatusFilter" class="bl-cal-mini-select" onchange="applyCalendarSubFilters()" aria-label="모집상태별 달력 필터">
@@ -406,11 +409,11 @@
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
-            <h3>부럽 단독 쿠폰특가 &amp; 직영 몽골원정대</h3>
-            <p>견적 대기 없이 지금 바로 확정 가능한 부럽 인기 몽골 투어입니다 (최대 20% 즉시할인 쿠폰 적용)</p>
+            <h3>부럽 직영 몽골원정대 &amp; 공식 파트너 인기 투어</h3>
+            <p>부럽에 실제 등록·판매 중인 검증된 몽골 투어 상품입니다. 원하시는 일정을 클릭해 바로 상세 코스와 예약을 확인하세요</p>
           </div>
           <a href="https://www.boolub.com/?pn=product.list&amp;cuid=769" target="_blank" rel="noopener" class="bl-more-link">
-            부럽 몽골 투어 51개 전체보기 <i class="xi-angle-right-min"></i>
+            부럽 몽골 투어 전체보기 (104) <i class="xi-angle-right-min"></i>
           </a>
         </div>
 
@@ -454,6 +457,7 @@
         </div>
 
         <div class="bl-waug-item-grid" id="productStoreGrid"></div>
+        <div id="storeMoreBtnWrap" style="margin-top:22px; text-align:center;"></div>
       </div>
     </section>
 
@@ -482,21 +486,24 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 4: 현지 파트너 LIVE 스토리 (실사 화보·영상 + 부럽 상품 직결) ==================== -->
+    <!-- ==================== 섹션 4: 실제 여행자 포토후기 & 파트너 현장 LIVE ==================== -->
     <section class="bl-section page-sec" id="sec-showcase">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
-            <h3>파트너사가 직접 올린 몽골 현장 LIVE</h3>
-            <p>실제 배정되는 숙소 컨디션, 투어 차량, 밤하늘 은하수 현장을 미리 확인하고 연결된 투어 상품을 바로 만나보세요</p>
+            <h3>실제 여행자 포토후기 &amp; 몽골 현장 LIVE</h3>
+            <p>부럽 커뮤니티에 올라온 실제 탑승객 후기와 공식 파트너사가 직접 전하는 숙소·차량·은하수 현장을 확인해보세요</p>
           </div>
+          <a href="https://www.boolub.com/?pn=board.list&amp;_menu=community&amp;searchMode=Y&amp;searchWord=%EB%AA%BD%EA%B3%A8" target="_blank" rel="noopener" class="bl-more-link">
+            몽골 실제 후기 더보기 <i class="xi-angle-right-min"></i>
+          </a>
         </div>
 
         <div class="bl-chip-row">
-          <button type="button" class="bl-chip active" onclick="filterShowcase('all', this)">전체 스토리</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('은하수·스냅', this)">은하수·인생스냅</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('게르·샤워실', this)">온수 게르·숙소 실사</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('푸르공·스타렉스', this)">푸르공·스타렉스 차량</button>
+          <button type="button" class="bl-chip active" onclick="filterShowcase('all', this)">전체 후기·LIVE</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('은하수·스냅', this)">은하수·원정대 후기</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('게르·샤워실', this)">홉스골·게르 숙소 후기</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('푸르공·스타렉스', this)">고비사막·차량 현장</button>
           <button type="button" class="bl-chip" onclick="filterShowcase('음식·불멍파티', this)">현지 특식·캠프파이어</button>
         </div>
 
@@ -504,23 +511,21 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 5: 부럽 실제 입점 파트너사 + MOKTA 공식 협력사 (20개사 자동 로테이션) ==================== -->
+    <!-- ==================== 섹션 5: 부럽 실제 입점 공식 파트너사 (실제 DB 연동) ==================== -->
     <section class="bl-section page-sec" id="sec-partners">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
-            <h3>부럽 공식 입점 파트너 &amp; MOKTA(몽골한국관광협회) 협력사</h3>
-            <p>현재 부럽에서 검증된 인기 상품을 운영 중인 공식 파트너사와 순차 입점 중인 MOKTA 정회원사를 만나보세요</p>
+            <h3>부럽 × MOKTA 공식 입점 몽골 전문 파트너사</h3>
+            <p>현재 부럽에서 실제 몽골 투어 상품을 운영 중인 검증된 공식 파트너사입니다. 브랜드 미니홈에서 여행사별 보유 상품을 바로 비교해보세요</p>
           </div>
         </div>
 
         <div class="bl-partner-ctrl-bar">
           <div class="bl-chip-row">
-            <button type="button" class="bl-chip active" onclick="filterAgencies('all', this)">전체 파트너 (20)</button>
-            <button type="button" class="bl-chip" onclick="filterAgencies('active', this)">현재 즉시예약 가능 파트너 (9)</button>
-            <button type="button" class="bl-chip" onclick="filterAgencies('mokta_soon', this)">MOKTA 협회 신규 입점예정 (11)</button>
-            <button type="button" class="bl-chip" onclick="filterAgencies('고비·남부', this)">고비·남부 특화</button>
-            <button type="button" class="bl-chip" onclick="filterAgencies('홉스골·중부', this)">홉스골·중부 특화</button>
+            <button type="button" class="bl-chip active" onclick="filterAgencies('all', this)">전체 공식 파트너 (<span id="chipPartnerTotal">9</span>)</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('고비·남부', this)">고비사막·남부 주력</button>
+            <button type="button" class="bl-chip" onclick="filterAgencies('홉스골·중부', this)">홉스골·중부·단기 주력</button>
           </div>
 
           <div class="bl-carousel-ctrls">
@@ -536,35 +541,46 @@
           </div>
         </div>
 
-        <!-- 상단 20개 파트너 실제 로고 & 엠블럼 무한 마키 바 -->
+        <!-- 상단 공식 파트너 실제 로고 & 엠블럼 무한 마키 바 -->
         <div class="bl-logo-marquee-wrap" id="logoMarqueeWrap">
           <div class="bl-logo-marquee-track" id="logoMarqueeTrack"></div>
         </div>
 
-        <!-- 하단 20개 파트너 가로 자동 슬라이드 캐러셀 -->
+        <!-- 하단 공식 파트너 가로 자동 슬라이드 캐러셀 -->
         <div class="bl-partner-slider-viewport" id="partnerSliderViewport">
           <div class="bl-partner-track" id="agencyCardsGrid"></div>
           <div class="bl-slider-progress-wrap">
             <div class="bl-slider-progress-bar">
               <div class="bl-slider-progress-fill" id="partnerProgressFill"></div>
             </div>
-            <span class="bl-slider-page-txt" id="partnerPageTxt">1 / 20</span>
+            <span class="bl-slider-page-txt" id="partnerPageTxt">1 / 9</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 6: 적재적소 부럽 자사 상품 크로스셀링 (몽골 출국 전 필수 준비물) ==================== -->
-    <section class="bl-section page-sec" id="sec-essentials">
+    <!-- ==================== 섹션 6: 부럽 몽골 여행 매거진 (실제 smart_bbs cityguide 매거진 연동) ==================== -->
+    <section class="bl-section page-sec" id="sec-magazine">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
-            <h3>몽골 출국 전 부럽에서 함께 챙기는 필수 준비물</h3>
-            <p>몽골 투어 상품에 불포함된 여행자보험·새벽 공항픽업·데이터 로밍까지 부럽 회원 특가로 한 번에 준비하세요</p>
+            <h3>출국 전 꼭 읽어보세요! 부럽 몽골 여행 매거진</h3>
+            <p>동행 구하는 노하우부터 징기스칸 공항 이동법, 계절별 준비물, 똑똑한 게르 선택법까지 부럽 에디터의 실전 가이드를 모았습니다</p>
           </div>
+          <a href="https://www.boolub.com/?pn=board.list&amp;_menu=cityguide&amp;searchMode=Y&amp;searchWord=%EB%AA%BD%EA%B3%A8" target="_blank" rel="noopener" class="bl-more-link">
+            몽골 매거진 전체보기 <i class="xi-angle-right-min"></i>
+          </a>
         </div>
 
-        <div class="bl-essentials-grid" id="essentialsGrid"></div>
+        <div class="bl-chip-row" id="magazineChipRow">
+          <button type="button" class="bl-chip active" onclick="filterMagazine('all', this)">몽골 매거진 전체</button>
+          <button type="button" class="bl-chip" onclick="filterMagazine('동행·일정', this)">동행·추천일정</button>
+          <button type="button" class="bl-chip" onclick="filterMagazine('공항·교통·날씨', this)">공항·시내교통·날씨</button>
+          <button type="button" class="bl-chip" onclick="filterMagazine('준비물·게르', this)">필수 준비물·게르 선택법</button>
+          <button type="button" class="bl-chip" onclick="filterMagazine('고비·온천·체험', this)">고비·온천·액티비티·음식</button>
+        </div>
+
+        <div class="bl-mokta-mag-grid" id="magazineGrid"></div>
 
         <!-- 부럽 안심 이용 혜택 배너 -->
         <div class="bl-service-banners">
@@ -624,20 +640,15 @@
               <span class="bl-master-badge"><i class="xi-crown"></i> MASTER 권한</span>
               <label for="activePartnerSelect" style="font-size:12.5px; font-weight:700; color:var(--bl-gray-700);">대행·관리 파트너 선택:</label>
               <select id="activePartnerSelect" class="bl-select" style="width:auto; height:32px; padding:0 10px; font-size:12.5px; font-weight:700;" onchange="changeActivePartnerAccount(this.value)">
-                <option value="부럽 몽골원정대 (직영)">부럽 몽골원정대 (본사 직영 · boolub)</option>
-                <option value="노라투어 (NORA TOUR)" selected>노라투어 (anoratour · 17개 상품)</option>
+                <option value="부럽 몽골원정대 (직영)">부럽 몽골원정대 (본사 직영 · boolub · 2개 원정대)</option>
                 <option value="BBM TOUR (비비엠투어)">BBM TOUR (bbm0707 · 17개 상품)</option>
-                <option value="하닥투어 (KHADAG TOUR)">하닥투어 (khadag · 4개 상품)</option>
-                <option value="스카이 투어 몽골 (SKY TOURS)">스카이 투어 몽골 (SKYTOURS · 4개 상품)</option>
-                <option value="밝은 미래 여행 (BRIGHT FUTURE)">밝은 미래 여행 (Bftour · 2개 상품)</option>
-                <option value="(주)두잇트래블">(주)두잇트래블 (doittavel · 3개 상품)</option>
-                <option value="양가투어 (YangGa Friends)">양가투어 (YangGaTour · 홉스골 특화)</option>
-                <option value="더블유아이티 (WIT)">더블유아이티 (wit77777 · 공항픽업)</option>
-                <option value="어드벤처 몽골 투어">어드벤처 몽골 투어 (MOKTA · mokta_ag10)</option>
-                <option value="고비 스타 글램핑">고비 스타 글램핑 (MOKTA · mokta_ag11)</option>
-                <option value="홉스골 블루펄 트래블">홉스골 블루펄 트래블 (MOKTA · mokta_ag12)</option>
-                <option value="노마드 스냅 익스페디션">노마드 스냅 익스페디션 (MOKTA · mokta_ag13)</option>
-                <option value="몽골 헤리티지 VIP">몽골 헤리티지 VIP (MOKTA · mokta_ag14)</option>
+                <option value="노라투어 (NORA TOUR)" selected>노라투어 (anoratour · 17개 상품)</option>
+                <option value="더블유아이티 (WIT)">더블유아이티 (wit77777 · 15개 상품)</option>
+                <option value="양가투어 (YangGa Mongolian Fri)">양가투어 (YangGaTour · 14개 상품)</option>
+                <option value="밝은 미래 여행 (BRIGHT FUTURE)">밝은 미래 여행 (Bftour · 13개 상품)</option>
+                <option value="(주)두잇트래블">(주)두잇트래블 (doittavel · 12개 상품)</option>
+                <option value="SKY TOURS MONGOLIA (스카이투어)">SKY TOURS MONGOLIA (SKYTOURS · 9개 상품)</option>
+                <option value="하닥투어 (KHADAG TOUR)">하닥투어 (khadag · 5개 상품)</option>
               </select>
             </div>
           </div>
@@ -1208,7 +1219,7 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div class="bl-field">
             <label>여행사명 (국문/영문) *</label>
-            <input type="text" class="bl-input" id="paCompany" placeholder="예: 어드벤처 몽골 투어" />
+            <input type="text" class="bl-input" id="paCompany" placeholder="예: MOKTA 정회원 여행사명 입력" />
           </div>
           <div class="bl-field">
             <label>협회 구분</label>
