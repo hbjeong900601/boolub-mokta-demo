@@ -40,7 +40,7 @@ const HERO_SLIDES = [
     title: '몽골한국관광협회 공식 인증\n안심 에스크로 전용관',
     sub: '부럽 검증 파트너사 9곳 · 104개 실제 투어 안전결제 보장',
     img: './images/hero_steppe_sunset.jpg',
-    action: () => scrollToSection('sec-trust')
+    action: () => openModal('trustGuaranteeModal')
   },
   {
     eyebrow: '부럽 고비원정대 베스트',
@@ -1484,12 +1484,15 @@ let heroIsTransitioning = false;
 let heroFallbackTimer = null;
 let heroAutoTimer = null;
 let isHeroAutoPlaying = true;
+let curCustomerMode = 'home'; // 'home' | 'join' | 'store' | 'partner'
 let curStoreCat = 'all';
-let storeVisibleCount = 12;
+let storeVisibleCount = 16;
 let curCalYear = 2026;
 let curCalMonth = 8;    // 기본 8월 성수기 월간 캘린더 표시 (0이면 전체 월 보기)
 let curJoinDate = 'all'; // 특정 일자 클릭 시 'YYYY-MM-DD', 미선택 시 'all' (선택 월 전체)
 let calSubFilters = { partner: 'all', status: 'all' };
+let confirmOnlyFilter = false;
+let sheetDraft = { month: 8, region: 'all', duration: 'all', style: 'all' };
 let curRfqFilter = 'all';
 let curShowcaseFilter = 'all';
 let curAgencyFilter = 'all';
@@ -1683,14 +1686,38 @@ function bgClose(e, id) {
 
 function scrollToSection(secId) {
   switchSiteRole('customer');
-  filterPageView('all', document.querySelector('#customerSubNav .bl-gnb-item'));
+  if (secId === 'sec-trust') {
+    openModal('trustGuaranteeModal');
+    return;
+  }
+  if (secId === 'sec-rfq') {
+    switchCustomerMode('partner');
+    setTimeout(() => document.getElementById('sec-rfq')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+    return;
+  }
+  if (secId === 'sec-partners') {
+    switchCustomerMode('partner');
+    setTimeout(() => document.getElementById('sec-partners')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
+    return;
+  }
+  if (secId === 'sec-join') {
+    switchCustomerMode('join');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  if (secId === 'sec-store') {
+    switchCustomerMode('store');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  switchCustomerMode('home');
   setTimeout(() => {
     const target = document.getElementById(secId);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 40);
 }
 
-/* ================= 헤더 검색 & GNB 섹션 전환 (파트너·마스터 권한 검증 포함) ================= */
+/* ================= 헤더 검색 & 4대 핵심 모드 전환 (트립소다 벤치마킹) ================= */
 function switchSiteRole(role) {
   if (role === 'partner' && !canAccessPartnerConsole()) {
     openModal('partnerApplyModal');
@@ -1711,26 +1738,87 @@ function switchSiteRole(role) {
   }
 }
 
-function filterPageView(targetId, btnEl) {
+function switchCustomerMode(mode, btnEl) {
   switchSiteRole('customer');
-  document.querySelectorAll('#customerSubNav .bl-gnb-item').forEach(b => b.classList.remove('active'));
+  curCustomerMode = mode || 'home';
+
+  document.querySelectorAll('#customerSubNav .bl-gnb-item').forEach(b => {
+    const bMode = b.getAttribute('data-cmode');
+    b.classList.toggle('active', bMode === curCustomerMode);
+  });
   if (btnEl) btnEl.classList.add('active');
 
-  const secs = document.querySelectorAll('.page-sec');
-  secs.forEach(sec => {
-    sec.style.display = (targetId === 'all' || sec.id === targetId) ? '' : 'none';
-  });
-  if (targetId !== 'all') {
-    const el = document.getElementById(targetId);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const showEl = (id, cond) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = cond ? '' : 'none';
+  };
+
+  showEl('sec-hero', curCustomerMode === 'home');
+  showEl('storeCollectionHero', curCustomerMode === 'store');
+  showEl('unifiedFilterBar', curCustomerMode === 'join' || curCustomerMode === 'store');
+  showEl('sec-open-group', curCustomerMode === 'home' || curCustomerMode === 'join');
+  showEl('sec-store', curCustomerMode === 'home' || curCustomerMode === 'store');
+  showEl('sec-join', curCustomerMode === 'home' || curCustomerMode === 'join');
+  showEl('sec-rfq', curCustomerMode === 'partner');
+  showEl('sec-showcase', curCustomerMode === 'home');
+  showEl('sec-partners', curCustomerMode === 'home' || curCustomerMode === 'partner');
+  showEl('sec-magazine', curCustomerMode === 'home');
+  showEl('sec-bottom-helper', curCustomerMode === 'home' || curCustomerMode === 'partner');
+
+  const openMoreBtn = document.getElementById('openGroupMoreBtn');
+  if (openMoreBtn) openMoreBtn.style.display = curCustomerMode === 'home' ? '' : 'none';
+
+  const storeViewAllBtn = document.getElementById('storeViewAllBtn');
+  if (storeViewAllBtn) storeViewAllBtn.style.display = curCustomerMode === 'home' ? '' : 'none';
+
+  const rightAct = document.getElementById('filterBarActionRight');
+  if (rightAct) {
+    rightAct.innerHTML = curCustomerMode === 'join'
+      ? `<button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate()"><i class="xi-pen-o"></i> 동행 모집글 쓰기</button>`
+      : `<button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openModal('rfqWizardModal')"><i class="xi-paper-o"></i> 맞춤견적 문의</button>`;
+  }
+
+  const fabTxt = document.getElementById('floatingPrimaryCtaTxt');
+  if (fabTxt) {
+    fabTxt.textContent = curCustomerMode === 'join' ? '동행 모집하기' : '맞춤견적 문의';
+  }
+
+  syncFilterPillBar();
+  renderOpenGroupCards();
+  renderStoreProducts();
+  renderJoinCalendar();
+  renderCommunityFeed();
+  renderRfqBoard();
+  renderShowcase();
+  renderPartnerSection();
+  renderMagazines();
+
+  if (btnEl) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function filterPageView(targetId, btnEl) {
+  if (targetId === 'sec-join') return switchCustomerMode('join', btnEl);
+  if (targetId === 'sec-store') return switchCustomerMode('store', btnEl);
+  if (targetId === 'sec-rfq' || targetId === 'sec-partners') return switchCustomerMode('partner', btnEl);
+  return switchCustomerMode('home', btnEl);
+}
+
+function handleFloatingPrimaryAction() {
+  if (curCustomerMode === 'join') {
+    openCompanionModalForDate();
+  } else {
+    openModal('rfqWizardModal');
   }
 }
 
 function handleGlobalSearch(val) {
   globalKeyword = (val || '').trim().toLowerCase();
-  storeVisibleCount = 12;
+  storeVisibleCount = 16;
+  renderOpenGroupCards();
   renderStoreProducts();
-  renderJoinCards();
+  renderCommunityFeed();
   renderRfqBoard();
   renderShowcase();
   renderPartnerSection();
@@ -2056,35 +2144,149 @@ function copyMoktaShareLink(label) {
   }
 }
 
-function applyQuickFinder(shouldScroll = false) {
-  quickFinder.region = document.getElementById('findRegion')?.value || 'all';
-  quickFinder.duration = document.getElementById('findDuration')?.value || 'all';
-  quickFinder.style = document.getElementById('findStyle')?.value || 'all';
+/* ================= 트립소다 스타일 통합 알약형 필터 바 & 3탭 필터 모달 ================= */
+function syncFilterPillBar() {
+  const dateBtn = document.getElementById('fpillDateBtn');
+  const dateLbl = document.getElementById('fpillDateLabel');
+  const regBtn = document.getElementById('fpillRegionBtn');
+  const regLbl = document.getElementById('fpillRegionLabel');
+  const styleBtn = document.getElementById('fpillStyleBtn');
+  const styleLbl = document.getElementById('fpillStyleLabel');
+  const confBtn = document.getElementById('fpillConfirmOnlyBtn');
+  const resetBtn = document.getElementById('fpillResetBtn');
 
+  if (dateLbl) {
+    if (curJoinDate !== 'all') {
+      const [, mm, dd] = curJoinDate.split('-').map(Number);
+      dateLbl.textContent = `${mm}월 ${dd}일`;
+    } else {
+      dateLbl.textContent = curCalMonth === 0 ? '전체 시즌' : `${curCalMonth}월 출발`;
+    }
+  }
+  if (dateBtn) dateBtn.classList.toggle('is-active', curJoinDate !== 'all' || curCalMonth !== 8);
+
+  const regParts = [];
+  if (quickFinder.region !== 'all') regParts.push(quickFinder.region);
+  if (quickFinder.duration !== 'all') regParts.push(quickFinder.duration);
+  if (regLbl) regLbl.textContent = regParts.length ? regParts.join(' · ') : '지역 · 기간';
+  if (regBtn) regBtn.classList.toggle('is-active', regParts.length > 0);
+
+  const styleMap = { all: '투어 유형', 원정대: '부럽원정대', 조인: '동행·조인', 단독: '단독투어' };
+  if (styleLbl) styleLbl.textContent = styleMap[quickFinder.style] || '투어 유형';
+  if (styleBtn) styleBtn.classList.toggle('is-active', quickFinder.style !== 'all');
+
+  if (confBtn) confBtn.classList.toggle('is-active', confirmOnlyFilter);
+
+  const hasAnyFilter = curJoinDate !== 'all' || curCalMonth !== 8 || regParts.length > 0 || quickFinder.style !== 'all' || confirmOnlyFilter || Boolean(globalKeyword);
+  if (resetBtn) resetBtn.style.display = hasAnyFilter ? 'inline-flex' : 'none';
+}
+
+function openFilterSheet(tabKey = 'date') {
+  sheetDraft = {
+    month: curCalMonth,
+    region: quickFinder.region,
+    duration: quickFinder.duration,
+    style: quickFinder.style
+  };
+  document.querySelectorAll('#fsMonthChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', Number(b.getAttribute('data-fmonth')) === sheetDraft.month);
+  });
+  document.querySelectorAll('#fsRegionChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-freg') === sheetDraft.region);
+  });
+  document.querySelectorAll('#fsDurationChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-fdur') === sheetDraft.duration);
+  });
+  document.querySelectorAll('#fsStyleChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-fstyle') === sheetDraft.style);
+  });
+
+  const targetTabBtn = document.querySelector(`#filterSheetModal .ts-sheet-tab[data-ftab="${tabKey}"]`);
+  switchFilterSheetTab(tabKey, targetTabBtn);
+  openModal('filterSheetModal');
+}
+
+function switchFilterSheetTab(tabKey, btnEl) {
+  document.querySelectorAll('#filterSheetModal .ts-sheet-tab').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  document.getElementById('fsPaneDate')?.classList.toggle('active', tabKey === 'date');
+  document.getElementById('fsPaneRegion')?.classList.toggle('active', tabKey === 'region');
+  document.getElementById('fsPaneStyle')?.classList.toggle('active', tabKey === 'style');
+}
+
+function selectSheetMonth(m) {
+  sheetDraft.month = m;
+  document.querySelectorAll('#fsMonthChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', Number(b.getAttribute('data-fmonth')) === m);
+  });
+}
+
+function selectSheetRegion(reg) {
+  sheetDraft.region = reg;
+  document.querySelectorAll('#fsRegionChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-freg') === reg);
+  });
+}
+
+function selectSheetDuration(dur) {
+  sheetDraft.duration = dur;
+  document.querySelectorAll('#fsDurationChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-fdur') === dur);
+  });
+}
+
+function selectSheetStyle(st) {
+  sheetDraft.style = st;
+  document.querySelectorAll('#fsStyleChoices .ts-choice-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-fstyle') === st);
+  });
+}
+
+function applySheetFiltersAndClose() {
+  curCalMonth = sheetDraft.month;
+  curJoinDate = 'all';
+  quickFinder.region = sheetDraft.region;
+  quickFinder.duration = sheetDraft.duration;
+  quickFinder.style = sheetDraft.style;
+  storeVisibleCount = 16;
+
+  syncFilterPillBar();
   renderJoinCalendar();
   renderJoinCards();
   renderStoreProducts();
+  closeModal('filterSheetModal');
+  showToast('선택하신 조건으로 목록을 업데이트했습니다.');
+}
 
+function toggleConfirmOnlyFilter() {
+  confirmOnlyFilter = !confirmOnlyFilter;
+  calSubFilters.status = confirmOnlyFilter ? 'confirm' : 'all';
+  syncFilterPillBar();
+  renderJoinCalendar();
+  renderJoinCards();
+}
+
+function applyQuickFinder(shouldScroll = false) {
+  syncFilterPillBar();
+  renderJoinCalendar();
+  renderJoinCards();
+  renderStoreProducts();
   if (shouldScroll) {
-    const targetId = quickFinder.style === '단독' ? 'sec-store' : 'sec-join';
-    const sec = document.getElementById(targetId);
-    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    showToast('선택하신 조건에 맞는 동행·조인 팀 및 부럽 투어를 필터링했습니다.');
+    showToast('선택하신 조건에 맞는 일정을 필터링했습니다.');
   }
 }
 
 function resetQuickFinder() {
-  const r = document.getElementById('findRegion');
-  const d = document.getElementById('findDuration');
-  const s = document.getElementById('findStyle');
-  if (r) r.value = 'all';
-  if (d) d.value = 'all';
-  if (s) s.value = 'all';
   quickFinder = { region: 'all', duration: 'all', style: 'all' };
+  curCalMonth = 8;
+  curJoinDate = 'all';
+  confirmOnlyFilter = false;
+  calSubFilters = { partner: 'all', status: 'all' };
   globalKeyword = '';
-  storeVisibleCount = 12;
+  storeVisibleCount = 16;
   const gInput = document.getElementById('globalSearchInput');
   if (gInput) gInput.value = '';
+  syncFilterPillBar();
   renderStoreProducts();
   renderJoinCalendar();
   renderJoinCards();
@@ -2092,13 +2294,13 @@ function resetQuickFinder() {
   renderShowcase();
   renderPartnerSection();
   renderMagazines();
-  showToast('모든 검색 조건이 초기화되었습니다.');
+  showToast('필터 및 검색 조건이 초기화되었습니다.');
 }
 
-/* ================= 섹션 2: 부럽 실제 판매 투어 스토어(104개) & 미리보기 모달 ================= */
+/* ================= 섹션 B: 믿고 떠나는 몽골 대표 투어 (트립소다 1:1 무테두리 컬렉션 카드) ================= */
 function filterStoreCat(cat, btnEl) {
   curStoreCat = cat;
-  storeVisibleCount = 12;
+  storeVisibleCount = 16;
   document.querySelectorAll('#storeChipRow .bl-chip').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   renderStoreProducts();
@@ -2112,6 +2314,15 @@ function loadMoreStoreProducts() {
 function renderStoreProducts() {
   const grid = document.getElementById('productStoreGrid');
   const moreWrap = document.getElementById('storeMoreBtnWrap');
+  const tabStoreCnt = document.getElementById('tabStoreCount');
+  const linkTotalLbl = document.getElementById('storeTotalLinkLabel');
+  const tickerEl = document.getElementById('liveProofTickerText');
+
+  if (tabStoreCnt) tabStoreCnt.textContent = String(DIRECT_PRODUCTS.length);
+  if (linkTotalLbl) linkTotalLbl.textContent = `${DIRECT_PRODUCTS.length}개 투어 전체보기`;
+  if (tickerEl) {
+    tickerEl.innerHTML = `현재 <strong>${MOKTA_AGENCIES.length}개 공식 파트너사</strong>의 <strong>${DIRECT_PRODUCTS.length}개 몽골 투어</strong>와 <strong>${JOIN_ITEMS.length}개 동행·오픈조인팀</strong>이 열려 있어요!`;
+  }
   if (!grid) return;
 
   const list = DIRECT_PRODUCTS.filter(p => {
@@ -2138,12 +2349,12 @@ function renderStoreProducts() {
 
   if (!list.length) {
     grid.innerHTML = `
-      <div style="grid-column:1/-1; padding:36px 20px; text-align:center; background:var(--bl-gray-50); border-radius:12px; border:1px dashed var(--bl-gray-200);">
-        <strong style="font-size:15px; color:var(--bl-gray-900);">선택하신 조건과 정확히 일치하는 즉시확정 상품이 없습니다.</strong>
-        <p style="font-size:13px; color:var(--bl-gray-500); margin:6px 0 14px;">원하시는 일정을 남겨주시면 부럽 공식 파트너사들이 1:1 맞춤 견적을 보내드립니다!</p>
+      <div style="grid-column:1/-1; padding:38px 20px; text-align:center; background:#f7f8fa; border-radius:16px;">
+        <strong style="font-size:15px; color:var(--bl-gray-900);">선택하신 조건과 일치하는 투어가 없습니다.</strong>
+        <p style="font-size:13px; color:var(--bl-gray-500); margin:6px 0 14px;">필터를 초기화하거나 원하시는 일정으로 1:1 맞춤견적을 요청해보세요.</p>
         <div style="display:flex; justify-content:center; gap:8px;">
-          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="resetQuickFinder()">조건 전체보기</button>
-          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openModal('rfqWizardModal')">내 일정으로 맞춤견적 신청</button>
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="resetQuickFinder()">필터 초기화</button>
+          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openModal('rfqWizardModal')">맞춤견적 문의</button>
         </div>
       </div>
     `;
@@ -2151,44 +2362,56 @@ function renderStoreProducts() {
     return;
   }
 
-  const visibleList = list.slice(0, storeVisibleCount);
+  const isHomePreview = curCustomerMode === 'home' && curStoreCat === 'all' && !globalKeyword;
+  const maxShow = isHomePreview ? 8 : storeVisibleCount;
+  const visibleList = list.slice(0, maxShow);
 
   grid.innerHTML = visibleList.map(p => {
     const wishKey = `prod:${p.pcode}`;
     const wished = isWished(wishKey);
     const hasDiscount = Boolean(p.originPrice && p.discount);
+    const partnerShort = String(p.sub || '').split('·')[0].trim() || '부럽 공식 파트너';
+    const badgeLabel = p.styleKey === '원정대' ? '원정대' : (p.styleKey === '조인' ? '조인가능' : (p.tag.includes('공항') ? '공항픽업' : '공식투어'));
+    const regionMap = { 고비: '고비사막', 중부: '중부·온천', 홉스골: '홉스골', 테를지: '테를지·근교' };
+    const regionChip = regionMap[p.regionKey] || '몽골';
+
     return `
-      <article class="bl-item-box" onclick="openProductPreviewModal('${p.pcode}')">
-        <div class="bl-item-thumb">
+      <article class="ts-store-card" onclick="openProductPreviewModal('${p.pcode}')">
+        <div class="ts-store-thumb">
           <img src="${p.img}" alt="${p.title}" loading="lazy" />
-          <span class="bl-item-tag">${p.tag}</span>
-          <button type="button" class="bl-card-wish ${wished ? 'active' : ''}" onclick="toggleWishItem('${wishKey}', event)" title="찜·비교 보관함 담기">
+          <span class="ts-store-badge ${p.styleKey === '원정대' ? 'is-exp' : ''}">${badgeLabel}</span>
+          <button type="button" class="bl-card-wish ${wished ? 'active' : ''}" onclick="toggleWishItem('${wishKey}', event)" title="찜 보관함 담기">
             <i class="${wished ? 'xi-heart' : 'xi-heart-o'}"></i>
           </button>
         </div>
-        <div class="bl-item-info">
-          <div class="bl-item-sub">${p.sub}</div>
-          <h4 class="bl-item-name">${p.title}</h4>
-          <div class="bl-item-meta">
-            <i class="xi-star"></i>
-            <span>${p.rating}</span>
-            <span style="color:var(--bl-gray-400);">(${p.reviews})</span>
+        <div class="ts-store-partner">${partnerShort}</div>
+        <h4 class="ts-store-title">${p.title}</h4>
+        <div class="ts-store-tags-row">
+          <div class="ts-store-pills">
+            <span class="ts-pill-gray">${p.durationKey}</span>
+            <span class="ts-pill-sky">${regionChip}</span>
           </div>
-          ${hasDiscount ? `<div class="bl-price-origin">정가 ${p.originPrice}</div>` : `<div style="height:17px;"></div>`}
-          <div class="bl-item-price" style="margin-top:2px;">
-            ${hasDiscount ? `<span class="bl-item-discount">${p.discount}</span>` : ''}
-            <span class="bl-item-won">${p.price}</span>
-          </div>
+          ${Number(p.reviews) > 0 ? `<span class="ts-store-star"><i class="xi-star"></i> ${p.rating} <em>(${p.reviews})</em></span>` : ''}
+        </div>
+        <div class="ts-store-price-row">
+          ${hasDiscount ? `<span class="ts-store-disc">${p.discount}</span>` : ''}
+          <span class="ts-store-price">${p.price} ~</span>
         </div>
       </article>
     `;
   }).join('');
 
   if (moreWrap) {
-    if (list.length > visibleList.length) {
+    if (isHomePreview) {
+      moreWrap.innerHTML = `
+        <button type="button" class="bl-btn bl-btn-outline" style="height:44px; padding:0 26px; border-radius:999px;" onclick="switchCustomerMode('store')">
+          몽골 투어 ${list.length}개 전체 구경하기 <i class="xi-angle-right-min"></i>
+        </button>
+      `;
+    } else if (list.length > visibleList.length) {
       moreWrap.innerHTML = `
         <button type="button" class="bl-btn bl-btn-outline" style="height:44px; padding:0 26px; border-radius:999px;" onclick="loadMoreStoreProducts()">
-          부럽 몽골 투어 더보기 (${visibleList.length} / ${list.length}개) <i class="xi-plus-min"></i>
+          투어 더보기 (${visibleList.length} / ${list.length}개) <i class="xi-plus-min"></i>
         </button>
       `;
     } else {
@@ -2240,7 +2463,6 @@ function openProductPreviewModal(pcode) {
         </div>
       </div>
 
-      <!-- 부럽 실제 공항픽업 & 몽골 매거진 자연스러운 연결 -->
       <div style="margin-top:18px; padding:14px 16px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200);">
         <div style="font-size:13px; font-weight:800; color:var(--bl-gray-900); margin-bottom:8px;">
           <i class="xi-compass-o" style="color:var(--bl-point-dark);"></i> 출국 전 부럽에서 함께 확인하면 좋은 공항픽업 &amp; 매거진
@@ -2276,7 +2498,7 @@ function openProductPreviewModal(pcode) {
   openModal('productPreviewModal');
 }
 
-/* ================= 섹션 1 (메인 전면): 월간 동행·조인 캘린더 허브 & 1/N 분할결제 ================= */
+/* ================= 섹션 A & C: 트립소다 스타일 미니멀 도트 캘린더 + 오픈조인 + 커뮤니티 동행 피드 ================= */
 const WEEKDAY_KO = ['일', '월', '화', '수', '목', '금', '토'];
 
 function normalizeJoinDateIso(rawKey, fallbackStr = '') {
@@ -2303,29 +2525,49 @@ function formatKoreanDateRange(isoStart, durationKey) {
   return `${sLabel} ~ ${eLabel} · ${durationKey}`;
 }
 
+function formatShortDepartureLabel(isoKey, fallbackStr = '') {
+  const iso = normalizeJoinDateIso(isoKey, fallbackStr);
+  const [, m, d] = iso.split('-').map(Number);
+  return `${m}월 ${d}일 출발`;
+}
+
+function renderAvatarStack(filledCount) {
+  const cnt = Math.max(1, Number(filledCount) || 2);
+  const labels = ['여', '남', '여', '남'];
+  const colors = ['c1', 'c2', 'c3', 'c4'];
+  const visible = Math.min(cnt, 3);
+  let html = '<span class="ts-avatar-stack">';
+  for (let i = 0; i < visible; i++) {
+    html += `<span class="ts-mini-ava ${colors[i % 4]}">${labels[i % 4]}</span>`;
+  }
+  if (cnt > 3) {
+    html += `<span class="ts-mini-ava more">+${cnt - 3}</span>`;
+  }
+  html += '</span>';
+  return html;
+}
+
 function changeCalendarMonth(delta) {
   let nextM = (curCalMonth === 0 ? 8 : curCalMonth) + delta;
-  let nextY = curCalYear;
-  if (nextM < 5) { nextM = 10; }
-  if (nextM > 10) { nextM = 5; }
-  curCalYear = nextY;
+  if (nextM < 5) nextM = 10;
+  if (nextM > 10) nextM = 5;
   curCalMonth = nextM;
   curJoinDate = 'all';
+  syncFilterPillBar();
   renderJoinCalendar();
   renderJoinCards();
 }
 
 function setCalendarMonth(monthNum) {
-  curCalMonth = monthNum; // 0 = 전체 시즌 보기, 5~10 = 월별
+  curCalMonth = monthNum;
   curJoinDate = 'all';
+  syncFilterPillBar();
   renderJoinCalendar();
   renderJoinCards();
 }
 
 function selectCalendarDate(dateIso) {
-  if (dateIso === 'all') {
-    curJoinDate = 'all';
-  } else if (curJoinDate === dateIso) {
+  if (dateIso === 'all' || curJoinDate === dateIso) {
     curJoinDate = 'all';
   } else {
     curJoinDate = dateIso;
@@ -2335,6 +2577,7 @@ function selectCalendarDate(dateIso) {
       curCalMonth = m;
     }
   }
+  syncFilterPillBar();
   renderJoinCalendar();
   renderJoinCards();
 }
@@ -2350,13 +2593,6 @@ function openCompanionModalForDate(dateIso) {
 
 function filterJoinByDate(dateKey) {
   selectCalendarDate(dateKey);
-}
-
-function applyCalendarSubFilters() {
-  calSubFilters.partner = document.getElementById('calPartnerFilter')?.value || 'all';
-  calSubFilters.status = document.getElementById('calStatusFilter')?.value || 'all';
-  renderJoinCalendar();
-  renderJoinCards();
 }
 
 function matchesCalendarSubFilter(j) {
@@ -2380,6 +2616,7 @@ function renderJoinCalendar() {
   const pillsEl = document.getElementById('calMonthPills');
   const daysGridEl = document.getElementById('mainMonthCalDays');
   const sidePanelEl = document.getElementById('calSelectedPanel');
+  const viewMonthBtn = document.getElementById('calViewMonthAllBtn');
   const tabJoinCnt = document.getElementById('tabJoinCount');
 
   const baseFilteredJoins = JOIN_ITEMS.filter(matchesCalendarSubFilter);
@@ -2388,27 +2625,25 @@ function renderJoinCalendar() {
 
   const activeMonth = curCalMonth === 0 ? 8 : curCalMonth;
   if (monthTitleEl) monthTitleEl.textContent = `${curCalYear}년 ${activeMonth}월`;
+  if (viewMonthBtn) {
+    viewMonthBtn.textContent = curJoinDate !== 'all'
+      ? `${activeMonth}월 전체 일정으로 보기`
+      : `${activeMonth}월 전체보기`;
+  }
 
-  // 1. 월별 빠른 전환 탭 (5월 ~ 10월 + 전체)
   const months = [5, 6, 7, 8, 9, 10];
   if (pillsEl) {
-    const monthBtns = months.map(m => {
-      const prefix = `${curCalYear}-${String(m).padStart(2, '0')}`;
-      const cnt = baseFilteredJoins.filter(j => normalizeJoinDateIso(j.dateKey, j.dateStr).startsWith(prefix)).length;
-      return `
-        <button type="button" class="bl-mpill ${curCalMonth === m ? 'active' : ''}" onclick="setCalendarMonth(${m})">
-          ${m}월 <em>(${cnt})</em>
-        </button>
-      `;
-    }).join('');
-    pillsEl.innerHTML = monthBtns + `
-      <button type="button" class="bl-mpill ${curCalMonth === 0 ? 'active' : ''}" onclick="setCalendarMonth(0)">
-        전체 시즌 <em>(${baseFilteredJoins.length})</em>
+    pillsEl.innerHTML = months.map(m => `
+      <button type="button" class="ts-mpill ${curCalMonth === m ? 'active' : ''}" onclick="setCalendarMonth(${m})">
+        ${m}월
+      </button>
+    `).join('') + `
+      <button type="button" class="ts-mpill ${curCalMonth === 0 ? 'active' : ''}" onclick="setCalendarMonth(0)">
+        전체
       </button>
     `;
   }
 
-  // 2. 날짜별 모집/확정 팀 인덱싱
   const eventsByDate = {};
   baseFilteredJoins.forEach(j => {
     const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
@@ -2417,13 +2652,12 @@ function renderJoinCalendar() {
     eventsByDate[iso].push(j);
   });
 
-  // 3. 7열 정식 월간 달력 셀 렌더링 — 30개 파트너사 예약이 몰려도 깔끔한 도트(•) + 건수 요약 표시
   const firstDow = new Date(curCalYear, activeMonth - 1, 1).getDay();
   const lastDate = new Date(curCalYear, activeMonth, 0).getDate();
   const cells = [];
 
   for (let i = 0; i < firstDow; i++) {
-    cells.push(`<div class="bl-mday is-empty"></div>`);
+    cells.push(`<div class="ts-cday is-empty"></div>`);
   }
 
   for (let d = 1; d <= lastDate; d++) {
@@ -2433,62 +2667,35 @@ function renderJoinCalendar() {
     const dayEvents = eventsByDate[iso] || [];
     const isActive = curJoinDate === iso;
 
-    const clsList = ['bl-mday'];
+    const clsList = ['ts-cday'];
     if (dow === 0) clsList.push('is-sun');
     if (dow === 6) clsList.push('is-sat');
     if (hol) clsList.push('is-hol');
-    if (dayEvents.length) clsList.push('has-teams');
+    if (dayEvents.length) {
+      clsList.push('has-teams');
+      const hasImminent = dayEvents.some(ev => (ev.max - ev.filled) <= 2 && ev.statusCls !== 'amber');
+      if (!hasImminent) clsList.push('is-confirm-day');
+    }
     if (isActive) clsList.push('active');
 
-    let confirmCnt = 0;
-    let imminentCnt = 0;
-    let recruitCnt = 0;
-    const dotClasses = dayEvents.map(ev => {
-      const rem = Math.max(0, ev.max - ev.filled);
-      if (ev.statusCls === 'amber') {
-        recruitCnt++;
-        return 'is-recruit';
-      }
-      if (rem <= 2 && rem > 0) {
-        imminentCnt++;
-        return 'is-imminent';
-      }
-      confirmCnt++;
-      return 'is-confirm';
-    });
-
-    const dotsHtml = dotClasses.slice(0, 5).map(dc => `<i class="bl-cal-dot-item ${dc}"></i>`).join('');
-    const tooltipTxt = dayEvents.length
-      ? `${activeMonth}월 ${d}일: 총 ${dayEvents.length}팀 (출발확정 ${confirmCnt} · 마감임박 ${imminentCnt} · 동행모집 ${recruitCnt})`
-      : `${activeMonth}월 ${d}일: 클릭하여 새 동행 모집하기`;
-
-    const summaryHtml = dayEvents.length
-      ? `
-        <div class="bl-mday-dots-wrap">
-          <span class="bl-mday-dots">${dotsHtml}</span>
-          <span class="bl-mday-cnt ${imminentCnt > 0 ? 'has-imminent' : ''}">${dayEvents.length}건</span>
-        </div>
-      `
-      : `<div class="bl-mday-dots-wrap"></div>`;
+    const tip = dayEvents.length
+      ? `${activeMonth}월 ${d}일 · ${dayEvents.length}개 출발/모집 일정`
+      : `${activeMonth}월 ${d}일`;
 
     cells.push(`
-      <button type="button" class="${clsList.join(' ')}" title="${tooltipTxt}" onclick="selectCalendarDate('${iso}')">
-        <div class="bl-mday-head">
-          <span class="bl-mday-num">${d}</span>
-          ${hol ? `<span class="bl-mday-hol">${hol}</span>` : ''}
-        </div>
-        ${summaryHtml}
+      <button type="button" class="${clsList.join(' ')}" title="${tip}" onclick="selectCalendarDate('${iso}')">
+        <span class="ts-cday-num">${d}</span>
+        <i class="ts-cday-dot"></i>
       </button>
     `);
   }
 
   const trailing = (7 - (cells.length % 7)) % 7;
   for (let i = 0; i < trailing; i++) {
-    cells.push(`<div class="bl-mday is-empty"></div>`);
+    cells.push(`<div class="ts-cday is-empty"></div>`);
   }
   daysGridEl.innerHTML = cells.join('');
 
-  // 4. 우측 선택 날짜 실시간 브리핑 패널 렌더링
   if (sidePanelEl) {
     let targetItems = [];
     let panelTitle = '';
@@ -2500,91 +2707,215 @@ function renderJoinCalendar() {
       const [yy, mm, dd] = curJoinDate.split('-').map(Number);
       const dt = new Date(yy, mm - 1, dd);
       const holTxt = KR_HOLIDAYS_2026[curJoinDate] ? ` · ${KR_HOLIDAYS_2026[curJoinDate]}` : '';
-      panelTitle = `${mm}월 ${dd}일(${WEEKDAY_KO[dt.getDay()]}${holTxt}) · ${targetItems.length}팀`;
+      panelTitle = `${mm}월 ${dd}일(${WEEKDAY_KO[dt.getDay()]}${holTxt}) 일정`;
     } else if (curCalMonth === 0) {
       targetItems = baseFilteredJoins;
-      panelTitle = `2026 전체 시즌 출발·모집 (${targetItems.length}팀)`;
+      panelTitle = `전체 시즌 출발·동행 (${targetItems.length})`;
     } else {
       const mPrefix = `${curCalYear}-${String(activeMonth).padStart(2, '0')}`;
       targetItems = baseFilteredJoins.filter(j => normalizeJoinDateIso(j.dateKey, j.dateStr).startsWith(mPrefix));
-      panelTitle = `${activeMonth}월 출발확정·동행모집 (${targetItems.length}팀)`;
+      panelTitle = `${activeMonth}월 출발·동행 (${targetItems.length})`;
     }
 
     if (!targetItems.length) {
       sidePanelEl.innerHTML = `
-        <div>
-          <div class="bl-side-head">
-            <strong style="font-size:15px; color:var(--bl-gray-900);">${panelTitle}</strong>
+        <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; padding:24px 12px;">
+          <strong style="font-size:15px; color:#191f28;">${panelTitle}에 등록된 팀이 아직 없어요</strong>
+          <p style="font-size:13px; color:#8b95a1; margin:6px 0 16px;">직접 동행을 모집하거나 1인 출발확정 원정대로 떠나보세요.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate('${targetIsoForWrite}')">이 날짜 동행 모집</button>
             <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="selectCalendarDate('all')">월 전체보기</button>
-          </div>
-          <div class="bl-side-empty-box" style="margin-top:12px;">
-            <strong style="display:block; font-size:14.5px; color:var(--bl-gray-900);">이 날짜의 첫 동행 모집 방장이 되어보세요!</strong>
-            <p style="font-size:12.5px; color:var(--bl-gray-500); margin:6px 0 14px; line-height:1.5;">
-              선택하신 날짜로 동행을 모집하거나, 1인 신청도 100% 출발 확정되는 부럽 몽골원정대·맞춤견적으로 바로 출발할 수 있습니다.
-            </p>
-            <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
-              <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate('${targetIsoForWrite}')">
-                <i class="xi-plus-min"></i> 이 날짜로 동행 모집하기
-              </button>
-              <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="prefillRfqFromCourse('선택일자 맞춤견적 문의', '${targetIsoForWrite} 출발 희망')">
-                맞춤견적 받기
-              </button>
-            </div>
           </div>
         </div>
       `;
     } else {
+      const shown = targetItems.slice(0, 6);
       sidePanelEl.innerHTML = `
         <div>
-          <div class="bl-side-head">
-            <strong style="font-size:15px; color:var(--bl-gray-900);">${panelTitle}</strong>
-            <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openCompanionModalForDate('${targetIsoForWrite}')">
-              <i class="xi-plus-min"></i> 이 시기 동행모집
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid #eef1f4;">
+            <strong style="font-size:15.5px; font-weight:800; color:#191f28;">${panelTitle}</strong>
+            <button type="button" style="font-size:12.5px; font-weight:700; color:#0284c7;" onclick="openCompanionModalForDate('${targetIsoForWrite}')">
+              + 동행 글쓰기
             </button>
           </div>
-          <div class="bl-side-team-list" style="margin-top:10px;">
-            ${targetItems.map(t => {
-              const rem = Math.max(0, t.max - t.filled);
+          <div class="ts-cal-side-list">
+            ${shown.map(t => {
+              const isRecruit = t.statusCls === 'amber';
+              const depShort = formatShortDepartureLabel(t.dateKey, t.dateStr).replace(' 출발', '');
               return `
-                <div class="bl-side-team-row" onclick="openJoinDetailModal('${t.id}')">
+                <div class="ts-cal-side-row" onclick="openJoinDetailModal('${t.id}')">
                   <div style="min-width:0; flex:1;">
-                    <div style="display:flex; align-items:center; gap:5px; margin-bottom:2px;">
-                      <span class="bl-badge-solid ${t.statusCls}" style="font-size:10px; padding:2px 6px;">${t.statusBadge}</span>
-                      <span style="font-size:11.5px; font-weight:700; color:var(--bl-gray-500);">${t.dateStr}</span>
+                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+                      <span style="font-size:11.5px; font-weight:800; color:#0284c7;">${depShort}</span>
+                      <span style="font-size:11.5px; color:#8b95a1;">${t.durationKey} · ${t.regionKey}</span>
                     </div>
-                    <strong style="display:block; font-size:13px; color:var(--bl-gray-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    <strong style="display:block; font-size:13.5px; font-weight:700; color:#191f28; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                       ${t.title}
                     </strong>
                   </div>
-                  <div style="text-align:right; flex-shrink:0;">
-                    <span style="display:block; font-size:11px; font-weight:800; color:var(--bl-coral);">${rem === 0 ? '마감' : `${rem}석 남음`}</span>
-                    <strong style="font-size:13px; color:var(--bl-point-text);">${t.curPrice}</strong>
+                  <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                    <span class="ts-pax-pill"><i class="xi-user-o"></i> ${t.filled}/${t.max}</span>
+                    <span class="ts-confirm-pill ${isRecruit ? 'is-recruit' : ''}">${isRecruit ? '모집중' : '확정'}</span>
                   </div>
                 </div>
               `;
             }).join('')}
           </div>
         </div>
-        ${curJoinDate !== 'all' ? `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--bl-gray-200); font-size:12px;">
-            <span style="color:var(--bl-gray-500);">선택 날짜 필터 적용 중</span>
-            <button type="button" style="color:var(--bl-point-text); font-weight:700;" onclick="selectCalendarDate('all')">월 전체 일정으로 복귀 ↺</button>
-          </div>
-        ` : ''}
+        <div style="padding-top:10px; text-align:right;">
+          ${curCustomerMode === 'home'
+            ? `<button type="button" class="ts-cal-viewall-btn" onclick="switchCustomerMode('join')">전체 일정 자세히 보기 <i class="xi-angle-right-min"></i></button>`
+            : (curJoinDate !== 'all' ? `<button type="button" class="ts-cal-viewall-btn" onclick="selectCalendarDate('all')">월 전체 일정으로 복귀 ↺</button>` : '')}
+        </div>
       `;
     }
   }
 }
 
+/* 트립소다 오픈조인 카드 ('예약한 동행이 있는 모험이에요!') */
+function renderOpenGroupCards() {
+  const grid = document.getElementById('openGroupGrid');
+  if (!grid) return;
+
+  const isHome = curCustomerMode === 'home' && !globalKeyword;
+
+  const list = JOIN_ITEMS.filter(j => {
+    if (j.bbsUrl) return false;
+    if (!isHome) {
+      const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
+      if (curJoinDate !== 'all') {
+        if (iso !== curJoinDate) return false;
+      } else if (curCalMonth !== 0) {
+        const mPrefix = `${curCalYear}-${String(curCalMonth).padStart(2, '0')}`;
+        if (!iso.startsWith(mPrefix)) return false;
+      }
+      if (!matchesCalendarSubFilter(j)) return false;
+    }
+    if (globalKeyword) {
+      const hay = `${j.title} ${j.agency} ${j.tags}`.toLowerCase();
+      if (!hay.includes(globalKeyword)) return false;
+    }
+    return true;
+  });
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1; padding:32px; text-align:center; background:#f7f8fa; border-radius:16px;">
+        <strong style="font-size:14.5px; color:#191f28;">선택하신 시기에 해당하는 오픈조인 차량이 없습니다.</strong>
+        <div style="margin-top:10px; display:flex; justify-content:center; gap:8px;">
+          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="setCalendarMonth(0)">전체 시즌 보기</button>
+          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate()">새 동행 모집하기</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const visible = isHome ? list.slice(0, 4) : list;
+
+  grid.innerHTML = visible.map(j => {
+    const wishKey = `join:${j.id}`;
+    const wished = isWished(wishKey);
+    const isRecruit = j.statusCls === 'amber';
+    const depTxt = formatShortDepartureLabel(j.dateKey, j.dateStr);
+    const shortAgency = String(j.agency || '').split('(')[0].trim();
+    const topBadge = j.styleKey === '원정대' ? '원정대' : '오픈조인';
+
+    return `
+      <article class="ts-og-card" onclick="openJoinDetailModal('${j.id}')">
+        <div class="ts-og-thumb">
+          <img src="${j.img}" alt="${j.title}" loading="lazy" />
+          <span class="ts-og-top-pill ${j.styleKey === '원정대' ? '' : 'is-join'}">${topBadge}</span>
+          <button type="button" class="bl-card-wish ${wished ? 'active' : ''}" onclick="toggleWishItem('${wishKey}', event)" title="찜 보관함 담기">
+            <i class="${wished ? 'xi-heart' : 'xi-heart-o'}"></i>
+          </button>
+          <div class="ts-og-date-scrim">${depTxt}</div>
+        </div>
+        <div class="ts-og-meta">${j.durationKey} · ${j.regionKey} · ${shortAgency}</div>
+        <h4 class="ts-og-title">${j.title}</h4>
+        <div class="ts-og-foot">
+          <div class="ts-og-status-left">
+            <span class="ts-pax-pill"><i class="xi-user-o"></i> ${j.filled}/${j.max}</span>
+            <span class="ts-confirm-pill ${isRecruit ? 'is-recruit' : ''}">${isRecruit ? '모집중' : '확정'}</span>
+          </div>
+          ${renderAvatarStack(j.filled)}
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+/* 트립소다 홈 구분선형 커뮤니티 동행 피드 ('함께 떠날 동행을 찾고 있어요') */
+function renderCommunityFeed() {
+  const listEl = document.getElementById('communityCompanionList');
+  if (!listEl) return;
+
+  const isHome = curCustomerMode === 'home' && !globalKeyword;
+  const feedItems = JOIN_ITEMS.filter(j => {
+    const isCommunity = Boolean(j.bbsUrl) || j.statusCls === 'amber';
+    if (!isCommunity) return false;
+    if (globalKeyword) {
+      const hay = `${j.title} ${j.agency} ${j.tags}`.toLowerCase();
+      if (!hay.includes(globalKeyword)) return false;
+    }
+    return true;
+  });
+
+  const visible = isHome ? feedItems.slice(0, 4) : feedItems;
+
+  if (!visible.length) {
+    listEl.innerHTML = `<div style="padding:24px 0; text-align:center; color:#8b95a1;">조건에 맞는 동행 모집글이 없습니다.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = visible.map(j => {
+    const authorName = String(j.agency || '').includes('·')
+      ? String(j.agency).split('·').pop().trim()
+      : String(j.agency || '여행자').split('(')[0].trim();
+    const avaChar = authorName.slice(0, 1) || '동';
+    return `
+      <article class="ts-comp-row" onclick="openJoinDetailModal('${j.id}')">
+        <div class="ts-comp-left">
+          <div class="ts-comp-tags">
+            <span class="ts-comp-tag"># ${j.regionKey}</span>
+            <span class="ts-comp-tag"># ${j.durationKey}</span>
+            <span class="ts-comp-tag"># 현재 ${j.filled}/${j.max}명</span>
+          </div>
+          <h5 class="ts-comp-title">${j.title}</h5>
+          <div class="ts-comp-meta">
+            <span class="ts-comp-author">
+              <span class="ts-comp-ava">${avaChar}</span>
+              ${authorName} <i class="xi-check-circle" style="color:#0ca678;"></i>
+            </span>
+            <span>·</span>
+            <span><i class="xi-calendar"></i> ${j.dateStr}</span>
+            <span>·</span>
+            <span>${j.tags}</span>
+          </div>
+        </div>
+        <div class="ts-comp-right">
+          <img src="${j.img}" alt="${j.title}" class="ts-comp-thumb" loading="lazy" />
+          <span class="ts-comp-loc">${j.regionKey}</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function renderJoinCards() {
+  renderOpenGroupCards();
+  renderCommunityFeed();
+}
+
 function setSimPax(pax, btnEl) {
-  document.querySelectorAll('.bl-pax-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#joinModalBody .bl-pax-tab').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
 
   const map = {
-    3: { label: '3명 모임 시 1인 예상 투어비', krw: '1,110,000원', diff: '(1인 추가 합류 시 전원 즉시 인하)' },
-    4: { label: '4명 출발확정 시 전원 1인 부담금', krw: '940,000원', diff: '(3인 대비 1인당 17만 원 절약)' },
-    5: { label: '5명 합류 시 전원 1인 부담금', krw: '820,000원', diff: '(3인 대비 1인당 29만 원 절약)' },
-    6: { label: '6명 마감 시 전원 최저 투어비', krw: '740,000원', diff: '(3인 대비 1인당 37만 원 절약!)' }
+    3: { label: '3명 출발 시 1인 예상 부담금', krw: '1,110,000원', diff: '(추가 합류 시 전원 즉시 인하)' },
+    4: { label: '4명 확정 시 전원 1인 부담금', krw: '940,000원', diff: '(3인 대비 17만 원 절약)' },
+    5: { label: '5명 합류 시 전원 1인 부담금', krw: '820,000원', diff: '(3인 대비 29만 원 절약)' },
+    6: { label: '6명 마감 시 전원 최저 부담금', krw: '740,000원', diff: '(3인 대비 37만 원 절약!)' }
   };
   const info = map[pax] || map[5];
   const l = document.getElementById('simDescLabel');
@@ -2593,97 +2924,6 @@ function setSimPax(pax, btnEl) {
   if (l) l.textContent = info.label;
   if (k) k.textContent = info.krw;
   if (u) u.textContent = info.diff;
-}
-
-function renderJoinCards() {
-  const grid = document.getElementById('joinCardsGrid');
-  const subTitleEl = document.getElementById('joinListSubTitle');
-  if (!grid) return;
-
-  const list = JOIN_ITEMS.filter(j => {
-    const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
-    if (curJoinDate !== 'all') {
-      if (iso !== curJoinDate) return false;
-    } else if (curCalMonth !== 0) {
-      const mPrefix = `${curCalYear}-${String(curCalMonth).padStart(2, '0')}`;
-      if (!iso.startsWith(mPrefix)) return false;
-    }
-    if (!matchesCalendarSubFilter(j)) return false;
-    if (globalKeyword) {
-      const hay = `${j.title} ${j.agency} ${j.tags}`.toLowerCase();
-      if (!hay.includes(globalKeyword)) return false;
-    }
-    return true;
-  });
-
-  if (subTitleEl) {
-    if (curJoinDate !== 'all') {
-      const [, mm, dd] = curJoinDate.split('-').map(Number);
-      subTitleEl.textContent = `${mm}월 ${dd}일 출발 동행·오픈조인 리스트 (${list.length}팀)`;
-    } else if (curCalMonth === 0) {
-      subTitleEl.textContent = `2026 전체 시즌 동행·오픈조인 모집 리스트 (${list.length}팀)`;
-    } else {
-      subTitleEl.textContent = `${curCalYear}년 ${curCalMonth}월 출발 동행·오픈조인 모집 리스트 (${list.length}팀)`;
-    }
-  }
-
-  if (!list.length) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1; padding:32px; text-align:center; background:var(--bl-gray-50); border-radius:12px; border:1px dashed var(--bl-gray-200);">
-        <strong style="font-size:15px; color:var(--bl-gray-900);">선택하신 날짜·조건에 모집 중인 조인 팀이 아직 없습니다.</strong>
-        <p style="font-size:13px; color:var(--bl-gray-500); margin:6px 0 14px;">이 날짜로 동행 모집글을 직접 올리시거나, 1인 신청도 100% 출발 확정되는 부럽 몽골원정대를 확인해보세요!</p>
-        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="setCalendarMonth(0); resetQuickFinder();">전체 시즌 조인팀 보기</button>
-          <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openCompanionModalForDate()">선택 날짜로 동행 모집하기</button>
-          <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openProductPreviewModal('T0950-Q2923-W2496')">1인 출발확정 원정대 보기</button>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  grid.innerHTML = list.map(j => {
-    const wishKey = `join:${j.id}`;
-    const wished = isWished(wishKey);
-    return `
-      <article class="bl-join-card">
-        <div>
-          <div class="bl-join-thumb" onclick="openJoinDetailModal('${j.id}')">
-            <img src="${j.img}" alt="${j.title}" loading="lazy" />
-            <div class="bl-join-badges">
-              <span class="bl-badge-solid ${j.statusCls}">${j.statusBadge}</span>
-              <span class="bl-badge-solid ${j.subCls}">${j.subBadge}</span>
-            </div>
-            <button type="button" class="bl-card-wish ${wished ? 'active' : ''}" onclick="toggleWishItem('${wishKey}', event)" title="찜·비교 보관함 담기">
-              <i class="${wished ? 'xi-heart' : 'xi-heart-o'}"></i>
-            </button>
-          </div>
-          <div class="bl-join-body">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
-              <span class="bl-join-agency">${j.agency}</span>
-              <span style="font-size:12px; font-weight:700; color:var(--bl-gray-700);">${j.dateStr}</span>
-            </div>
-            <h4 class="bl-join-title" onclick="openJoinDetailModal('${j.id}')">${j.title}</h4>
-            <div style="font-size:12px; color:var(--bl-gray-500);">${j.tags}</div>
-            <div class="bl-seat-pills">
-              ${j.seats.map(s => `<span class="bl-seat ${s === '빈좌석' ? 'open' : 'filled'}">${s}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-        <div style="padding:0 16px 16px;">
-          <div class="bl-join-price-row">
-            <div>
-              <div style="font-size:11px; color:var(--bl-gray-500);">현재 ${j.filled}/${j.max}명 · 6인 마감 시 <strong style="color:var(--bl-point-text);">${j.fullPrice}</strong></div>
-              <strong style="font-size:17px; font-weight:800; color:var(--bl-gray-900);">${j.curPrice}</strong>
-            </div>
-            <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openJoinDetailModal('${j.id}')">
-              합류·상세보기
-            </button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join('');
 }
 
 function openJoinDetailModal(joinId) {
@@ -2701,30 +2941,41 @@ function openJoinDetailModal(joinId) {
       </div>
       <h3 style="font-size:18px; font-weight:800; color:var(--bl-gray-900); margin-bottom:14px;">${item.title}</h3>
 
-      <div style="padding:14px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200); margin-bottom:16px;">
+      <div style="padding:14px; border-radius:12px; background:#f7f8fa; margin-bottom:14px;">
         <div style="font-size:13px; font-weight:700; margin-bottom:8px;">실시간 차량 탑승 현황 (${item.filled}명 확정 / ${item.max}인 정원)</div>
         <div class="bl-seat-pills">
           ${item.seats.map(s => `<span class="bl-seat ${s === '빈좌석' ? 'open' : 'filled'}" style="padding:8px 4px; font-size:12px;">${s}</span>`).join('')}
         </div>
         <p style="font-size:12px; color:var(--bl-gray-500); margin-top:10px;">
           · 총무에게 현금을 송금할 필요 없이 부럽 안심결제로 본인 몫만 카드 결제합니다.<br/>
-          · 출발 전 추가 인원이 합류하여 6인 마감될 경우, 먼저 결제하신 분들도 전원 <strong>${item.fullPrice}</strong> 기준으로 차액이 자동 환급됩니다.
+          · 추가 인원 합류로 6인 마감 시, 먼저 결제하신 분들도 전원 <strong>${item.fullPrice}</strong> 기준으로 차액이 자동 환급됩니다.
         </p>
       </div>
 
-      <div style="padding:12px 14px; border-radius:10px; background:var(--bl-point-bg); border:1px solid var(--bl-point-line); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div>
-          <strong style="font-size:13px; color:var(--bl-point-text);">원하는 출발일이 조금 다르신가요?</strong>
-          <div style="font-size:12px; color:var(--bl-gray-700);">1인 예약도 취소 없이 무조건 출발하는 부럽 직영 몽골원정대 전 일정을 확인해보세요.</div>
+      <!-- 모달 내부로 깔끔하게 이동된 1/N 자동할인 가이드 -->
+      <div style="padding:14px; border-radius:12px; background:#f4fafe; border:1px solid #d9effb; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:13.5px; color:#191f28;">인원별 1/N 자동할인 예시 (고비 4박5일 기준)</strong>
+          <span style="font-size:11px; font-weight:700; color:#0284c7;">각자 카드결제 · 차액환급</span>
         </div>
-        <a href="https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition" target="_blank" rel="noopener" class="bl-btn bl-btn-outline bl-btn-sm" style="background:#fff;">
-          원정대 일정표 보기
-        </a>
+        <div class="bl-pax-tabs" style="margin-bottom:8px;">
+          <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3명</button>
+          <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4명</button>
+          <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5명</button>
+          <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6명 마감</button>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:6px;">
+          <span style="font-size:12px; font-weight:700; color:#0284c7;" id="simDescLabel">5명 합류 시 전원 1인 부담금</span>
+          <div>
+            <strong style="font-size:16.5px; font-weight:800; color:#191f28;" id="simKrwText">820,000원</strong>
+            <span style="font-size:11.5px; color:#6b7684;" id="simUsdText">(3인 대비 29만 원 절약)</span>
+          </div>
+        </div>
       </div>
 
-      <div style="margin-top:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
-          <span style="font-size:12px; color:var(--bl-gray-500);">현재 합류 시 1인 기준 요금</span>
+          <span style="font-size:12px; color:var(--bl-gray-500);">현재 기준 1인 요금</span>
           <strong style="display:block; font-size:20px; font-weight:800; color:var(--bl-gray-900);">${item.curPrice}</strong>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -3096,21 +3347,51 @@ function renderShowcase() {
     return true;
   });
 
-  grid.innerHTML = list.map(s => `
-    <article class="bl-explore-card" onclick="openShowcaseModal('${s.id}')">
-      <img src="${s.img}" alt="${s.title}" class="bg-photo" loading="lazy" />
-      <div class="bl-explore-top">
-        <span class="bl-glass-pill"><i class="xi-check-circle"></i> ${s.agency.split('(')[0].trim()}</span>
-        <span class="bl-glass-pill">${s.badge}</span>
-      </div>
-      <div class="bl-explore-txt">
-        <em>${s.cat}</em>
-        <strong>${s.title}</strong>
-        <span>연결상품: ${s.prodName} (${s.price})</span>
-      </div>
-      <div class="bl-explore-arrow"><i class="xi-angle-right-min"></i></div>
-    </article>
-  `).join('');
+  const maxShow = (curShowcaseFilter === 'all' && !globalKeyword) ? 4 : 8;
+  const visible = list.slice(0, maxShow);
+
+  grid.innerHTML = visible.map((s, idx) => {
+    const shortAg = String(s.agency || '').split('(')[0].trim();
+    const reviewerLabel = s.postUrl ? '실제 탑승 모험가' : `${shortAg} 현장 LIVE`;
+    const avaTxt = s.postUrl ? ['김', '박', '이', '정', '최', '윤'][idx % 6] : shortAg.slice(0, 1);
+    const companionCnt = [5, 6, 4, 5][idx % 4];
+    return `
+      <article class="ts-rev-card" onclick="openShowcaseModal('${s.id}')">
+        <div>
+          <div class="ts-rev-top">
+            <div class="ts-rev-user">
+              <div class="ts-rev-user-ava">${avaTxt}</div>
+              <div>
+                <strong style="font-size:13.5px; color:#191f28; display:block;">${reviewerLabel}</strong>
+                <span style="font-size:11.5px; color:#8b95a1;">${s.badge} · <i class="xi-star" style="color:#ffb800;"></i> <b style="color:#333d4b;">5.0</b></span>
+              </div>
+            </div>
+            <span class="ts-pill-gray">${s.cat}</span>
+          </div>
+
+          <div class="ts-rev-prod-link" style="margin-top:11px;" onclick="event.stopPropagation(); openProductPreviewModal('${s.pcode}')">
+            ${s.prodName} (${s.price})
+          </div>
+
+          <div class="ts-rev-cohesion-bar" style="margin-top:9px;">
+            <span>함께한 모험가</span>
+            <div style="display:inline-flex; align-items:center; gap:6px;">
+              ${renderAvatarStack(companionCnt)}
+              <strong style="color:#191f28;">${companionCnt}명</strong>
+            </div>
+          </div>
+
+          <div class="ts-rev-body-row" style="margin-top:12px;">
+            <div style="min-width:0; flex:1;">
+              <h4 class="ts-rev-title">${s.title}</h4>
+              <p class="ts-rev-desc">${s.tip}</p>
+            </div>
+            <img src="${s.img}" alt="${s.title}" class="ts-rev-photo" loading="lazy" />
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 function openShowcaseModal(id) {
@@ -3216,25 +3497,16 @@ function renderPartnerSection() {
 
           <div class="bl-pcard-title-box">
             <h4>${ag.name}</h4>
-            <div class="en-name">${ag.en}</div>
-            ${ag.slogan ? `<div class="bl-pcard-slogan">"${ag.slogan}"</div>` : ''}
+            ${ag.slogan ? `<div class="bl-pcard-slogan" style="margin-top:4px;">${ag.slogan}</div>` : ''}
           </div>
 
-          <p class="bl-pcard-desc">${ag.desc}</p>
-
           ${Array.isArray(ag.perks) && ag.perks.length ? `
-            <div class="bl-pcard-perks">
-              ${ag.perks.slice(0, 3).map(pk => `<span class="bl-pcard-perk-chip">✓ ${pk}</span>`).join('')}
+            <div class="bl-pcard-perks" style="margin-top:10px;">
+              ${ag.perks.slice(0, 2).map(pk => `<span class="bl-pcard-perk-chip">✓ ${pk}</span>`).join('')}
             </div>
           ` : ''}
 
-          <div class="bl-pcard-metrics">
-            <div><span>응답·확정</span><strong title="${ag.resp}">${ag.resp}</strong></div>
-            <div><span>주력차량</span><strong title="${ag.fleet}">${ag.fleet}</strong></div>
-            <div><span>숙소품질</span><strong title="${ag.camp}">${ag.camp}</strong></div>
-          </div>
-
-          <div class="bl-partner-thumbs">
+          <div class="bl-partner-thumbs" style="margin-top:12px;">
             ${(ag.photos || []).slice(0, 3).map(ph => `<img src="${ph}" alt="${ag.name} 현장실사" />`).join('')}
           </div>
         </div>
@@ -3521,7 +3793,9 @@ function renderMagazines() {
     return;
   }
 
-  grid.innerHTML = list.slice(0, 8).map(m => `
+  const magLimit = (curMagFilter === 'all' && !globalKeyword) ? 4 : 8;
+
+  grid.innerHTML = list.slice(0, magLimit).map(m => `
     <a href="${m.url}" target="_blank" rel="noopener" class="bl-mokta-mag-card">
       <div class="bl-mokta-mag-thumb">
         <img src="${m.img}" alt="${m.title}" loading="lazy" />
@@ -4302,13 +4576,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroTrack();
   bindHeroSliderEvents();
   startHeroAutoSlide();
-  renderStoreProducts();
-  renderJoinCalendar();
-  renderJoinCards();
-  renderRfqBoard();
-  renderShowcase();
-  renderPartnerSection();
-  renderMagazines();
+  switchCustomerMode('home');
   populatePartnerRfqSelect();
   bindPartnerSliderEvents();
   startPartnerAutoSlide();

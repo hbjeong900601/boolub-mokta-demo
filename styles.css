@@ -27,11 +27,11 @@
   --bl-radius: 8px;
   --bl-radius-md: 12px;
   --bl-radius-lg: 18px;
-  --bl-max: 1200px;
-  --bl-side: 16px;
+  --bl-max: 1120px;
+  --bl-side: 20px;
 }
 
-@media (min-width: 1240px) {
+@media (min-width: 1200px) {
   :root { --bl-side: 0px; }
 }
 
@@ -183,18 +183,19 @@ em, i { font-style: normal; }
   width: 100%;
   height: 42px;
   padding: 0 18px 0 42px;
-  border: 1px solid var(--bl-gray-200);
-  border-radius: 25px;
-  background: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #f5f6f8;
   font-size: 14px;
   font-weight: 500;
   color: var(--bl-gray-900);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.bl-search-input::placeholder { color: var(--bl-gray-400); }
-.bl-search-input:hover { border-color: var(--bl-point-line); }
+.bl-search-input::placeholder { color: #8b95a1; }
+.bl-search-input:hover { background: #eef1f4; }
 .bl-search-input:focus {
   outline: none;
+  background: #ffffff;
   border-color: var(--bl-point);
   box-shadow: 0 0 0 3px rgba(56, 190, 239, 0.12);
 }
@@ -400,7 +401,7 @@ em, i { font-style: normal; }
 .bl-hero-card {
   position: relative;
   aspect-ratio: 360 / 440;
-  border-radius: var(--bl-radius);
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   background: var(--bl-gray-100);
@@ -3088,13 +3089,956 @@ body.is-live-cms .bl-auth-sim-bar {
   gap: 6px;
 }
 
+/* =========================================================================
+   [v13] 트립소다(TripSoda) 벤치마킹 와이드 클린 UI/UX 고도화 시스템
+   - 1줄 라이브 소셜 프루프 바 / 통합 필터 칩 & 3탭 필터 모달
+   - 무테두리 1:1 오픈조인(참여자 아바타) & 투어 스토어(2-Pill) 카드
+   - 격자선 없는 순백색 미니멀 도트 캘린더 + 구분선형 커뮤니티 동행 피드
+   - '함께한 모험가 N명' 코히전 리뷰 카드 + 2단 하단 헬퍼 카드
+   ========================================================================= */
+
+/* 1. 1줄 MOKTA 라이브 소셜 프루프 바 */
+.ts-live-proof-bar {
+  margin-top: 14px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  background: #f4fafe;
+  border: 1px solid #d9effb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+.ts-live-proof-bar:hover {
+  background: #eaf6fd;
+  border-color: #b7e2f8;
+}
+.ts-proof-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.ts-proof-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #1fa8db;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ts-proof-text {
+  font-size: 13px;
+  color: #333d4b;
+  font-weight: 500;
+}
+.ts-proof-text strong {
+  color: #0284c7;
+  font-weight: 700;
+}
+.ts-proof-more {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1596c9;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+/* 2. 투어 스토어 모드 전용 몽골 컬렉션 에디토리얼 배너 */
+.ts-collection-hero-sec {
+  padding-top: 24px;
+}
+.ts-collection-banner {
+  position: relative;
+  height: 210px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #121619;
+}
+.ts-collection-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ts-collection-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(12, 18, 28, 0.78) 0%, rgba(12, 18, 28, 0.42) 60%, rgba(12, 18, 28, 0.18) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px 32px;
+  color: #ffffff;
+}
+.ts-col-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #7dd3fc;
+  margin-bottom: 4px;
+}
+.ts-collection-scrim h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+}
+.ts-collection-scrim p {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.86);
+  margin-top: 5px;
+  max-width: 620px;
+}
+
+/* 3. 트립소다 스타일 통합 알약형 필터 바 & 3탭 필터 모달 */
+.ts-filter-bar-sec {
+  padding-top: 20px;
+}
+.ts-filter-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eef1f4;
+}
+.ts-filter-pills-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ts-fpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: #f5f6f8;
+  border: 1px solid transparent;
+  color: #333d4b;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.16s ease;
+}
+.ts-fpill:hover {
+  background: #ebedf0;
+}
+.ts-fpill.is-active {
+  background: #e8f7fd;
+  border-color: #93daf8;
+  color: #0284c7;
+  font-weight: 700;
+}
+.ts-fpill-reset {
+  height: 34px;
+  padding: 0 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #6b7684;
+}
+.ts-fpill-reset:hover { color: #121619; }
+
+.ts-sheet-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid #eef1f4;
+  margin-bottom: 18px;
+}
+.ts-sheet-tab {
+  height: 42px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8b95a1;
+  border-bottom: 2px solid transparent;
+  transition: all 0.16s ease;
+}
+.ts-sheet-tab.active {
+  color: #121619;
+  font-weight: 800;
+  border-bottom-color: #1fa8db;
+}
+.ts-sheet-pane {
+  display: none;
+}
+.ts-sheet-pane.active {
+  display: block;
+}
+.ts-sheet-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4e5968;
+  margin-bottom: 10px;
+}
+.ts-sheet-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.ts-choice-pill {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e8eb;
+  background: #ffffff;
+  color: #333d4b;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+.ts-choice-pill:hover {
+  border-color: #bfe8f8;
+}
+.ts-choice-pill.active {
+  background: #e8f7fd;
+  border-color: #1fa8db;
+  color: #0284c7;
+  font-weight: 700;
+}
+
+/* 4. '예약한 동행이 있는 모험이에요!' — 트립소다 오픈조인 무테두리 1:1 카드 */
+.ts-opengroup-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.ts-og-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.ts-og-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f2f4f6;
+}
+.ts-og-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.ts-og-card:hover .ts-og-thumb img {
+  transform: scale(1.04);
+}
+.ts-og-top-pill {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #1fa8db;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+.ts-og-top-pill.is-join {
+  background: rgba(18, 22, 25, 0.72);
+  backdrop-filter: blur(4px);
+}
+.ts-og-date-scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24px 12px 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(12, 16, 20, 0.78) 100%);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.2px;
+}
+.ts-og-meta {
+  font-size: 12px;
+  color: #8b95a1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ts-og-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.38;
+  color: #191f28;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+.ts-og-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+.ts-og-status-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ts-pax-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ts-confirm-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #e6fcf5;
+  color: #0ca678;
+  font-size: 11.5px;
+  font-weight: 800;
+}
+.ts-confirm-pill.is-recruit {
+  background: #fff4e6;
+  color: #f76707;
+}
+.ts-avatar-stack {
+  display: inline-flex;
+  align-items: center;
+}
+.ts-mini-ava {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  margin-left: -6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #ffffff;
+}
+.ts-mini-ava:first-child { margin-left: 0; }
+.ts-mini-ava.c1 { background: #38bdf8; }
+.ts-mini-ava.c2 { background: #34d399; }
+.ts-mini-ava.c3 { background: #fbbf24; }
+.ts-mini-ava.c4 { background: #a78bfa; }
+.ts-mini-ava.more {
+  background: #4e5968;
+  font-size: 9px;
+}
+
+/* 5. 투어 스토어(104개) — 트립소다 몽골 컬렉션 무테두리 1:1 카드 + 2-Pill */
+.ts-store-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 30px;
+}
+.ts-store-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.ts-store-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f2f4f6;
+}
+.ts-store-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.ts-store-card:hover .ts-store-thumb img {
+  transform: scale(1.04);
+}
+.ts-store-badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(18, 22, 25, 0.70);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ts-store-badge.is-exp {
+  background: #1fa8db;
+  font-weight: 800;
+}
+.ts-store-partner {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #8b95a1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ts-store-title {
+  margin-top: 3px;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.38;
+  color: #191f28;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 40px;
+}
+.ts-store-tags-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.ts-store-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ts-pill-gray {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.ts-pill-sky {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #e8f7fd;
+  color: #0284c7;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.ts-store-star {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333d4b;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.ts-store-star i { color: #ffb800; }
+.ts-store-star em {
+  color: #8b95a1;
+  font-weight: 500;
+}
+.ts-store-price-row {
+  margin-top: 6px;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 5px;
+}
+.ts-store-disc {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #f04452;
+}
+.ts-store-price {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #191f28;
+}
+
+/* 6. 격자선 없는 순백색 미니멀 도트 캘린더 (트립소다 '어드벤처 캘린더' 동일 감성) */
+.ts-clean-cal-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  gap: 20px;
+  align-items: stretch;
+}
+.ts-clean-cal-card,
+.ts-cal-list-card {
+  background: #ffffff;
+  border: 1px solid #eef1f4;
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 20px rgba(18, 22, 25, 0.03);
+}
+.ts-cal-nav-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.ts-cal-month-label {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: #191f28;
+}
+.ts-cal-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4e5968;
+  font-size: 16px;
+  transition: background-color 0.15s ease;
+}
+.ts-cal-arrow:hover {
+  background: #f2f4f6;
+}
+.ts-cal-month-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.ts-mpill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7684;
+  background: #f5f6f8;
+  transition: all 0.15s ease;
+}
+.ts-mpill:hover { background: #ebedf0; }
+.ts-mpill.active {
+  background: #191f28;
+  color: #ffffff;
+  font-weight: 700;
+}
+.ts-cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b95a1;
+  margin-bottom: 8px;
+}
+.ts-cal-weekdays .is-sun { color: #f04452; }
+.ts-cal-weekdays .is-sat { color: #3182f6; }
+
+.ts-cal-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 4px;
+}
+.ts-cday {
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  position: relative;
+}
+.ts-cday.is-empty {
+  pointer-events: none;
+}
+.ts-cday:not(.is-empty):hover {
+  background: #f5f6f8;
+}
+.ts-cday-num {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #333d4b;
+  line-height: 1.1;
+}
+.ts-cday.is-sun .ts-cday-num,
+.ts-cday.is-hol .ts-cday-num {
+  color: #f04452;
+}
+.ts-cday.is-sat .ts-cday-num {
+  color: #3182f6;
+}
+.ts-cday.has-teams .ts-cday-num {
+  font-weight: 800;
+  color: #191f28;
+}
+.ts-cday-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+}
+.ts-cday.has-teams .ts-cday-dot {
+  background: #ff5a5f;
+}
+.ts-cday.has-teams.is-confirm-day .ts-cday-dot {
+  background: #1fa8db;
+}
+.ts-cday.active {
+  background: #1fa8db !important;
+}
+.ts-cday.active .ts-cday-num {
+  color: #ffffff !important;
+  font-weight: 800;
+}
+.ts-cday.active .ts-cday-dot {
+  background: #ffffff !important;
+}
+.ts-cal-foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f2f4f6;
+  text-align: center;
+}
+.ts-cal-viewall-btn {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1596c9;
+}
+.ts-cal-viewall-btn:hover { text-decoration: underline; }
+
+/* 캘린더 우측 심플 출발 리스트 */
+.ts-cal-list-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.ts-cal-side-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+.ts-cal-side-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 4px;
+  border-bottom: 1px solid #f2f4f6;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.ts-cal-side-row:last-child { border-bottom: 0; }
+.ts-cal-side-row:hover { opacity: 0.78; }
+
+/* 7. 트립소다 홈 스타일 구분선형 커뮤니티 동행 피드 */
+.ts-companion-feed-wrap {
+  margin-top: 28px;
+  background: #ffffff;
+  border: 1px solid #eef1f4;
+  border-radius: 18px;
+  padding: 22px 26px;
+}
+.ts-subsec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eef1f4;
+}
+.ts-subsec-head h4 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #191f28;
+}
+.ts-subsec-head span {
+  font-size: 12.5px;
+  color: #8b95a1;
+  display: block;
+  margin-top: 2px;
+}
+.ts-companion-list {
+  display: flex;
+  flex-direction: column;
+}
+.ts-comp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #f2f4f6;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.ts-comp-row:last-child { border-bottom: 0; padding-bottom: 4px; }
+.ts-comp-left {
+  min-width: 0;
+  flex: 1;
+}
+.ts-comp-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+.ts-comp-tag {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.ts-comp-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #191f28;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ts-comp-row:hover .ts-comp-title { color: #0284c7; }
+.ts-comp-meta {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #8b95a1;
+}
+.ts-comp-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: #4e5968;
+}
+.ts-comp-ava {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e8f7fd;
+  color: #0284c7;
+  font-size: 10px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ts-comp-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.ts-comp-thumb {
+  width: 68px;
+  height: 68px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #f2f4f6;
+}
+.ts-comp-loc {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0ca678;
+}
+
+/* 8. 트립소다 '함께한 모험가 N명' 스타일 리얼 후기 카드 */
+.ts-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.ts-rev-card {
+  background: #ffffff;
+  border: 1px solid #eef1f4;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ts-rev-card:hover {
+  border-color: #bfe8f8;
+  box-shadow: 0 8px 22px rgba(18, 22, 25, 0.05);
+}
+.ts-rev-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ts-rev-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ts-rev-user-ava {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e8f7fd;
+  color: #0284c7;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ts-rev-prod-link {
+  padding-left: 9px;
+  border-left: 2px solid #38beef;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0284c7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ts-rev-cohesion-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f7f8fa;
+  font-size: 12px;
+  color: #4e5968;
+  font-weight: 600;
+}
+.ts-rev-body-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.ts-rev-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #191f28;
+  line-height: 1.4;
+}
+.ts-rev-desc {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #6b7684;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ts-rev-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f2f4f6;
+}
+
+/* 9. 하단 '아직 몽골 여행이 망설여지나요?' 2열 헬퍼 카드 */
+.ts-helper-heading {
+  font-size: 18px;
+  font-weight: 800;
+  color: #191f28;
+  margin-bottom: 14px;
+}
+.ts-helper-2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.ts-helper-card {
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e8eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.ts-helper-card:hover {
+  border-color: #93daf8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 22, 25, 0.04);
+}
+.ts-helper-txt strong {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #191f28;
+}
+.ts-helper-txt span {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7684;
+}
+.ts-helper-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f5f8fa;
+  font-size: 22px;
+  color: #0284c7;
+}
+.ts-helper-icon img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+.ts-helper-icon.is-soft {
+  background: #e8f7fd;
+}
+
+/* 파트너 카드 경량화 보정 */
+.bl-partner-card .bl-pcard-body {
+  padding: 14px 18px 12px;
+}
+
 /* 반응형 */
 @media (max-width: 1024px) {
-  .bl-explore-grid, .bl-waug-item-grid, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bl-quick-4box { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bl-trip-finder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bl-join-grid, .bl-service-banners { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .bl-join-top-bar, .bl-cal-hub-grid, .partner-grid-2col { grid-template-columns: 1fr; }
+  .bl-explore-grid, .bl-waug-item-grid, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid,
+  .ts-opengroup-grid, .ts-store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ts-clean-cal-layout, .ts-review-grid, .partner-grid-2col { grid-template-columns: 1fr; }
   .bl-hero-slide { flex: 0 0 50%; max-width: 50%; }
   .bl-slider-arrow.prev { left: 8px; }
   .bl-slider-arrow.next { right: 8px; }
@@ -3109,16 +4053,13 @@ body.is-live-cms .bl-auth-sim-bar {
   .bl-hero-viewport { margin: 0; }
   .bl-hero-slide { flex: 0 0 100%; max-width: 100%; padding: 0; }
   .bl-hero-card { aspect-ratio: 4 / 5; }
-  .bl-quick-4box, .bl-trip-finder, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid { grid-template-columns: 1fr; }
-  .bl-rfq-grid, .bl-join-grid, .bl-service-banners { grid-template-columns: 1fr; }
+  .ts-opengroup-grid, .ts-store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .bl-mokta-mag-grid, .bl-rfq-grid, .ts-helper-2col, .bl-mh-spec-grid { grid-template-columns: 1fr; }
   .bl-top-notice-inner .bl-notice-right { display: none; }
   .bl-partner-card { flex: 0 0 86%; min-width: 268px; }
-  .bl-cal-hub-wrap { padding: 14px; }
-  .bl-trust-top { padding: 20px 18px; }
-  .bl-trust-grid { padding: 16px; }
-  .bl-trust-steps { margin: 0 16px 16px; }
-  .bl-mday { min-height: 52px; padding: 5px 4px; }
-  .bl-cal-dot-item { width: 5.5px; height: 5.5px; }
-  .bl-mday-cnt { font-size: 9px; padding: 1px 4px; }
-  .bl-fab-write { left: 14px; bottom: 76px; height: 42px; padding: 0 15px; font-size: 13px; }
+  .ts-clean-cal-card, .ts-cal-list-card, .ts-companion-feed-wrap { padding: 16px; }
+  .ts-collection-banner { height: 180px; }
+  .ts-collection-scrim { padding: 20px; }
+  .ts-collection-scrim h2 { font-size: 21px; }
+  .bl-fab-write { left: 16px; right: auto; bottom: 20px; height: 42px; padding: 0 15px; font-size: 13px; }
 }
