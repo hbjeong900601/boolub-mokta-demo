@@ -4034,10 +4034,292 @@ body.is-live-cms .bl-auth-sim-bar {
   padding: 14px 18px 12px;
 }
 
+/* =========================================================================
+   v14 실사용 고도화: 전용관 즉시 가입·로그인 & 동행 신청 & 파트너사 통합 CRM
+   ========================================================================= */
+.ts-header-auth-btn,
+.ts-header-my-btn {
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #d0ebfa;
+  background: #f0f9ff;
+  color: #0284c7;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+.ts-header-auth-btn:hover,
+.ts-header-my-btn:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+}
+.ts-header-my-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #191f28;
+}
+
+/* 1번 독립 섹션: 함께 떠날 동행을 찾고 있어요 */
+.ts-companion-feed-wrap.is-standalone {
+  margin-top: 0;
+  padding: 10px 24px 18px;
+}
+.ts-companion-foot {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #f2f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ts-comp-apply-pill {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f0f9ff;
+  color: #0284c7;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid #d0ebfa;
+}
+.ts-comp-row:hover .ts-comp-apply-pill {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+/* 동행 글쓰기 체크박스 */
+.ts-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+.ts-check-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1fa8db;
+  flex-shrink: 0;
+}
+
+/* 3초 회원가입·로그인 모달 */
+.ts-auth-pending-banner {
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.ts-sns-btn-stack {
+  display: grid;
+  gap: 9px;
+}
+.ts-sns-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.ts-sns-btn:hover {
+  filter: brightness(0.97);
+  transform: translateY(-1px);
+}
+.ts-sns-btn.is-kakao {
+  background: #FEE500;
+  color: #191919;
+}
+.ts-sns-btn.is-naver {
+  background: #03C75A;
+  color: #ffffff;
+}
+.ts-naver-n {
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1;
+}
+.ts-auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 16px 0 14px;
+}
+.ts-auth-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: #eef1f4;
+}
+.ts-auth-divider span {
+  position: relative;
+  background: #ffffff;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #8b95a1;
+  font-weight: 600;
+}
+.ts-auth-foot-links {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f2f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: #6b7684;
+}
+.ts-auth-foot-links button,
+.ts-auth-foot-links a {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4e5968;
+}
+.ts-auth-foot-links button:hover,
+.ts-auth-foot-links a:hover {
+  color: #0284c7;
+  text-decoration: underline;
+}
+
+/* 동행·조인 상세 모달 내부 간편 신청 폼 */
+.ts-apply-seat-box {
+  padding: 15px 16px;
+  border-radius: 14px;
+  background: #f8fbff;
+  border: 1px solid #d0ebfa;
+  margin-bottom: 14px;
+}
+.ts-apply-grid {
+  display: grid;
+  grid-template-columns: 0.36fr 0.64fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* 내 활동 관리함 */
+.ts-myact-top-bar {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ts-myact-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e8eb;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 파트너 센터 KPI 대시보드 & 실시간 CRM 리스트 */
+.partner-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.partner-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+.partner-kpi-card:hover {
+  border-color: #7dd3fc;
+  box-shadow: 0 6px 18px rgba(18, 22, 25, 0.05);
+  transform: translateY(-1px);
+}
+.pkpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+}
+.pkpi-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.pkpi-sub {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0284c7;
+}
+.partner-crm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.partner-crm-card {
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1px solid #e5e8eb;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.partner-deeplink-box {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.partner-deeplink-box code {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-all;
+}
+
 /* 반응형 */
 @media (max-width: 1024px) {
   .bl-explore-grid, .bl-waug-item-grid, .bl-mokta-mag-grid, .bl-essentials-grid, .bl-trust-grid, .bl-mh-spec-grid,
-  .ts-opengroup-grid, .ts-store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ts-opengroup-grid, .ts-store-grid, .partner-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ts-clean-cal-layout, .ts-review-grid, .partner-grid-2col { grid-template-columns: 1fr; }
   .bl-hero-slide { flex: 0 0 50%; max-width: 50%; }
   .bl-slider-arrow.prev { left: 8px; }
@@ -4054,12 +4336,13 @@ body.is-live-cms .bl-auth-sim-bar {
   .bl-hero-slide { flex: 0 0 100%; max-width: 100%; padding: 0; }
   .bl-hero-card { aspect-ratio: 4 / 5; }
   .ts-opengroup-grid, .ts-store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .bl-mokta-mag-grid, .bl-rfq-grid, .ts-helper-2col, .bl-mh-spec-grid { grid-template-columns: 1fr; }
+  .bl-mokta-mag-grid, .bl-rfq-grid, .ts-helper-2col, .bl-mh-spec-grid, .partner-kpi-strip, .ts-apply-grid { grid-template-columns: 1fr; }
   .bl-top-notice-inner .bl-notice-right { display: none; }
   .bl-partner-card { flex: 0 0 86%; min-width: 268px; }
-  .ts-clean-cal-card, .ts-cal-list-card, .ts-companion-feed-wrap { padding: 16px; }
+  .ts-clean-cal-card, .ts-cal-list-card, .ts-companion-feed-wrap, .ts-companion-feed-wrap.is-standalone { padding: 14px 16px; }
   .ts-collection-banner { height: 180px; }
   .ts-collection-scrim { padding: 20px; }
   .ts-collection-scrim h2 { font-size: 21px; }
   .bl-fab-write { left: 16px; right: auto; bottom: 20px; height: 42px; padding: 0 15px; font-size: 13px; }
+  #partnerApplyHeaderBtn { display: none !important; }
 }

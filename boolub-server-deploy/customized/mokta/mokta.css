@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* =========================================================================
-   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_13)
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_14)
    - 본 페이지(data=mj, data=mokta)에서는 부럽 기본 상단 헤더(.sc_Header) 비노출 + MOKTA 전용 스티키 헤더 노출
    - 3-Tier CSS Specificity Guard + 30개 파트너사 도트 캘린더 + 신뢰 보증 섹션 + 미니홈 커스터마이저
    ========================================================================= */
@@ -4692,6 +4692,322 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 
 
 
+#bl-mokta-cms-wrap .ts-header-auth-btn,
+#bl-mokta-cms-wrap .ts-header-my-btn {
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #d0ebfa;
+  background: #f0f9ff;
+  color: #0284c7;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+#bl-mokta-cms-wrap .ts-header-auth-btn:hover,
+#bl-mokta-cms-wrap .ts-header-my-btn:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+}
+
+#bl-mokta-cms-wrap .ts-header-my-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #191f28;
+}
+
+
+
+#bl-mokta-cms-wrap .ts-companion-feed-wrap.is-standalone {
+  margin-top: 0;
+  padding: 10px 24px 18px;
+}
+
+#bl-mokta-cms-wrap .ts-companion-foot {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #f2f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#bl-mokta-cms-wrap .ts-comp-apply-pill {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f0f9ff;
+  color: #0284c7;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid #d0ebfa;
+}
+
+#bl-mokta-cms-wrap .ts-comp-row:hover .ts-comp-apply-pill {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+
+
+#bl-mokta-cms-wrap .ts-check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+
+#bl-mokta-cms-wrap .ts-check-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1fa8db;
+  flex-shrink: 0;
+}
+
+
+
+#bl-mokta-cms-wrap .ts-auth-pending-banner {
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+#bl-mokta-cms-wrap .ts-sns-btn-stack {
+  display: grid;
+  gap: 9px;
+}
+
+#bl-mokta-cms-wrap .ts-sns-btn {
+  width: 100%;
+  height: 46px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+#bl-mokta-cms-wrap .ts-sns-btn:hover {
+  filter: brightness(0.97);
+  transform: translateY(-1px);
+}
+
+#bl-mokta-cms-wrap .ts-sns-btn.is-kakao {
+  background: #FEE500;
+  color: #191919;
+}
+
+#bl-mokta-cms-wrap .ts-sns-btn.is-naver {
+  background: #03C75A;
+  color: #ffffff;
+}
+
+#bl-mokta-cms-wrap .ts-naver-n {
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1;
+}
+
+#bl-mokta-cms-wrap .ts-auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 16px 0 14px;
+}
+
+#bl-mokta-cms-wrap .ts-auth-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: #eef1f4;
+}
+
+#bl-mokta-cms-wrap .ts-auth-divider span {
+  position: relative;
+  background: #ffffff;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #8b95a1;
+  font-weight: 600;
+}
+
+#bl-mokta-cms-wrap .ts-auth-foot-links {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f2f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: #6b7684;
+}
+
+#bl-mokta-cms-wrap .ts-auth-foot-links button,
+#bl-mokta-cms-wrap .ts-auth-foot-links a {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4e5968;
+}
+
+#bl-mokta-cms-wrap .ts-auth-foot-links button:hover,
+#bl-mokta-cms-wrap .ts-auth-foot-links a:hover {
+  color: #0284c7;
+  text-decoration: underline;
+}
+
+
+
+#bl-mokta-cms-wrap .ts-apply-seat-box {
+  padding: 15px 16px;
+  border-radius: 14px;
+  background: #f8fbff;
+  border: 1px solid #d0ebfa;
+  margin-bottom: 14px;
+}
+
+#bl-mokta-cms-wrap .ts-apply-grid {
+  display: grid;
+  grid-template-columns: 0.36fr 0.64fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+
+
+#bl-mokta-cms-wrap .ts-myact-top-bar {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+#bl-mokta-cms-wrap .ts-myact-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e8eb;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+
+#bl-mokta-cms-wrap .partner-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+#bl-mokta-cms-wrap .partner-kpi-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+#bl-mokta-cms-wrap .partner-kpi-card:hover {
+  border-color: #7dd3fc;
+  box-shadow: 0 6px 18px rgba(18, 22, 25, 0.05);
+  transform: translateY(-1px);
+}
+
+#bl-mokta-cms-wrap .pkpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+#bl-mokta-cms-wrap .pkpi-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+#bl-mokta-cms-wrap .pkpi-sub {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+#bl-mokta-cms-wrap .partner-crm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#bl-mokta-cms-wrap .partner-crm-card {
+  padding: 13px 15px;
+  border-radius: 12px;
+  border: 1px solid #e5e8eb;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+#bl-mokta-cms-wrap .partner-deeplink-box {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#bl-mokta-cms-wrap .partner-deeplink-box code {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+
+
 @media (max-width: 1024px) {
 
   #bl-mokta-cms-wrap .bl-explore-grid,
@@ -4701,7 +5017,8 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 #bl-mokta-cms-wrap .bl-trust-grid,
 #bl-mokta-cms-wrap .bl-mh-spec-grid,
 #bl-mokta-cms-wrap .ts-opengroup-grid,
-#bl-mokta-cms-wrap .ts-store-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#bl-mokta-cms-wrap .ts-store-grid,
+#bl-mokta-cms-wrap .partner-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   #bl-mokta-cms-wrap .ts-clean-cal-layout,
 #bl-mokta-cms-wrap .ts-review-grid,
@@ -4741,7 +5058,9 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
   #bl-mokta-cms-wrap .bl-mokta-mag-grid,
 #bl-mokta-cms-wrap .bl-rfq-grid,
 #bl-mokta-cms-wrap .ts-helper-2col,
-#bl-mokta-cms-wrap .bl-mh-spec-grid { grid-template-columns: 1fr; }
+#bl-mokta-cms-wrap .bl-mh-spec-grid,
+#bl-mokta-cms-wrap .partner-kpi-strip,
+#bl-mokta-cms-wrap .ts-apply-grid { grid-template-columns: 1fr; }
 
   #bl-mokta-cms-wrap .bl-top-notice-inner .bl-notice-right { display: none; }
 
@@ -4749,7 +5068,8 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 
   #bl-mokta-cms-wrap .ts-clean-cal-card,
 #bl-mokta-cms-wrap .ts-cal-list-card,
-#bl-mokta-cms-wrap .ts-companion-feed-wrap { padding: 16px; }
+#bl-mokta-cms-wrap .ts-companion-feed-wrap,
+#bl-mokta-cms-wrap .ts-companion-feed-wrap.is-standalone { padding: 14px 16px; }
 
   #bl-mokta-cms-wrap .ts-collection-banner { height: 180px; }
 
@@ -4758,6 +5078,8 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
   #bl-mokta-cms-wrap .ts-collection-scrim h2 { font-size: 21px; }
 
   #bl-mokta-cms-wrap .bl-fab-write { left: 16px; right: auto; bottom: 20px; height: 42px; padding: 0 15px; font-size: 13px; }
+
+  #bl-mokta-cms-wrap #partnerApplyHeaderBtn { display: none !important; }
 
 
 }

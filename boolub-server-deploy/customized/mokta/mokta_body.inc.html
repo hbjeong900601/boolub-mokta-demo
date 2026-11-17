@@ -29,6 +29,16 @@
           <i class="xi-heart"></i> <span>찜</span> <span class="bl-wish-cnt-pill" id="headerWishCount">0</span>
         </button>
 
+        <!-- [미로그인 고객 전용] 이 페이지에서 이탈 없이 바로 가입·로그인 -->
+        <button type="button" class="ts-header-auth-btn" id="guestLoginHeaderBtn" onclick="openAuthQuickModal()">
+          <i class="xi-user-o"></i> <span>로그인 · 3초 가입</span>
+        </button>
+
+        <!-- [로그인 회원(일반/파트너/마스터) 전용] 내 동행·조인·견적 관리함 -->
+        <button type="button" class="ts-header-my-btn" id="memberMyHeaderBtn" style="display:none;" onclick="openMyActivityModal()">
+          <i class="xi-user"></i> <span id="headerMemberNameTxt">내 활동</span> <span class="bl-wish-cnt-pill" id="headerMyActCount">0</span>
+        </button>
+
         <!-- [비로그인 / 일반 로그인 고객 전용 노출] 파트너 입점신청 버튼 -->
         <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
           파트너 입점신청
@@ -155,65 +165,54 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 A: 예약한 동행이 있는 모험이에요! (트립소다 오픈조인 카드) ==================== -->
-    <section class="bl-section page-sec" id="sec-open-group">
+    <!-- ==================== 1. 함께 떠날 동행을 찾고 있어요 ==================== -->
+    <section class="bl-section page-sec" id="sec-companion">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
-            <h3 id="openGroupSecTitle">예약한 동행이 있는 모험이에요!</h3>
-            <p id="openGroupSecSub">이미 출발이 확정되었거나 함께할 팀원이 모인 차량입니다. 빈 좌석에 가볍게 합류해보세요</p>
+            <h3>함께 떠날 동행을 찾고 있어요</h3>
+            <p>마음 맞는 동행과 함께 떠나면 투어비는 내려가고 즐거움은 배가 됩니다 · 3초 로그인으로 바로 모집·합류하세요</p>
           </div>
-          <button type="button" class="bl-more-link" id="openGroupMoreBtn" onclick="switchCustomerMode('join')">
-            오픈조인 전체보기 <i class="xi-angle-right-min"></i>
-          </button>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate()">
+              <i class="xi-pen-o"></i> 동행 모집글 쓰기
+            </button>
+          </div>
         </div>
 
-        <div class="ts-opengroup-grid" id="openGroupGrid"></div>
+        <div class="bl-chip-row" id="companionChipRow">
+          <button type="button" class="bl-chip active" onclick="filterCompanionFeed('all', this)">
+            <span>전체 동행 (<em id="chipCompanionTotal" style="font-style:normal;">5</em>)</span>
+          </button>
+          <button type="button" class="bl-chip" onclick="filterCompanionFeed('고비', this)">고비사막 · 남부</button>
+          <button type="button" class="bl-chip" onclick="filterCompanionFeed('중부', this)">중부 · 온천</button>
+          <button type="button" class="bl-chip" onclick="filterCompanionFeed('홉스골', this)">홉스골 · 북부</button>
+          <button type="button" class="bl-chip" onclick="filterCompanionFeed('테를지', this)">테를지 · 단기</button>
+        </div>
+
+        <div class="ts-companion-feed-wrap is-standalone" id="communityFeedBlock">
+          <div class="ts-companion-list" id="communityCompanionList"></div>
+          <div class="ts-companion-foot" id="companionMoreWrap"></div>
+        </div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 B: 믿고 떠나는 몽골 추천 투어 (트립소다 1:1 미니멀 컬렉션 카드) ==================== -->
-    <section class="bl-section page-sec" id="sec-store">
-      <div class="bl-container">
-        <div class="bl-sec-head">
-          <div>
-            <h3 id="storeSecTitle">믿고 떠나는 몽골 대표 투어</h3>
-            <p id="storeSecSub">부럽 직영 1인 출발확정 원정대와 9개 공식 파트너사의 베스트 코스를 모았습니다</p>
-          </div>
-          <button type="button" class="bl-more-link" id="storeViewAllBtn" onclick="switchCustomerMode('store')">
-            <span id="storeTotalLinkLabel">104개 투어 전체보기</span> <i class="xi-angle-right-min"></i>
-          </button>
-        </div>
-
-        <div class="bl-chip-row" id="storeChipRow">
-          <button type="button" class="bl-chip active" onclick="filterStoreCat('all', this)">인기 전체</button>
-          <button type="button" class="bl-chip" onclick="filterStoreCat('원정대', this)">부럽원정대 (1인확정)</button>
-          <button type="button" class="bl-chip" onclick="filterStoreCat('고비', this)">고비사막 · 남부</button>
-          <button type="button" class="bl-chip" onclick="filterStoreCat('홉스골·중부', this)">홉스골 · 중부온천</button>
-          <button type="button" class="bl-chip" onclick="filterStoreCat('단기', this)">단기 2~3박 · 공항픽업</button>
-        </div>
-
-        <div class="ts-store-grid" id="productStoreGrid"></div>
-        <div id="storeMoreBtnWrap" style="margin-top:26px; text-align:center;"></div>
-      </div>
-    </section>
-
-    <!-- ==================== 섹션 C: 초심플 도트 캘린더 & 커뮤니티 동행 피드 ==================== -->
+    <!-- ==================== 2. 몽골 출발 · 동행 캘린더 ==================== -->
     <section class="bl-section page-sec" id="sec-join">
       <div class="bl-container">
         <div class="bl-sec-head">
           <div>
             <h3>몽골 출발 · 동행 캘린더</h3>
-            <p>점(•)이 찍힌 날짜를 누르면 해당일 출발확정 팀과 동행 모집글을 바로 확인할 수 있습니다</p>
+            <p>점(•)이 찍힌 날짜를 누르면 해당일 출발확정 팀과 동행 모집글을 한눈에 보고 바로 합류할 수 있습니다</p>
           </div>
           <div style="display:flex; gap:8px; align-items:center;">
             <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="openCompanionModalForDate()">
-              <i class="xi-plus-min"></i> 동행 모집하기
+              <i class="xi-plus-min"></i> 희망일 동행 모집
             </button>
           </div>
         </div>
 
-        <!-- 트립소다 어드벤처 캘린더 벤치마킹: 격자선 없는 순백색 도트 달력 + 심플 일정 리스트 -->
+        <!-- 트립소다 어드벤처 캘린더 벤치마킹: 격자선 없는 순백색 도트 달력 + 우측 선택일 출발 리스트 -->
         <div class="ts-clean-cal-layout">
           <div class="ts-clean-cal-card">
             <div class="ts-cal-nav-head">
@@ -250,25 +249,53 @@
           <!-- 우측: 선택한 날짜/월 출발 리스트 -->
           <div class="ts-cal-list-card" id="calSelectedPanel"></div>
         </div>
-
-        <!-- 트립소다 홈 스타일: 박스 테두리 없는 깔끔한 커뮤니티 동행찾기 피드 -->
-        <div class="ts-companion-feed-wrap" id="communityFeedBlock">
-          <div class="ts-subsec-head">
-            <div>
-              <h4>함께 떠날 동행을 찾고 있어요</h4>
-              <span>부럽 커뮤니티에 올라온 실제 여행자들의 동행 모집글입니다</span>
-            </div>
-            <a href="https://www.boolub.com/?pn=board.list&amp;_menu=community&amp;searchMode=Y&amp;searchWord=%EB%8F%99%ED%96%89" target="_blank" rel="noopener" class="bl-more-link">
-              커뮤니티 원문 더보기 <i class="xi-angle-right-min"></i>
-            </a>
-          </div>
-
-          <div class="ts-companion-list" id="communityCompanionList"></div>
-        </div>
       </div>
     </section>
 
-    <!-- ==================== 섹션 D: 내 일정 맞춤견적 보드 (맞춤견적·파트너 탭 중심) ==================== -->
+    <!-- ==================== 3. 예약한 동행이 있는 모험이에요! ==================== -->
+    <section class="bl-section page-sec" id="sec-open-group">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3 id="openGroupSecTitle">예약한 동행이 있는 모험이에요!</h3>
+            <p id="openGroupSecSub">이미 출발이 확정되었거나 함께할 팀원이 모인 차량입니다. 빈 좌석에 가볍게 합류해보세요</p>
+          </div>
+          <button type="button" class="bl-more-link" id="openGroupMoreBtn" onclick="switchCustomerMode('join')">
+            오픈조인 전체보기 <i class="xi-angle-right-min"></i>
+          </button>
+        </div>
+
+        <div class="ts-opengroup-grid" id="openGroupGrid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. 믿고 떠나는 몽골 대표 투어 ==================== -->
+    <section class="bl-section page-sec" id="sec-store">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3 id="storeSecTitle">믿고 떠나는 몽골 대표 투어</h3>
+            <p id="storeSecSub">부럽 직영 1인 출발확정 원정대와 9개 공식 파트너사의 베스트 코스를 모았습니다</p>
+          </div>
+          <button type="button" class="bl-more-link" id="storeViewAllBtn" onclick="switchCustomerMode('store')">
+            <span id="storeTotalLinkLabel">104개 투어 전체보기</span> <i class="xi-angle-right-min"></i>
+          </button>
+        </div>
+
+        <div class="bl-chip-row" id="storeChipRow">
+          <button type="button" class="bl-chip active" onclick="filterStoreCat('all', this)">인기 전체</button>
+          <button type="button" class="bl-chip" onclick="filterStoreCat('원정대', this)">부럽원정대 (1인확정)</button>
+          <button type="button" class="bl-chip" onclick="filterStoreCat('고비', this)">고비사막 · 남부</button>
+          <button type="button" class="bl-chip" onclick="filterStoreCat('홉스골·중부', this)">홉스골 · 중부온천</button>
+          <button type="button" class="bl-chip" onclick="filterStoreCat('단기', this)">단기 2~3박 · 공항픽업</button>
+        </div>
+
+        <div class="ts-store-grid" id="productStoreGrid"></div>
+        <div id="storeMoreBtnWrap" style="margin-top:26px; text-align:center;"></div>
+      </div>
+    </section>
+
+    <!-- [맞춤견적·파트너 모드 전용] 내 일정 맞춤견적 보드 (추천 홈에서는 숨김) -->
     <section class="bl-section page-sec" id="sec-rfq" style="display:none;">
       <div class="bl-container">
         <div class="bl-sec-head">
@@ -293,32 +320,7 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 E: 다녀온 모험가들의 리얼 후기 (트립소다 '함께한 모험가' 스타일) ==================== -->
-    <section class="bl-section page-sec" id="sec-showcase">
-      <div class="bl-container">
-        <div class="bl-sec-head">
-          <div>
-            <h3>다녀온 모험가들의 리얼 후기</h3>
-            <p>부럽을 통해 실제 몽골을 다녀온 여행자들의 솔직한 후기와 함께한 동행 분위기를 확인해보세요</p>
-          </div>
-          <a href="https://www.boolub.com/?pn=board.list&amp;_menu=community&amp;searchMode=Y&amp;searchWord=%EB%AA%BD%EA%B3%A8" target="_blank" rel="noopener" class="bl-more-link">
-            실제 후기 더보기 <i class="xi-angle-right-min"></i>
-          </a>
-        </div>
-
-        <div class="bl-chip-row">
-          <button type="button" class="bl-chip active" onclick="filterShowcase('all', this)">전체 후기</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('은하수·스냅', this)">원정대 · 은하수</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('게르·샤워실', this)">홉스골 · 게르 숙소</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('푸르공·스타렉스', this)">고비사막 · 차량</button>
-          <button type="button" class="bl-chip" onclick="filterShowcase('음식·불멍파티', this)">특식 · 캠프파이어</button>
-        </div>
-
-        <div class="ts-review-grid" id="showcaseGrid"></div>
-      </div>
-    </section>
-
-    <!-- ==================== 섹션 F: 부럽 × MOKTA 공식 입점 파트너사 (슬림 카드 & 미니홈) ==================== -->
+    <!-- ==================== 5. 공식 입점 몽골 전문 파트너사 ==================== -->
     <section class="bl-section page-sec" id="sec-partners">
       <div class="bl-container">
         <div class="bl-sec-head">
@@ -363,7 +365,32 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 G: 출국 전 꼭 읽어보는 부럽 몽골 매거진 ==================== -->
+    <!-- ==================== 6. 다녀온 모험가들의 리얼 후기 ==================== -->
+    <section class="bl-section page-sec" id="sec-showcase">
+      <div class="bl-container">
+        <div class="bl-sec-head">
+          <div>
+            <h3>다녀온 모험가들의 리얼 후기</h3>
+            <p>부럽을 통해 실제 몽골을 다녀온 여행자들의 솔직한 후기와 함께한 동행 분위기를 확인해보세요</p>
+          </div>
+          <a href="https://www.boolub.com/?pn=board.list&amp;_menu=community&amp;searchMode=Y&amp;searchWord=%EB%AA%BD%EA%B3%A8" target="_blank" rel="noopener" class="bl-more-link">
+            실제 후기 더보기 <i class="xi-angle-right-min"></i>
+          </a>
+        </div>
+
+        <div class="bl-chip-row">
+          <button type="button" class="bl-chip active" onclick="filterShowcase('all', this)">전체 후기</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('은하수·스냅', this)">원정대 · 은하수</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('게르·샤워실', this)">홉스골 · 게르 숙소</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('푸르공·스타렉스', this)">고비사막 · 차량</button>
+          <button type="button" class="bl-chip" onclick="filterShowcase('음식·불멍파티', this)">특식 · 캠프파이어</button>
+        </div>
+
+        <div class="ts-review-grid" id="showcaseGrid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 7. 출국 전 읽어보는 몽골 여행 매거진 ==================== -->
     <section class="bl-section page-sec" id="sec-magazine">
       <div class="bl-container">
         <div class="bl-sec-head">
@@ -388,7 +415,7 @@
       </div>
     </section>
 
-    <!-- ==================== 섹션 H: 트립소다 '아직 모험이 망설여지나요?' 벤치마킹 2단 헬퍼 ==================== -->
+    <!-- ==================== 8. 아직 몽골 여행이 망설여지나요? ==================== -->
     <section class="bl-section page-sec" id="sec-bottom-helper">
       <div class="bl-container">
         <h3 class="ts-helper-heading">아직 몽골 여행이 망설여지나요?</h3>
@@ -416,7 +443,7 @@
       </div>
     </section>
 
-    <!-- 우측 하단 트립소다 스타일 플로팅 액션 버튼 -->
+    <!-- 좌측 하단 플로팅 액션 버튼 -->
     <button type="button" class="bl-fab-write" id="floatingPrimaryCta" onclick="handleFloatingPrimaryAction()">
       <i class="xi-pen"></i> <span id="floatingPrimaryCtaTxt">동행 · 견적 문의</span>
     </button>
@@ -455,17 +482,20 @@
             </div>
           </div>
           <h2 style="font-size:20px; font-weight:800; color:var(--bl-gray-900);">
-            부럽 × MOKTA 파트너사 전용 업무 라운지
+            부럽 × MOKTA 파트너사 전용 통합 관리 라운지
             <span class="mn-txt">/ Түншийн ажлын хэсэг</span>
           </h2>
           <p style="font-size:13px; color:var(--bl-gray-500); margin-top:3px;">
-            승인된 입점 파트너 및 마스터 관리자 전용 공간입니다. 고객 맞춤견적 발송, 오픈조인 등록, 현장 스토리 홍보, 자사 브랜드 미니홈 커스터마이징이 실시간 DB와 연동됩니다.
+            유입 고객 합류신청 승인, 여행자 동행팀 차량 제안, 기등록 상품 연동 맞춤견적, 오픈조인 잔여석·마감 관리, 자사 브랜드 미니홈을 한곳에서 실시간 관리하세요.
           </p>
         </div>
 
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="copyPartnerMinihomeLink()">
+            <i class="xi-link"></i> 내 미니홈 홍보링크 복사
+          </button>
           <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" id="mnToggleBtn" onclick="toggleMongolianMode()">
-            <i class="xi-globus"></i> 한·몽 병기 켜기 (현지 직원용)
+            <i class="xi-globus"></i> 한·몽 병기 켜기
           </button>
           <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" id="mobSimBtn" onclick="togglePartnerMobile()">
             <i class="xi-mobile"></i> 모바일 화면 미리보기
@@ -476,36 +506,98 @@
         </div>
       </div>
 
-      <!-- 파트너사 실무 탭 메뉴 (4번 브랜드 미니홈 커스터마이징 / 5번 탭은 마스터 계정 전용 노출) -->
-      <div class="bl-ptab-nav">
-        <button type="button" class="bl-ptab-btn active" onclick="switchPartnerTab('ptab-quote', this)">
-          1. 고객 견적 요청함 (<span id="ptabQuoteCnt">4</span>)
+      <!-- 파트너사 실시간 핵심 KPI 대시보드 스트립 -->
+      <div class="partner-kpi-strip" id="partnerKpiStrip">
+        <button type="button" class="partner-kpi-card" onclick="switchPartnerTab('ptab-leads', document.querySelector('[data-ptab=ptab-leads]'))">
+          <span class="pkpi-label">신규 합류·동행 신청 고객</span>
+          <strong class="pkpi-val" id="pkpiLeadsCnt">3건</strong>
+          <span class="pkpi-sub">연락처 확인 및 합류 확정하기 →</span>
         </button>
-        <button type="button" class="bl-ptab-btn" onclick="switchPartnerTab('ptab-openjoin', this)">
-          2. 오픈조인 잔여석 등록
+        <button type="button" class="partner-kpi-card" onclick="switchPartnerTab('ptab-leads', document.querySelector('[data-ptab=ptab-leads]'))">
+          <span class="pkpi-label">차량·투어 매칭 대기 동행팀</span>
+          <strong class="pkpi-val" id="pkpiMatchableCnt">5팀</strong>
+          <span class="pkpi-sub">여행자 동행팀에 자사 투어 제안 →</span>
         </button>
-        <button type="button" class="bl-ptab-btn" onclick="switchPartnerTab('ptab-media', this)">
-          3. 현장 스토리·상품 홍보
+        <button type="button" class="partner-kpi-card" onclick="switchPartnerTab('ptab-quote', document.querySelector('[data-ptab=ptab-quote]'))">
+          <span class="pkpi-label">맞춤견적 대기 요청글</span>
+          <strong class="pkpi-val" id="pkpiRfqCnt">4건</strong>
+          <span class="pkpi-sub">내 기등록 실상품으로 10초 발송 →</span>
         </button>
-        <button type="button" class="bl-ptab-btn" onclick="switchPartnerTab('ptab-minihome', this)">
-          <i class="xi-shop" style="color:var(--bl-point-dark);"></i> 4. 내 브랜드 미니홈 꾸미기
-        </button>
-        <button type="button" class="bl-ptab-btn" id="ptabMasterBtn" style="display:none;" onclick="switchPartnerTab('ptab-onboard', this)">
-          <i class="xi-crown" style="color:#ffb800;"></i> 5. [마스터 전용] 파트너 입점신청 관리 (<span id="ptabOnboardCnt">2</span>)
+        <button type="button" class="partner-kpi-card" onclick="switchPartnerTab('ptab-openjoin', document.querySelector('[data-ptab=ptab-openjoin]'))">
+          <span class="pkpi-label">내 운영 투어 · 오픈조인</span>
+          <strong class="pkpi-val" id="pkpiProdJoinCnt">17개 · 2팀</strong>
+          <span class="pkpi-sub">잔여석 수정 · 모집마감 관리 →</span>
         </button>
       </div>
 
-      <!-- 파트너 탭 1: 고객 견적 요청 응대 -->
-      <div class="bl-ptab-pane active" id="ptab-quote">
+      <!-- 파트너사 실무 탭 메뉴 -->
+      <div class="bl-ptab-nav">
+        <button type="button" class="bl-ptab-btn active" data-ptab="ptab-leads" onclick="switchPartnerTab('ptab-leads', this)">
+          <span>1. 유입 고객 · 동행팀 매칭 (<em id="ptabLeadsCnt" style="font-style:normal;">3</em>)</span>
+        </button>
+        <button type="button" class="bl-ptab-btn" data-ptab="ptab-quote" onclick="switchPartnerTab('ptab-quote', this)">
+          <span>2. 맞춤견적 발송 (<em id="ptabQuoteCnt" style="font-style:normal;">4</em>)</span>
+        </button>
+        <button type="button" class="bl-ptab-btn" data-ptab="ptab-openjoin" onclick="switchPartnerTab('ptab-openjoin', this)">
+          <span>3. 내 오픈조인 · 잔여석 관리</span>
+        </button>
+        <button type="button" class="bl-ptab-btn" data-ptab="ptab-minihome" onclick="switchPartnerTab('ptab-minihome', this)">
+          <span><i class="xi-shop" style="color:var(--bl-point-dark);"></i> 4. 내 브랜드 미니홈 관리</span>
+        </button>
+        <button type="button" class="bl-ptab-btn" data-ptab="ptab-media" onclick="switchPartnerTab('ptab-media', this)">
+          <span>5. 현장 스토리 홍보</span>
+        </button>
+        <button type="button" class="bl-ptab-btn" id="ptabMasterBtn" data-ptab="ptab-onboard" style="display:none;" onclick="switchPartnerTab('ptab-onboard', this)">
+          <span><i class="xi-crown" style="color:#ffb800;"></i> [마스터] 입점심사 (<em id="ptabOnboardCnt" style="font-style:normal;">2</em>)</span>
+        </button>
+      </div>
+
+      <!-- 파트너 탭 1: 유입 고객(합류 신청 CRM) & 여행자 동행팀 차량·투어 제안 -->
+      <div class="bl-ptab-pane active" id="ptab-leads">
         <div class="partner-grid-2col">
           <div class="partner-box">
-            <span class="bl-mokta-tag" style="margin-bottom:8px;">30초 간편 견적 발송</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+              <span class="bl-mokta-tag">유입 고객 실시간 CRM</span>
+              <span style="font-size:12px; color:var(--bl-gray-500);">DB: smart_mokta_join_apply</span>
+            </div>
+            <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">
+              자사 오픈조인 합류 신청 고객 관리
+              <span class="mn-txt">/ Нэгдэх хүсэлтүүд</span>
+            </h3>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:14px;">
+              전용관에서 고객이 신청한 합류 인원·연락처·요청사항을 확인하고 [합류 확정] 처리하면 캘린더 잔여석에 즉시 반영됩니다.
+            </p>
+            <div class="partner-crm-list" id="partnerLeadList"></div>
+          </div>
+
+          <div class="partner-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+              <span class="bl-mokta-tag">신규 모객 기회</span>
+              <span style="font-size:12px; color:var(--bl-point-text); font-weight:700;">동행 모집팀 원클릭 매칭</span>
+            </div>
+            <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">
+              차량·투어 매칭 대기중인 여행자 동행팀
+              <span class="mn-txt">/ Хамтрагч хайж буй багууд</span>
+            </h3>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:14px;">
+              여행자들이 직접 올린 동행 모집글입니다. 해당 날짜·지역에 배차 가능한 자사 투어를 원클릭으로 제안해 출발 확정팀으로 전환하세요.
+            </p>
+            <div class="partner-crm-list" id="partnerMatchableCompanionList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 파트너 탭 2: 고객 견적 요청 응대 (자사 기등록 부럽 실상품 자동 불러오기 지원) -->
+      <div class="bl-ptab-pane" id="ptab-quote">
+        <div class="partner-grid-2col">
+          <div class="partner-box">
+            <span class="bl-mokta-tag" style="margin-bottom:8px;">10초 실상품 연동 견적 발송</span>
             <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">
               고객 희망 일정에 맞춤 견적서 제안하기
               <span class="mn-txt">/ Үнийн санал илгээх</span>
             </h3>
             <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
-              부럽에 이미 등록된 자사 투어 상품을 불러오면 가격과 코스가 자동 입력되어 현지 매니저도 쉽게 발송할 수 있습니다.
+              부럽에 이미 등록된 자사 투어 상품을 선택하면 판매가·상품코드·대표 실사가 자동으로 채워져 즉시 발송할 수 있습니다.
             </p>
 
             <div class="bl-field">
@@ -514,11 +606,12 @@
             </div>
 
             <div class="bl-field">
-              <label>2. 내 기등록 부럽 상품 템플릿 빠른 불러오기 <span class="mn-txt">/ Бэлэн бүтээгдэхүүн</span></label>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('gobi')">고비사막 4박5일 시그니처</button>
-                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('khuvsgul')">홉스골 힐링 5박6일</button>
-                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('terelj')">중부·테를지 단기 3박4일</button>
+              <label>2. 내 기등록 부럽 판매상품 불러오기 (실제 DB 연동) <span class="mn-txt">/ Манай бүтээгдэхүүн</span></label>
+              <select class="bl-select" id="pOwnProductSelect" onchange="onSelectOwnProductForBid(this.value)"></select>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('gobi')">고비 4박5일 기본값</button>
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('khuvsgul')">홉스골 5박6일 기본값</button>
+                <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="loadPartnerPreset('terelj')">중부·단기 3박4일 기본값</button>
               </div>
             </div>
 
@@ -573,77 +666,96 @@
           </div>
 
           <div class="partner-box" style="background:var(--bl-gray-50);">
-            <h4 style="font-size:16px; font-weight:700; margin-bottom:10px;">파트너사 이용 가이드</h4>
-            <ul style="display:grid; gap:10px; font-size:13px; color:var(--bl-gray-700); line-height:1.6;">
-              <li><strong>1. 과당경쟁 방지 시스템:</strong> 고객 요청 1건당 최대 6개 파트너사까지만 견적 발송이 가능하여 무분별한 단가 출혈 경쟁을 막습니다.</li>
-              <li><strong>2. 부럽 기등록 상품 자동 연동:</strong> 견적서 하단에 파트너사의 부럽 판매 상품이 자동 연결되어 고객이 즉시 카드결제·쿠폰적용으로 예약할 수 있습니다.</li>
-              <li><strong>3. 편리한 1/N 수금 대행:</strong> 동행 팀원들이 부럽에서 각자 카드로 결제한 뒤 파트너사에 일괄 정산되므로 개별 수금 번거로움이 없습니다.</li>
+            <h4 style="font-size:16px; font-weight:700; margin-bottom:10px;">내가 발송한 맞춤견적 현황</h4>
+            <div class="partner-crm-list" id="partnerMySentQuotesList" style="margin-bottom:18px;"></div>
+
+            <h4 style="font-size:15px; font-weight:700; margin-bottom:8px; padding-top:14px; border-top:1px solid var(--bl-gray-200);">파트너사 이용 가이드</h4>
+            <ul style="display:grid; gap:8px; font-size:12.5px; color:var(--bl-gray-700); line-height:1.6;">
+              <li><strong>1. 과당경쟁 방지:</strong> 고객 요청 1건당 최대 6개 파트너사까지만 견적 발송이 가능합니다.</li>
+              <li><strong>2. 부럽 결제 직결:</strong> 발송된 견적서에서 고객이 자사 부럽 상품을 바로 카드결제할 수 있습니다.</li>
+              <li><strong>3. 편리한 1/N 정산:</strong> 동행 팀원이 각자 부럽에서 결제 후 파트너사로 일괄 정산됩니다.</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- 파트너 탭 2: 오픈조인 잔여석 등록 -->
+      <!-- 파트너 탭 3: 오픈조인 신규 등록 + 기등록 오픈조인 좌석/마감 실시간 관리 -->
       <div class="bl-ptab-pane" id="ptab-openjoin">
-        <div class="partner-box" style="max-width:680px;">
-          <span class="bl-mokta-tag" style="margin-bottom:8px;">출발확정 차량 잔여석 빠르게 채우기</span>
-          <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">오픈조인 출발팀 신규 등록 <span class="mn-txt">/ Нэгдсэн аялал нэмэх</span></h3>
-          <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
-            선택하신 출발 날짜의 월간 캘린더 셀과 동행·조인 모집 리스트 최상단에 즉시 노출됩니다.
-          </p>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+        <div class="partner-grid-2col">
+          <div class="partner-box">
+            <span class="bl-mokta-tag" style="margin-bottom:8px;">출발확정 차량 잔여석 빠르게 채우기</span>
+            <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">오픈조인 출발팀 신규 등록 <span class="mn-txt">/ Нэгдсэн аялал нэмэх</span></h3>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
+              자사 부럽 판매 상품을 선택하고 출발일을 지정하면 메인 도트 캘린더와 오픈조인 섹션에 즉시 노출됩니다.
+            </p>
             <div class="bl-field">
-              <label>출발 날짜 (캘린더 연동)</label>
-              <input type="date" class="bl-input" id="pjStartDate" value="2026-08-15" />
+              <label>연결할 자사 부럽 판매상품 선택 (자동 입력)</label>
+              <select class="bl-select" id="pjOwnProductSelect" onchange="onSelectOwnProductForJoin(this.value)"></select>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+              <div class="bl-field">
+                <label>출발 날짜 (캘린더 연동)</label>
+                <input type="date" class="bl-input" id="pjStartDate" value="2026-08-15" />
+              </div>
+              <div class="bl-field">
+                <label>여행 지역</label>
+                <select class="bl-select" id="pjRegion">
+                  <option value="고비">고비사막 · 남부</option>
+                  <option value="중부">중부 · 온천</option>
+                  <option value="홉스골">홉스골 · 북부</option>
+                  <option value="테를지">테를지 · 단기</option>
+                </select>
+              </div>
+              <div class="bl-field">
+                <label>여행 기간</label>
+                <select class="bl-select" id="pjDuration">
+                  <option value="2박3일">2박 3일</option>
+                  <option value="3박4일">3박 4일</option>
+                  <option value="4박5일" selected>4박 5일</option>
+                  <option value="5박6일">5박 6일 이상</option>
+                </select>
+              </div>
             </div>
             <div class="bl-field">
-              <label>여행 지역</label>
-              <select class="bl-select" id="pjRegion">
-                <option value="고비">고비사막 · 남부</option>
-                <option value="중부">중부 · 온천</option>
-                <option value="홉스골">홉스골 · 북부</option>
-                <option value="테를지">테를지 · 단기</option>
+              <label>현재 확정 인원 / 정원</label>
+              <select class="bl-select" id="pjSeats">
+                <option value="4">4명 확정 / 6인 정원 (2자리 남음)</option>
+                <option value="5">5명 확정 / 6인 정원 (마지막 1자리!)</option>
+                <option value="3">3명 모집중 / 6인 정원 (1명 추가시 확정)</option>
+                <option value="2">2명 모집중 / 6인 정원 (4자리 여유)</option>
               </select>
             </div>
             <div class="bl-field">
-              <label>여행 기간</label>
-              <select class="bl-select" id="pjDuration">
-                <option value="2박3일">2박 3일</option>
-                <option value="3박4일">3박 4일</option>
-                <option value="4박5일" selected>4박 5일</option>
-                <option value="5박6일">5박 6일 이상</option>
-              </select>
+              <label>오픈조인 투어 제목</label>
+              <input type="text" class="bl-input" id="pjTitle" value="[출발확정] 고비사막+바얀작 별밤 투어 4박5일 잔여석 합류자 모집" />
             </div>
-          </div>
-          <div class="bl-field">
-            <label>현재 확정 인원 / 정원</label>
-            <select class="bl-select" id="pjSeats">
-              <option value="4">4명 확정 / 6인 정원 (2자리 남음)</option>
-              <option value="5">5명 확정 / 6인 정원 (마지막 1자리!)</option>
-              <option value="3">3명 모집중 / 6인 정원 (1명 추가시 확정)</option>
-            </select>
-          </div>
-          <div class="bl-field">
-            <label>오픈조인 투어 제목</label>
-            <input type="text" class="bl-input" id="pjTitle" value="[출발확정] 고비사막+바얀작 별밤 투어 4박5일 잔여석 합류자 모집" />
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="bl-field">
-              <label>현재 합류 시 1인 요금</label>
-              <input type="text" class="bl-input" id="pjCurPrice" value="890,000원" />
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div class="bl-field">
+                <label>현재 합류 시 1인 요금</label>
+                <input type="text" class="bl-input" id="pjCurPrice" value="890,000원" />
+              </div>
+              <div class="bl-field">
+                <label>6인 마감 시 전원 할인 요금</label>
+                <input type="text" class="bl-input" id="pjFullPrice" value="780,000원" />
+              </div>
             </div>
-            <div class="bl-field">
-              <label>6인 마감 시 전원 할인 요금</label>
-              <input type="text" class="bl-input" id="pjFullPrice" value="780,000원" />
-            </div>
+            <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="registerPartnerOpenJoin()">
+              월간 캘린더 &amp; 오픈조인 보드에 바로 등록하기
+            </button>
           </div>
-          <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="registerPartnerOpenJoin()">
-            월간 캘린더 &amp; 실시간 조인 보드에 바로 등록하기
-          </button>
+
+          <div class="partner-box">
+            <span class="bl-mokta-tag" style="margin-bottom:8px;">실시간 좌석 · 마감 컨트롤</span>
+            <h3 style="font-size:17.5px; font-weight:700; margin-bottom:4px;">내 등록 오픈조인 현황 및 잔여석 관리</h3>
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:14px;">
+              오프라인·타채널 예약으로 좌석이 변동되었을 때 [+1 / -1] 또는 [모집마감] 버튼으로 즉시 반영하세요.
+            </p>
+            <div class="partner-crm-list" id="partnerMyJoinsManageList"></div>
+          </div>
         </div>
       </div>
 
-      <!-- 파트너 탭 3: 현장 스토리 등록 -->
+      <!-- 파트너 탭 5: 현장 스토리 등록 -->
       <div class="bl-ptab-pane" id="ptab-media">
         <div class="partner-box" style="max-width:680px;">
           <span class="bl-mokta-tag" style="margin-bottom:8px;">실사 사진·영상으로 상품 매력 어필</span>
@@ -702,7 +814,7 @@
         </div>
       </div>
 
-      <!-- 파트너 탭 4: 내 브랜드 미니홈 커스터마이징 (각 파트너사 특장점 어필 에디터) -->
+      <!-- 파트너 탭 4: 내 브랜드 미니홈 커스터마이징 (각 파트너사 특장점 어필 에디터 + 전용 딥링크) -->
       <div class="bl-ptab-pane" id="ptab-minihome">
         <div class="partner-grid-2col">
           <div class="partner-box">
@@ -714,9 +826,20 @@
               우리 여행사만의 특장점·차량·캠프 미니홈 꾸미기
               <span class="mn-txt">/ Брэнд мини-хүүдий засах</span>
             </h3>
-            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:16px;">
+            <p style="font-size:12.5px; color:var(--bl-gray-500); margin-bottom:12px;">
               입력하신 슬로건·핵심 어필 배지·보유 차량/캠프 스펙·현장 화보는 공식 파트너사 카드와 브랜드 미니홈에 즉시 반영됩니다.
             </p>
+
+            <!-- 파트너 미니홈 다이렉트 홍보 링크 복사 박스 -->
+            <div class="partner-deeplink-box">
+              <div>
+                <span style="font-size:11px; font-weight:800; color:var(--bl-point-text); display:block;">인스타그램 · 블로그 · 카톡 상담용 전용 미니홈 주소</span>
+                <code id="mhDirectUrlText">https://www.boolub.com/?pn=pages.view&amp;type=pages&amp;data=mj&amp;partner=anoratour</code>
+              </div>
+              <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="copyPartnerMinihomeLink()">
+                <i class="xi-documents-o"></i> 주소 복사
+              </button>
+            </div>
 
             <div style="display:grid; grid-template-columns:1.35fr 0.65fr; gap:10px;">
               <div class="bl-field">
@@ -809,17 +932,17 @@
           </div>
 
           <div class="partner-box" style="background:var(--bl-gray-50);">
-            <h4 style="font-size:16px; font-weight:700; margin-bottom:10px;">미니홈 전환율 극대화 TIP</h4>
+            <h4 style="font-size:16px; font-weight:700; margin-bottom:10px;">미니홈 전환율 극대화 &amp; 홍보 가이드</h4>
             <ul style="display:grid; gap:11px; font-size:13px; color:var(--bl-gray-700); line-height:1.6;">
-              <li><strong>1. 구체적인 숫자로 신뢰 어필:</strong> "좋은 차량" 대신 <em>"2024~25년식 신형 스타렉스 10대 직영"</em>처럼 구체적인 연식과 보유 대수를 적으면 1:1 지정견적 문의율이 2배 이상 높아집니다.</li>
-              <li><strong>2. 샤워실·침구 실사 공개:</strong> 한국 여행객이 가장 민감하게 확인하는 요소는 <strong>온수 샤워 여부와 화장실 청결도</strong>입니다. 갤러리에 숙소 내부 사진을 꼭 포함해 보세요.</li>
-              <li><strong>3. 투어 상품 &amp; 오픈조인 자동 연결:</strong> 미니홈 내 3개 탭에 귀사의 <strong>부럽 판매 투어</strong>와 <strong>진행중인 오픈조인 일정</strong>이 자동으로 모아져 노출됩니다.</li>
+              <li><strong>1. SNS·블로그에 미니홈 직결 링크 활용:</strong> 좌측의 전용 미니홈 주소를 복사해 자사 인스타그램 프로필이나 카카오톡 채널에 걸어두면, 접속 즉시 귀사의 미니홈이 열려 예약 전환율이 극대화됩니다.</li>
+              <li><strong>2. 구체적인 숫자로 신뢰 어필:</strong> "좋은 차량" 대신 <em>"2024~25년식 신형 스타렉스 10대 직영"</em>처럼 구체적인 연식과 보유 대수를 적어보세요.</li>
+              <li><strong>3. 투어 상품 &amp; 오픈조인 자동 연결:</strong> 미니홈 내 3개 탭에 귀사의 <strong>부럽 판매 투어 전체</strong>와 <strong>진행중인 오픈조인 일정</strong>이 자동으로 모아져 노출됩니다.</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- 파트너 탭 5: [마스터 계정 전용] 파트너 입점신청 관리 및 승인 -->
+      <!-- 파트너 탭 6: [마스터 계정 전용] 파트너 입점신청 관리 및 승인 -->
       <div class="bl-ptab-pane" id="ptab-onboard">
         <div class="partner-box">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
@@ -927,24 +1050,58 @@
             </select>
           </div>
         </div>
-        <div class="bl-field">
-          <label>현재 확정 인원 / 목표 정원</label>
-          <select class="bl-select" id="cwSeats">
-            <option value="2">현재 2명 확정 / 총 6명 모집</option>
-            <option value="3">현재 3명 확정 / 총 6명 모집</option>
-            <option value="1">현재 1명(방장) / 총 4~6명 모집</option>
-          </select>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="bl-field">
+            <label>현재 확정 인원 / 목표 정원</label>
+            <select class="bl-select" id="cwSeats">
+              <option value="2">현재 2명 확정 / 총 6명 모집</option>
+              <option value="3">현재 3명 확정 / 총 6명 모집</option>
+              <option value="1">현재 1명(방장) / 총 4~6명 모집</option>
+              <option value="4">현재 4명 확정 / 마지막 2명 모집</option>
+            </select>
+          </div>
+          <div class="bl-field">
+            <label>항공권 발권 상태</label>
+            <select class="bl-select" id="cwFlightPref">
+              <option value="항공권 발권완료">항공권 발권완료 (일정 확정)</option>
+              <option value="항공권 예매예정">항공권 예매예정 (일정 조율가능)</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="bl-field">
+            <label>선호 연령대</label>
+            <select class="bl-select" id="cwAgePref">
+              <option value="2030 또래">2030 또래 환영</option>
+              <option value="연령 무관">연령 무관 (누구나 환영)</option>
+              <option value="20대 청춘">20대 또래 위주</option>
+              <option value="3040 직장인">3040 직장인 위주</option>
+              <option value="4050 중장년·가족">4050 중장년 · 가족 동반</option>
+            </select>
+          </div>
+          <div class="bl-field">
+            <label>선호 성별 구성</label>
+            <select class="bl-select" id="cwGenderPref">
+              <option value="성별 무관">성별 무관 (혼성 조인)</option>
+              <option value="여성 동행 선호">여성 동행 선호</option>
+              <option value="남성 동행 선호">남성 동행 선호</option>
+            </select>
+          </div>
         </div>
         <div class="bl-field">
           <label>모집 제목 및 희망 코스 *</label>
           <input type="text" class="bl-input" id="cwTitle" value="고비사막+쳉헤르 온천 별 보러 같이 가실 동행 구해요!" />
         </div>
         <div class="bl-field">
-          <label>선호 동행 성향 (연령대, 흡연여부, 항공권 등)</label>
-          <input type="text" class="bl-input" id="cwTags" value="2030 또래 · 비흡연 · 사진 촬영 좋아하는 분 환영" />
+          <label>추가 동행 성향 메모 (흡연여부, 촬영, 식성 등)</label>
+          <input type="text" class="bl-input" id="cwTags" value="비흡연 · 별밤 사진 촬영 & 삼겹살 파티 좋아하는 분 환영" />
         </div>
-        <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;" onclick="submitCompanionPost()">
-          월간 캘린더에 동행 모집글 등록하기
+        <label class="ts-check-row" for="cwWantMatch">
+          <input type="checkbox" id="cwWantMatch" checked />
+          <span>공식 입점 파트너사(9곳)의 전용 차량·가이드 투어 매칭 제안도 함께 받기</span>
+        </label>
+        <button type="button" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%; margin-top:12px;" onclick="submitCompanionPost()">
+          동행 피드 &amp; 월간 캘린더에 등록하기
         </button>
       </div>
     </div>
@@ -1191,6 +1348,96 @@
             인증 투어 스토어 보러가기
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 모달 12: 전용관 이탈 없는 3초 간편 회원가입 · 로그인 모달 ================= -->
+  <div class="bl-modal-dim" id="authQuickModal" onclick="bgClose(event, 'authQuickModal')">
+    <div class="bl-modal sm" style="max-width:440px;">
+      <div class="bl-modal-head">
+        <h4>3초 만에 시작하기 · 동행 &amp; 조인</h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('authQuickModal')"><i class="xi-close"></i></button>
+      </div>
+      <div class="bl-modal-body">
+        <div class="ts-auth-pending-banner" id="authPendingNotice" style="display:none;"></div>
+
+        <div style="text-align:center; margin-bottom:18px;">
+          <span class="bl-mokta-tag" style="margin-bottom:6px;"><i class="xi-shield-checked"></i> MOKTA × 부럽 통합회원</span>
+          <strong style="display:block; font-size:18px; font-weight:800; color:#191f28; margin-top:4px;">몽골 동행 모집부터 오픈조인 합류까지!</strong>
+          <p style="font-size:13px; color:#6b7684; margin-top:4px; line-height:1.5;">
+            간편 가입·로그인 후 지금 보고 계신 전용관으로 바로 돌아옵니다.
+          </p>
+        </div>
+
+        <div class="ts-sns-btn-stack">
+          <button type="button" class="ts-sns-btn is-kakao" onclick="startSnsAuth('kakao')">
+            <i class="xi-kakaotalk"></i> 카카오로 3초 만에 시작하기 (가입·로그인)
+          </button>
+          <button type="button" class="ts-sns-btn is-naver" onclick="startSnsAuth('naver')">
+            <span class="ts-naver-n">N</span> 네이버로 3초 만에 시작하기 (가입·로그인)
+          </button>
+        </div>
+
+        <div class="ts-auth-divider"><span>또는 부럽 아이디 로그인</span></div>
+
+        <form id="moktaQuickLoginForm" method="post" action="/program/member.login.pro.php" target="common_frame" onsubmit="return handleQuickLoginSubmit(event)">
+          <input type="hidden" name="_mode" value="login" />
+          <input type="hidden" name="_rurl" id="quickLoginRurlInput" value="/?pn=pages.view&amp;type=pages&amp;data=mj" />
+          <div class="bl-field" style="margin-bottom:8px;">
+            <input type="text" class="bl-input" name="login_id" id="quickLoginId" placeholder="부럽 아이디 입력" autocomplete="username" />
+          </div>
+          <div class="bl-field" style="margin-bottom:12px;">
+            <input type="password" class="bl-input" name="login_password" id="quickLoginPw" placeholder="비밀번호 입력" autocomplete="current-password" />
+          </div>
+          <button type="submit" class="bl-btn bl-btn-point bl-btn-lg" style="width:100%;">
+            로그인하고 계속하기
+          </button>
+        </form>
+
+        <div class="ts-auth-foot-links">
+          <button type="button" onclick="goDirectJoinPage()">이메일 일반 회원가입</button>
+          <span>·</span>
+          <a href="https://www.boolub.com/?pn=member.find.form" target="_blank" rel="noopener">아이디 · 비밀번호 찾기</a>
+          <span>·</span>
+          <button type="button" onclick="closeModal('authQuickModal'); openModal('partnerApplyModal');">여행사 입점신청</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 모달 13: 로그인 고객 전용 '내 동행 · 조인 · 맞춤견적 관리함' ================= -->
+  <div class="bl-modal-dim" id="myActivityModal" onclick="bgClose(event, 'myActivityModal')">
+    <div class="bl-modal" style="max-width:740px;">
+      <div class="bl-modal-head">
+        <h4><i class="xi-user" style="color:var(--bl-point-dark);"></i> <span id="myActModalTitle">내 동행 · 조인 · 견적 관리함</span></h4>
+        <button type="button" class="bl-modal-close" onclick="closeModal('myActivityModal')"><i class="xi-close"></i></button>
+      </div>
+      <div class="bl-modal-body">
+        <div class="ts-myact-top-bar">
+          <div>
+            <strong id="myActUserGreeting" style="font-size:15px; color:#191f28;">여행자님 반갑습니다!</strong>
+            <span style="display:block; font-size:12.5px; color:#6b7684; margin-top:2px;">모집한 동행팀 인원 관리와 신청한 조인투어·맞춤견적을 한눈에 확인하세요.</span>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <a href="https://www.boolub.com/?pn=mypage.main" target="_blank" rel="noopener" class="bl-btn bl-btn-outline bl-btn-sm">부럽 마이페이지 ↗</a>
+            <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="logoutMoktaMember()">로그아웃</button>
+          </div>
+        </div>
+
+        <div class="ts-sheet-tabs" style="margin-top:14px;">
+          <button type="button" class="ts-sheet-tab active" data-mytab="hosted" onclick="switchMyActivityTab('hosted', this)">
+            <span>내가 올린 동행 &amp; 신청자 (<em id="myTabHostedCnt" style="font-style:normal;">0</em>)</span>
+          </button>
+          <button type="button" class="ts-sheet-tab" data-mytab="applied" onclick="switchMyActivityTab('applied', this)">
+            <span>합류 신청 내역 (<em id="myTabAppliedCnt" style="font-style:normal;">0</em>)</span>
+          </button>
+          <button type="button" class="ts-sheet-tab" data-mytab="rfqs" onclick="switchMyActivityTab('rfqs', this)">
+            <span>내 맞춤견적 (<em id="myTabRfqCnt" style="font-style:normal;">0</em>)</span>
+          </button>
+        </div>
+
+        <div id="myActivityPaneBody" style="margin-top:14px;"></div>
       </div>
     </div>
   </div>

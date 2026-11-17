@@ -537,6 +537,7 @@ if (!empty($rfqRows)) {
 
         $rfqs[] = array(
             'id'        => (string)$uid,
+            'inid'      => $r['mr_inid'],
             'author'    => $r['mr_author'] . ' 여행자님',
             'avatar'    => $authorFirst !== '' ? $authorFirst : '여',
             'timeAgo'   => substr((string)$r['mr_rdate'], 5, 11),
@@ -569,6 +570,9 @@ foreach ($joinRows as $j) {
     $rem = max(0, (int)$j['mj_max_pax'] - (int)$j['mj_cur_pax']);
     $joins[] = array(
         'id'          => (string)$j['mj_uid'],
+        'hostType'    => $j['mj_host_type'],
+        'hostInid'    => $j['mj_inid'],
+        'pid'         => $j['mj_pid'],
         'dateKey'     => $j['mj_date_key'],
         'dateStr'     => $j['mj_date_str'],
         'regionKey'   => $j['mj_region_key'],
@@ -770,8 +774,87 @@ foreach ($storyRows as $s) {
 }
 
 /* =========================================================================
-   6. 마스터 계정일 때만 신규 입점신청 목록(smart_mokta_onboard) 반환
+   6. 고객 내 활동 내역(myApplies/receivedApplies) & 파트너 유입 리드(partnerLeads) & 마스터 입점목록
    ========================================================================= */
+mokta_q_exec("
+    CREATE TABLE IF NOT EXISTS `smart_mokta_join_apply` (
+      `ja_uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      `ja_join_key` VARCHAR(40) NOT NULL DEFAULT '',
+      `ja_join_title` VARCHAR(200) NOT NULL DEFAULT '',
+      `ja_pid` VARCHAR(50) NOT NULL DEFAULT '',
+      `ja_host_inid` VARCHAR(60) NOT NULL DEFAULT '',
+      `ja_applicant_id` VARCHAR(60) NOT NULL DEFAULT '',
+      `ja_applicant_name` VARCHAR(60) NOT NULL DEFAULT '',
+      `ja_contact` VARCHAR(100) NOT NULL DEFAULT '',
+      `ja_pax` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+      `ja_memo` VARCHAR(255) NOT NULL DEFAULT '',
+      `ja_status` ENUM('pending','confirmed','cancelled') NOT NULL DEFAULT 'pending',
+      `ja_rdate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (`ja_uid`),
+      KEY `idx_pid` (`ja_pid`),
+      KEY `idx_applicant` (`ja_applicant_id`),
+      KEY `idx_join_key` (`ja_join_key`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+");
+
+$myApplies = array();
+$receivedApplies = array();
+$partnerLeads = array();
+
+if ($auth['role'] !== 'guest' && $auth['userId'] !== '') {
+    $escUid = mokta_esc($auth['userId']);
+    $myRows = mokta_q_all("SELECT * FROM smart_mokta_join_apply WHERE ja_applicant_id = '{$escUid}' ORDER BY ja_uid DESC LIMIT 40");
+    foreach ($myRows as $mr) {
+        $myApplies[] = array(
+            'id'        => (string)$mr['ja_uid'],
+            'joinKey'   => $mr['ja_join_key'],
+            'joinTitle' => $mr['ja_join_title'],
+            'pid'       => $mr['ja_pid'],
+            'pax'       => (int)$mr['ja_pax'],
+            'contact'   => $mr['ja_contact'],
+            'memo'      => $mr['ja_memo'],
+            'status'    => $mr['ja_status'],
+            'rdate'     => substr((string)$mr['ja_rdate'], 5, 11)
+        );
+    }
+
+    $recRows = mokta_q_all("SELECT * FROM smart_mokta_join_apply WHERE ja_host_inid = '{$escUid}' ORDER BY ja_uid DESC LIMIT 40");
+    foreach ($recRows as $rr) {
+        $receivedApplies[] = array(
+            'id'            => (string)$rr['ja_uid'],
+            'joinKey'       => $rr['ja_join_key'],
+            'joinTitle'     => $rr['ja_join_title'],
+            'applicantName' => $rr['ja_applicant_name'],
+            'contact'       => $rr['ja_contact'],
+            'pax'           => (int)$rr['ja_pax'],
+            'memo'          => $rr['ja_memo'],
+            'status'        => $rr['ja_status'],
+            'rdate'         => substr((string)$rr['ja_rdate'], 5, 11)
+        );
+    }
+}
+
+if ($auth['role'] === 'partner' || $auth['role'] === 'master') {
+    $leadSql = ($auth['role'] === 'master')
+        ? "SELECT * FROM smart_mokta_join_apply ORDER BY ja_uid DESC LIMIT 60"
+        : sprintf("SELECT * FROM smart_mokta_join_apply WHERE ja_pid IN ('%s', 'boolub') ORDER BY ja_uid DESC LIMIT 60", mokta_esc($auth['partnerId']));
+    $leadRows = mokta_q_all($leadSql);
+    foreach ($leadRows as $lr) {
+        $partnerLeads[] = array(
+            'id'            => (string)$lr['ja_uid'],
+            'joinKey'       => $lr['ja_join_key'],
+            'joinTitle'     => $lr['ja_join_title'],
+            'pid'           => $lr['ja_pid'],
+            'applicantName' => $lr['ja_applicant_name'],
+            'contact'       => $lr['ja_contact'],
+            'pax'           => (int)$lr['ja_pax'],
+            'memo'          => $lr['ja_memo'],
+            'status'        => $lr['ja_status'],
+            'rdate'         => substr((string)$lr['ja_rdate'], 5, 11)
+        );
+    }
+}
+
 $onboardList = null;
 if ($auth['role'] === 'master') {
     $obRows = mokta_q_all("
@@ -804,6 +887,9 @@ mokta_json(array(
     'rfqs'            => $rfqs,
     'joins'           => $joins,
     'stories'         => $stories,
+    'myApplies'       => $myApplies,
+    'receivedApplies' => $receivedApplies,
+    'partnerLeads'    => $partnerLeads,
     'partnerProfiles' => $partnerProfiles,
     'onboardList'     => $onboardList
 ));
