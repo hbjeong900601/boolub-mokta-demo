@@ -317,7 +317,7 @@ const MOKTA_AGENCIES = [
     fleet: '전용 스타렉스·푸르공',
     camp: '업그레이드 게르 보장',
     desc: '동행을 따로 구하지 않아도 1인 신청 즉시 출발이 확정되며, 유심·특식 3회·숙소 업그레이드가 모두 포함된 부럽 대표 시그니처 프로그램입니다.',
-    logoImg: './images/boolub_logo.png',
+    logoImg: './images/mokta_logo.png',
     storeUrl: 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition',
     repPcode: 'T0950-Q2923-W2496',
     cover: './images/sand_dunes_camp.jpg',
@@ -1177,7 +1177,7 @@ const RFQ_ITEMS = [
         agency: '부럽 몽골원정대 (직영)',
         pid: 'boolub',
         pcode: 'T0950-Q2923-W2496',
-        logo: './images/boolub_logo.png',
+        logo: './images/mokta_logo.png',
         badge: '1인 신청 즉시 100% 출발확정',
         price4: '799,000원',
         price6: '699,000원',
@@ -2386,7 +2386,7 @@ function renderRfqBoard() {
 
   grid.innerHTML = list.map(r => {
     const qCnt = r.quotes.length;
-    const logos = r.quotes.slice(0, 4).map(q => `<img src="${q.logo || './images/boolub_logo.png'}" alt="${q.agency}" />`).join('');
+    const logos = r.quotes.slice(0, 4).map(q => `<img src="${q.logo || './images/mokta_logo.png'}" alt="${q.agency}" />`).join('');
     return `
       <article class="bl-freeboard-card">
         <div>
@@ -2490,7 +2490,7 @@ async function submitCustomerWizard() {
         agency: '부럽 몽골원정대 · AI 빠른추천',
         pid: 'boolub',
         pcode: regionTag === '홉스골' ? 'A9725-O5305-E2887' : 'C3954-E9344-H0474',
-        logo: `${assetPrefix}/images/boolub_logo.png`,
+        logo: `${assetPrefix}/images/mokta_logo.png`,
         badge: '견적 대기 없이 즉시 예약 가능',
         price4: regionTag === '홉스골' ? '1,400,000원' : '1,150,000원',
         price6: regionTag === '홉스골' ? '1,184,000원' : '990,000원',
@@ -2539,7 +2539,7 @@ function openQuoteCompareModal(rfqId) {
                 </div>
                 <div style="padding:14px;">
                   <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-                    <img src="${q.logo || './images/boolub_logo.png'}" alt="${q.agency}" style="width:28px; height:28px; border-radius:50%; object-fit:contain; border:1px solid var(--bl-gray-200); background:#fff;" />
+                    <img src="${q.logo || './images/mokta_logo.png'}" alt="${q.agency}" style="width:28px; height:28px; border-radius:50%; object-fit:contain; border:1px solid var(--bl-gray-200); background:#fff;" />
                     <div>
                       <strong style="font-size:14.5px; color:var(--bl-gray-900); display:block;">${q.agency}</strong>
                       <span style="font-size:11px; color:var(--bl-point-text); font-weight:700;">${q.badge}</span>
@@ -2990,7 +2990,7 @@ function resolvePartnerMetaByName(partnerLabel) {
     ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
     : '.';
   const logoMap = {
-    '부럽 몽골원정대': { logo: `${assetPrefix}/images/boolub_logo.png`, pid: 'boolub', pcode: 'T0950-Q2923-W2496' },
+    '부럽 몽골원정대': { logo: `${assetPrefix}/images/mokta_logo.png`, pid: 'boolub', pcode: 'T0950-Q2923-W2496' },
     '노라투어': { logo: `${assetPrefix}/images/partners/anoratour.png`, pid: 'anoratour', pcode: 'V6003-W0388-Z1928' },
     'BBM': { logo: `${assetPrefix}/images/partners/bbm0707.jpeg`, pid: 'bbm0707', pcode: 'A7468-J1235-Q7992' },
     '하닥투어': { logo: `${assetPrefix}/images/partners/khadag.png`, pid: 'khadag', pcode: 'H7863-P9594-D9241' },
@@ -3002,7 +3002,7 @@ function resolvePartnerMetaByName(partnerLabel) {
   const matchedKey = Object.keys(logoMap).find(k => partnerLabel.includes(k));
   return matchedKey
     ? logoMap[matchedKey]
-    : { logo: `${assetPrefix}/images/boolub_logo.png`, pid: AUTH_STATE.partnerId || 'doittavel', pcode: 'G8231-V9289-H9933' };
+    : { logo: `${assetPrefix}/images/mokta_logo.png`, pid: AUTH_STATE.partnerId || 'doittavel', pcode: 'G8231-V9289-H9933' };
 }
 
 async function sendPartnerQuoteLive() {
@@ -3396,6 +3396,15 @@ async function hydrateFromLiveBackend() {
       DIRECT_PRODUCTS.splice(0, DIRECT_PRODUCTS.length, ...data.products);
     }
     if (Array.isArray(data.rfqs) && data.rfqs.length) {
+      data.rfqs.forEach(r => {
+        if (Array.isArray(r.quotes)) {
+          r.quotes.forEach(q => {
+            if (q.logo && q.logo.includes('boolub_logo.png')) {
+              q.logo = q.logo.replace('boolub_logo.png', 'mokta_logo.png');
+            }
+          });
+        }
+      });
       const existingTitles = new Set(data.rfqs.map(x => x.title));
       const mergedRfqs = [...data.rfqs, ...RFQ_ITEMS.filter(x => !existingTitles.has(x.title))];
       RFQ_ITEMS.splice(0, RFQ_ITEMS.length, ...mergedRfqs);

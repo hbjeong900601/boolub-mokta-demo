@@ -29,13 +29,13 @@ CREATE TABLE IF NOT EXISTS `od_mokta_partner_map` (
 INSERT IGNORE INTO `od_mokta_partner_map`
   (`mp_pid`, `mp_member_id`, `mp_name`, `mp_mokta_yn`, `mp_rep_pcode`, `mp_logo_url`, `mp_status`, `mp_sort`)
 VALUES
-  ('boolub',     'boolub',     '부럽 몽골원정대 (직영)',           'Y', 'T0950-Q2923-W2496', '/customized/mokta/images/boolub_logo.png',           'approved', 1),
+  ('boolub',     'boolub',     '부럽 몽골원정대 (직영)',           'Y', 'T0950-Q2923-W2496', '/customized/mokta/images/mokta_logo.png',           'approved', 1),
   ('anoratour',  'anoratour',  '노라투어 (NORA TOUR)',            'Y', 'V6003-W0388-Z1928', '/customized/mokta/images/partners/anoratour.png',    'approved', 2),
   ('bbm0707',    'bbm0707',    'BBM TOUR (비비엠투어)',            'Y', 'A7468-J1235-Q7992', '/customized/mokta/images/partners/bbm0707.jpeg',     'approved', 3),
   ('khadag',     'khadag',     '하닥투어 (KHADAG TOUR)',           'Y', 'L0277-Y0435-H3099', '/customized/mokta/images/partners/khadag.png',       'approved', 4),
   ('SKYTOURS',   'SKYTOURS',   '스카이 투어 몽골 (SKY TOURS)',      'Y', 'J8833-W9230-L2860', '/customized/mokta/images/partners/SKYTOURS.jpg',     'approved', 5),
   ('Bftour',     'Bftour',     '밝은 미래 여행 (BRIGHT FUTURE)',    'Y', 'E0711-V0341-Z7774', '/customized/mokta/images/partners/Bftour.png',       'approved', 6),
-  ('doittavel',  'doittavel',  '(주)두잇트래블',                    'Y', 'G8231-V9289-H9933', '/customized/mokta/images/boolub_logo.png',           'approved', 7),
+  ('doittavel',  'doittavel',  '(주)두잇트래블',                    'Y', 'G8231-V9289-H9933', '/customized/mokta/images/mokta_logo.png',           'approved', 7),
   ('YangGaTour', 'YangGaTour', '양가투어 (YangGa Friends)',        'Y', 'E4890-B3318-G7233', '/customized/mokta/images/partners/YangGaTour.png',   'approved', 8),
   ('wit77777',   'wit77777',   '더블유아이티 (WIT)',                'N', 'I3885-I4036-S5377', '/customized/mokta/images/partners/wit77777.png',     'approved', 9);
 

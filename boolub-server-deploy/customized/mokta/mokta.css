@@ -1,10 +1,24 @@
 @charset "utf-8";
 /* =========================================================================
-   BOOLUB x MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_8)
-   - Tier 1 리셋: :where(#bl-mokta-cms-wrap) (명시도 0,0,0) -> 컴포넌트 여백/버튼 스타일 침범 제로
-   - Tier 2 상속 보호: #bl-mokta-cms-wrap :where(span,strong,em,p,a...) (명시도 1,0,0) -> setting.css의 span{color:#333} 완벽 무력화
-   - Tier 3 컴포넌트: #bl-mokta-cms-wrap .bl-* (명시도 1,1,0+) -> 33개 공통 CSS 완벽 우위
+   MOKTA 공식 전용관 본 사이트 탑재용 스코프 CSS (v=bl_mokta_9)
+   - 본 페이지(data=mj)에서는 부럽 기본 상단 헤더(.sc_Header)를 완전히 숨기고 MOKTA 전용 헤더(.bl-mokta-header)만 노출
+   - 스티키 헤더(position: sticky) 정상 작동을 위해 html/body overflow-x: clip 보장
    ========================================================================= */
+#cert_info > .sc_Header,
+body .wrap > .sc_Header {
+  display: none !important;
+}
+html,
+body.if_view,
+body.is-live-cms {
+  height: auto !important;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+}
+#cert_info.wrap {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
 :where(#bl-mokta-cms-wrap) {
   display: block;
   width: 100%;
@@ -32,18 +46,6 @@
   font-family: var(--bl-font);
   box-sizing: border-box;
   margin: 0;
-}
-#bl-mokta-cms-wrap .bl-cms-hub-bar {
-  background: #ffffff;
-  border-bottom: 1px solid #f2f4f5;
-  padding: 12px 0;
-}
-#bl-mokta-cms-wrap .bl-cms-hub-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 #bl-mokta-cms-wrap .bl-container {
   max-width: 1200px;
@@ -120,7 +122,7 @@
   letter-spacing: -0.3px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 
@@ -191,36 +193,60 @@
 
 
 
+#bl-mokta-cms-wrap .bl-mokta-header {
+  position: sticky;
+  top: 0;
+  z-index: 650;
+  background: #ffffff;
+  border-bottom: 1px solid var(--bl-gray-200);
+  box-shadow: 0 2px 12px rgba(18, 22, 25, 0.04);
+}
 
-
-#bl-mokta-cms-wrap .logo_area {
+#bl-mokta-cms-wrap .bl-mokta-header .bl-mokta-header-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  height: 76px;
+  gap: 18px;
+}
+
+#bl-mokta-cms-wrap .bl-mokta-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+#bl-mokta-cms-wrap .bl-mokta-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
-#bl-mokta-cms-wrap .logo_area img {
-  height: 28px;
-  width: auto;
-  object-fit: contain;
+#bl-mokta-cms-wrap .bl-mokta-logo-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
 }
 
-#bl-mokta-cms-wrap .logo_hub_badge {
-  display: inline-flex;
+#bl-mokta-cms-wrap .bl-mokta-logo-title {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #1d2a4d;
+  letter-spacing: -0.4px;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  height: 24px;
-  padding: 0 9px;
-  border-radius: 12px;
-  background: var(--bl-gray-50);
-  border: 1px solid var(--bl-gray-200);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--bl-gray-900);
+  gap: 6px;
 }
 
-#bl-mokta-cms-wrap .logo_hub_badge b { color: var(--bl-point-text); }
+#bl-mokta-cms-wrap .bl-mokta-logo-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bl-gray-500);
+  margin-top: 2px;
+}
 
 
 
@@ -2873,7 +2899,12 @@ body.is-live-cms #bl-mokta-cms-wrap .bl-auth-sim-bar {
 
 @media (max-width: 640px) {
 
-  
+  #bl-mokta-cms-wrap .bl-mokta-header .bl-mokta-header-top { height: auto; padding: 10px 0; flex-wrap: wrap; }
+
+  #bl-mokta-cms-wrap .bl-mokta-logo-img { height: 40px; }
+
+  #bl-mokta-cms-wrap .bl-mokta-logo-sub { display: none; }
+
   #bl-mokta-cms-wrap .bl-search-box { order: 3; max-width: 100%; flex: 0 0 100%; }
 
   #bl-mokta-cms-wrap .bl-hero-grid { grid-template-columns: 1fr; }

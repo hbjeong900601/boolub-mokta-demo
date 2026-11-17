@@ -60,7 +60,7 @@ $bidSql = sprintf(
     "INSERT INTO smart_mokta_bid
         (mb_mr_uid, mb_pid, mb_agency, mb_logo, mb_badge, mb_pcode, mb_price4, mb_price6, mb_veh_name, mb_ger_name, mb_veh_img, mb_ger_img, mb_comment, mb_rdate)
      VALUES
-        (%d, 'boolub', '부럽 몽골원정대 · AI 빠른추천', '/customized/mokta/images/boolub_logo.png', '견적 대기 없이 즉시 예약 가능', '%s', '%s', '%s', '%s', '부럽 검증 정식 캠프 + USIM 혜택', '/customized/mokta/images/vehicle_fleet.jpg', '/customized/mokta/images/ger_interior.jpg', '파트너사 맞춤 견적이 도착하는 동안 조건이 가장 유사한 부럽 즉시확정 베스트 상품을 먼저 확인해보세요!', NOW())",
+        (%d, 'boolub', '부럽 몽골원정대 · AI 빠른추천', '/customized/mokta/images/mokta_logo.png', '견적 대기 없이 즉시 예약 가능', '%s', '%s', '%s', '%s', '부럽 검증 정식 캠프 + USIM 혜택', '/customized/mokta/images/vehicle_fleet.jpg', '/customized/mokta/images/ger_interior.jpg', '파트너사 맞춤 견적이 도착하는 동안 조건이 가장 유사한 부럽 즉시확정 베스트 상품을 먼저 확인해보세요!', NOW())",
     $rfqId,
     mokta_esc($recPcode),
     mokta_esc($recPrice4),

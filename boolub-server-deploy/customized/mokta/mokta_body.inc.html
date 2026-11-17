@@ -1,21 +1,39 @@
 <div id="bl-mokta-cms-wrap">
-  <div class="bl-cms-hub-bar">
-    <div class="bl-container bl-cms-hub-inner">
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; flex:1;">
-        <span class="bl-mokta-tag"><i class="xi-shield-checked"></i> BOOLUB × MOKTA 공식전용관</span>
-        <div class="bl-search-box" style="max-width:360px; min-width:220px;">
-          <i class="xi-search"></i>
-          <input type="search" id="globalSearchInput" class="bl-search-input" placeholder="고비사막, 홉스골, 온수 게르, 노라투어, 부럽원정대 검색" oninput="handleGlobalSearch(this.value)" />
+  <header class="bl-mokta-header" id="moktaMainHeader">
+    <div class="bl-container bl-mokta-header-top">
+      <a href="#top" class="bl-mokta-logo-area" onclick="switchSiteRole('customer')">
+        <img src="/customized/mokta/images/mokta_logo.png" alt="MOKTA 몽골한국관광협회" class="bl-mokta-logo-img" />
+        <div class="bl-mokta-logo-meta">
+          <div class="bl-mokta-logo-title">
+            몽골한국관광협회 <span class="bl-mokta-tag">공식전용관</span>
+          </div>
+          <span class="bl-mokta-logo-sub">몽골 투어 · 실시간 동행 · 맞춤 비교견적 플랫폼</span>
         </div>
+      </a>
+
+      <!-- 부럽 알약형 통합 검색바 -->
+      <div class="bl-search-box">
+        <i class="xi-search"></i>
+        <input
+          type="search"
+          id="globalSearchInput"
+          class="bl-search-input"
+          placeholder="고비사막, 홉스골, 온수 게르, 노라투어, 부럽원정대 검색"
+          oninput="handleGlobalSearch(this.value)"
+        />
       </div>
 
       <div class="header-actions">
+        <!-- [비로그인 / 일반 로그인 고객 전용 노출] 파트너 입점신청 버튼 -->
         <button type="button" class="bl-partner-apply-btn" id="partnerApplyHeaderBtn" onclick="openModal('partnerApplyModal')">
           <i class="xi-briefcase"></i> 파트너 입점신청
         </button>
 
-        <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist">
-          <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">여행자 홈</button>
+        <!-- [로그인한 입점 파트너 계정 & 마스터 계정 전용 노출] 파트너사 센터 스위치 -->
+        <div class="role-switch-pill" id="partnerRoleSwitchWrap" style="display:none;" role="tablist" aria-label="이용자 및 파트너사 전환">
+          <button type="button" class="active" id="roleCustomerBtn" onclick="switchSiteRole('customer')">
+            여행자 홈
+          </button>
           <button type="button" id="rolePartnerBtn" onclick="switchSiteRole('partner')">
             <span id="rolePartnerBtnLabel">파트너사 센터</span> <span class="role-count" id="headerBidBadge">4</span>
           </button>
@@ -26,9 +44,9 @@
         </button>
       </div>
     </div>
-  </div>
 
-  <nav class="bl-sub-gnb" id="customerSubNav">
+    <!-- 2단 카테고리 네비게이션 -->
+    <nav class="bl-sub-gnb" id="customerSubNav">
       <div class="bl-container bl-sub-gnb-list">
         <button type="button" class="bl-gnb-item active" onclick="filterPageView('all', this)">전체보기</button>
         <button type="button" class="bl-gnb-item" onclick="filterPageView('sec-join', this)">

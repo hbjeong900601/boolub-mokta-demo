@@ -32,7 +32,7 @@ if ($auth['role'] === 'master') {
 
 $escPid  = mokta_esc($pid);
 $mapMeta = mokta_q_one("SELECT mp_logo_url, mp_rep_pcode FROM smart_mokta_partner_map WHERE mp_pid = '{$escPid}' LIMIT 1");
-$logoUrl = !empty($mapMeta['mp_logo_url']) ? $mapMeta['mp_logo_url'] : '/customized/mokta/images/boolub_logo.png';
+$logoUrl = !empty($mapMeta['mp_logo_url']) ? $mapMeta['mp_logo_url'] : '/customized/mokta/images/mokta_logo.png';
 $pcode   = !empty($_POST['pcode']) ? trim($_POST['pcode']) : (!empty($mapMeta['mp_rep_pcode']) ? $mapMeta['mp_rep_pcode'] : '');
 
 $price4  = !empty($_POST['price4']) ? trim($_POST['price4']) : '1,060,000원';

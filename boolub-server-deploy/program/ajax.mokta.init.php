@@ -37,7 +37,7 @@ if (!empty($rfqRows)) {
             'agency'  => $b['mb_agency'],
             'pid'     => $b['mb_pid'],
             'pcode'   => $b['mb_pcode'],
-            'logo'    => $b['mb_logo'] !== '' ? $b['mb_logo'] : '/customized/mokta/images/boolub_logo.png',
+            'logo'    => $b['mb_logo'] !== '' ? $b['mb_logo'] : '/customized/mokta/images/mokta_logo.png',
             'badge'   => $b['mb_badge'],
             'price4'  => $b['mb_price4'],
             'price6'  => $b['mb_price6'],

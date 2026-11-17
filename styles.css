@@ -114,46 +114,55 @@ em, i { font-style: normal; }
   color: var(--bl-gray-500);
 }
 
-/* ===== 부럽 메인 동일 헤더 (.sc_Header) ===== */
-.sc_Header {
+/* ===== MOKTA 전용관 단독 상단 스티키 헤더 (.bl-mokta-header) ===== */
+.bl-mokta-header {
   position: sticky;
   top: 0;
-  z-index: 400;
+  z-index: 650;
   background: #ffffff;
-  border-bottom: 1px solid var(--bl-gray-100);
+  border-bottom: 1px solid var(--bl-gray-200);
+  box-shadow: 0 2px 12px rgba(18, 22, 25, 0.04);
 }
-.sc_Header .top_wrap {
+.bl-mokta-header .bl-mokta-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 68px;
-  gap: 20px;
+  height: 76px;
+  gap: 18px;
 }
-.logo_area {
+.bl-mokta-logo-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   flex-shrink: 0;
+  cursor: pointer;
 }
-.logo_area img {
-  height: 28px;
+.bl-mokta-logo-img {
+  height: 48px;
   width: auto;
   object-fit: contain;
+  flex-shrink: 0;
 }
-.logo_hub_badge {
-  display: inline-flex;
+.bl-mokta-logo-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.bl-mokta-logo-title {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #1d2a4d;
+  letter-spacing: -0.4px;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  height: 24px;
-  padding: 0 9px;
-  border-radius: 12px;
-  background: var(--bl-gray-50);
-  border: 1px solid var(--bl-gray-200);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--bl-gray-900);
+  gap: 6px;
 }
-.logo_hub_badge b { color: var(--bl-point-text); }
+.bl-mokta-logo-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--bl-gray-500);
+  margin-top: 2px;
+}
 
 /* 와그형 컴팩트 알약 검색바 (waug.css 1597행 동일) */
 .bl-search-box {
@@ -2448,7 +2457,9 @@ body.is-live-cms .bl-auth-sim-bar {
 }
 
 @media (max-width: 640px) {
-  .sc_Header .top_wrap { height: auto; padding: 12px 0; flex-wrap: wrap; }
+  .bl-mokta-header .bl-mokta-header-top { height: auto; padding: 10px 0; flex-wrap: wrap; }
+  .bl-mokta-logo-img { height: 40px; }
+  .bl-mokta-logo-sub { display: none; }
   .bl-search-box { order: 3; max-width: 100%; flex: 0 0 100%; }
   .bl-hero-grid { grid-template-columns: 1fr; }
   .bl-hero-grid .bl-hero-card:nth-child(2) { display: none; }
