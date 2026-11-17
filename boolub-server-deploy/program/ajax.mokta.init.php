@@ -513,19 +513,28 @@ if (!empty($rfqRows)) {
         $k = (int)$b['mb_mr_uid'];
         if (!isset($bidsByRfq[$k])) $bidsByRfq[$k] = array();
         $logoPath = $b['mb_logo'] !== '' ? str_replace('boolub_logo.png', 'mokta_logo.png', $b['mb_logo']) : '/customized/mokta/images/mokta_logo.png';
+        $guarArr = array();
+        if (!empty($b['mb_guarantees_json'])) {
+            $decG = json_decode((string)$b['mb_guarantees_json'], true);
+            if (is_array($decG)) $guarArr = $decG;
+        }
+        if (empty($guarArr)) {
+            $guarArr = array('전 일정 온수샤워 캠프', '노팁·노옵션 추가금 0원', '공항 무료 단독픽업', '연식보증 전용차량');
+        }
         $bidsByRfq[$k][] = array(
-            'agency'  => $b['mb_agency'],
-            'pid'     => $b['mb_pid'],
-            'pcode'   => $b['mb_pcode'],
-            'logo'    => $logoPath,
-            'badge'   => $b['mb_badge'],
-            'price4'  => $b['mb_price4'],
-            'price6'  => $b['mb_price6'],
-            'veh'     => $b['mb_veh_name'],
-            'ger'     => $b['mb_ger_name'],
-            'vehImg'  => $b['mb_veh_img'],
-            'gerImg'  => $b['mb_ger_img'],
-            'comment' => $b['mb_comment']
+            'agency'     => $b['mb_agency'],
+            'pid'        => $b['mb_pid'],
+            'pcode'      => $b['mb_pcode'],
+            'logo'       => $logoPath,
+            'badge'      => $b['mb_badge'],
+            'price4'     => $b['mb_price4'],
+            'price6'     => $b['mb_price6'],
+            'veh'        => $b['mb_veh_name'],
+            'ger'        => $b['mb_ger_name'],
+            'vehImg'     => $b['mb_veh_img'],
+            'gerImg'     => $b['mb_ger_img'],
+            'comment'    => $b['mb_comment'],
+            'guarantees' => $guarArr
         );
     }
 
@@ -554,25 +563,77 @@ if (!empty($rfqRows)) {
 }
 
 /* =========================================================================
-   4. 실시간 동행·오픈조인(smart_mokta_join + 실제 커뮤니티 동행모집 게시글 연동)
+   4. 실시간 동행·오픈조인(smart_mokta_join + 실제 커뮤니티 동행모집 게시글 + 사전 Q&A 댓글 연동)
    ========================================================================= */
+mokta_ensure_col('smart_mokta_join', 'mj_prefix_tag', "`mj_prefix_tag` VARCHAR(40) NOT NULL DEFAULT ''");
+mokta_ensure_col('smart_mokta_join', 'mj_member_slots_json', "`mj_member_slots_json` TEXT NULL");
+mokta_ensure_col('smart_mokta_join', 'mj_bumped_at', "`mj_bumped_at` DATETIME NULL DEFAULT NULL");
+mokta_q_exec("
+    CREATE TABLE IF NOT EXISTS `smart_mokta_join_cmt` (
+      `jc_uid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+      `jc_join_key` VARCHAR(40) NOT NULL DEFAULT '',
+      `jc_author_id` VARCHAR(60) NOT NULL DEFAULT '',
+      `jc_author_name` VARCHAR(60) NOT NULL DEFAULT '',
+      `jc_role_badge` VARCHAR(40) NOT NULL DEFAULT '여행자',
+      `jc_content` VARCHAR(500) NOT NULL DEFAULT '',
+      `jc_rdate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (`jc_uid`),
+      KEY `idx_join_key` (`jc_join_key`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+");
+
+$cmtByJoin = array();
+$cmtRows = mokta_q_all("SELECT * FROM smart_mokta_join_cmt ORDER BY jc_uid ASC LIMIT 300");
+foreach ($cmtRows as $cr) {
+    $jk = (string)$cr['jc_join_key'];
+    if (!isset($cmtByJoin[$jk])) $cmtByJoin[$jk] = array();
+    $cmtByJoin[$jk][] = array(
+        'id'        => (string)$cr['jc_uid'],
+        'author'    => $cr['jc_author_name'],
+        'roleBadge' => $cr['jc_role_badge'],
+        'content'   => $cr['jc_content'],
+        'rdate'     => substr((string)$cr['jc_rdate'], 5, 11)
+    );
+}
+
 $joinRows = mokta_q_all("
     SELECT *
     FROM smart_mokta_join
     WHERE mj_view_yn = 'Y'
-    ORDER BY mj_uid DESC
+    ORDER BY COALESCE(mj_bumped_at, mj_rdate) DESC, mj_uid DESC
     LIMIT 60
 ");
 $joins = array();
 foreach ($joinRows as $j) {
     $seats = json_decode((string)$j['mj_seats_json'], true);
     if (!is_array($seats)) $seats = array('확정1', '확정2', '확정3', '빈좌석', '빈좌석', '빈좌석');
+    $slots = json_decode((string)($j['mj_member_slots_json'] ?? ''), true);
+    if (!is_array($slots) || empty($slots)) {
+        $slots = array();
+        foreach ($seats as $sidx => $sv) {
+            if ($sv !== '빈좌석') {
+                $slots[] = array(
+                    'role'   => $sidx === 0 ? ($j['mj_host_type'] === 'member' ? '방장' : '예약확정') : '동행확정',
+                    'nick'   => $sv,
+                    'age'    => ($sidx % 2 === 0) ? '20대' : '30대',
+                    'gender' => ($sidx % 2 === 0) ? '여성' : '남성',
+                    'flight' => '항공권완료',
+                    'note'   => $j['mj_host_type'] === 'partner' ? '부럽 에스크로 확정' : '일정·매너 동행'
+                );
+            }
+        }
+    }
+    $prefixTag = !empty($j['mj_prefix_tag'])
+        ? $j['mj_prefix_tag']
+        : ($j['mj_host_type'] === 'partner' ? '무조건출발확정' : '항공권발권완료');
     $rem = max(0, (int)$j['mj_max_pax'] - (int)$j['mj_cur_pax']);
+    $jidStr = (string)$j['mj_uid'];
     $joins[] = array(
-        'id'          => (string)$j['mj_uid'],
+        'id'          => $jidStr,
         'hostType'    => $j['mj_host_type'],
         'hostInid'    => $j['mj_inid'],
         'pid'         => $j['mj_pid'],
+        'prefixTag'   => $prefixTag,
         'dateKey'     => $j['mj_date_key'],
         'dateStr'     => $j['mj_date_str'],
         'regionKey'   => $j['mj_region_key'],
@@ -589,9 +650,12 @@ foreach ($joinRows as $j) {
         'filled'      => (int)$j['mj_cur_pax'],
         'max'         => (int)$j['mj_max_pax'],
         'seats'       => $seats,
+        'memberSlots' => $slots,
         'curPrice'    => $j['mj_cur_price'],
         'fullPrice'   => $j['mj_full_price'],
         'tags'        => $j['mj_tags'],
+        'bumpedAt'    => !empty($j['mj_bumped_at']) ? substr((string)$j['mj_bumped_at'], 5, 11) : '',
+        'comments'    => isset($cmtByJoin[$jidStr]) ? $cmtByJoin[$jidStr] : array(),
         'bbsUrl'      => ''
     );
 }
@@ -664,8 +728,23 @@ foreach ($bbsJoinRows as $bj) {
     $cleanTitle = preg_replace('/@@동행모집중@/u', '', $rawT);
     $cleanTitle = trim(preg_replace('/\s+/u', ' ', $cleanTitle));
 
+    $bbsKey = 'bbs_' . $bj['b_uid'];
+    $bbsPrefix = (mb_strpos($comb, '확정', 0, 'UTF-8') !== false) ? '투어사확정' : '항공권발권완료';
+    $bbsSlots = array();
+    for ($si = 0; $si < $filledCnt; $si++) {
+        $bbsSlots[] = array(
+            'role'   => $si === 0 ? '방장' : '동행확정',
+            'nick'   => $si === 0 ? mokta_mask_name($bj['b_writer']) : '모험가#' . ($si + 1),
+            'age'    => '2030',
+            'gender' => ($si % 2 === 0) ? '여성' : '남성',
+            'flight' => '항공권완료',
+            'note'   => '부럽 커뮤니티 인증 동행'
+        );
+    }
+
     $joins[] = array(
-        'id'          => 'bbs_' . $bj['b_uid'],
+        'id'          => $bbsKey,
+        'prefixTag'   => $bbsPrefix,
         'dateKey'     => $isoDate,
         'dateStr'     => sprintf('%d.%02d 출발 · %s', $mm, $dd, $durKey),
         'regionKey'   => $regKey,
@@ -682,9 +761,11 @@ foreach ($bbsJoinRows as $bj) {
         'filled'      => $filledCnt,
         'max'         => 6,
         'seats'       => $seatsArr,
+        'memberSlots' => $bbsSlots,
         'curPrice'    => '동행모집 게시글',
         'fullPrice'   => '1/N 조인상담',
         'tags'        => '부럽 실제 동행찾기 · 조회 ' . number_format((int)$bj['b_hit']) . '회',
+        'comments'    => isset($cmtByJoin[$bbsKey]) ? $cmtByJoin[$bbsKey] : array(),
         'bbsUrl'      => 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=' . (int)$bj['b_uid']
     );
 }

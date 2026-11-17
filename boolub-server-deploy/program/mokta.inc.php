@@ -77,6 +77,14 @@ function mokta_json($payload, $httpCode = 200) {
     exit;
 }
 
+function mokta_ensure_col($table, $col, $ddl) {
+    $escCol = mokta_esc($col);
+    $chk = mokta_q_one("SHOW COLUMNS FROM `{$table}` LIKE '{$escCol}'");
+    if (empty($chk)) {
+        mokta_q_exec("ALTER TABLE `{$table}` ADD COLUMN {$ddl}");
+    }
+}
+
 function mokta_mask_name($name) {
     $name = trim((string)$name);
     if ($name === '') return '부럽 여행자';

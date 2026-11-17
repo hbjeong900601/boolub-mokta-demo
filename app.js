@@ -615,6 +615,7 @@ const KR_HOLIDAYS_2026 = {
 const JOIN_ITEMS = [
   {
     id: 'bbs_1602',
+    prefixTag: '투어사확정',
     dateKey: '2026-08-06',
     dateStr: '8.06(목) ~ 8.09(일) · 3박4일',
     regionKey: '중부',
@@ -633,8 +634,32 @@ const JOIN_ITEMS = [
     seats: ['윤*지(방장)', '동행확정', '빈좌석', '빈좌석', '빈좌석', '빈좌석'],
     curPrice: '699,000원',
     fullPrice: '699,000원',
-    tags: '부럽 실제 동행찾기 · 조회 3,124회',
+    tags: '2030 또래 환영 · 비흡연 · 인생샷·은하수진심 · 조회 3,124회',
     bbsUrl: 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=1602'
+  },
+  {
+    id: 'j_pickup_aug15',
+    prefixTag: '공항픽업쉐어',
+    hostType: 'member',
+    dateKey: '2026-08-15',
+    dateStr: '8.15(토) 새벽 01:30 도착편 · 단독픽업 쉐어',
+    regionKey: '테를지',
+    durationKey: '2박3일',
+    styleKey: '조인',
+    statusBadge: '공항 단독픽업 1/N',
+    statusCls: 'amber',
+    subBadge: '2자리 쉐어모집',
+    subCls: 'sky',
+    agency: '여행자 공항쉐어 · 최*우',
+    pcode: 'I3885-I4036-S5377',
+    title: '8/15 새벽 울란바토르 공항 → 시내 호텔 단독픽업 차량(19,200원) 1/N 같이 타실 2분!',
+    img: 'https://files.boolub.com/upfiles/product/3283866928.jpg',
+    filled: 2,
+    max: 4,
+    seats: ['30대남(방장)', '30대여', '빈좌석', '빈좌석'],
+    curPrice: '1인 약 4,800원',
+    fullPrice: '단독차량 19,200원',
+    tags: '칭기스칸 공항 심야 도착편 · 수하물 여유 · 부럽 공식 단독차량 이용'
   },
   {
     id: 'bbs_1599',
@@ -1529,10 +1554,14 @@ let heroAutoTimer = null;
 let isHeroAutoPlaying = true;
 let curCustomerMode = 'home'; // 'home' | 'join' | 'store' | 'partner'
 let curCompanionFilter = 'all';
+let curCompanionPrefix = 'all';
 let companionVisibleCount = 5;
 let curMyActTab = 'hosted';
 let curStoreCat = 'all';
 let storeVisibleCount = 16;
+let curProdDetailMode = 'open'; // 'open' | 'private'
+let curQuoteViewMode = 'matrix'; // 'matrix' | 'cards'
+let curOpenJoinId = '';
 let curCalYear = 2026;
 let curCalMonth = 8;    // 기본 8월 성수기 월간 캘린더 표시 (0이면 전체 월 보기)
 let curJoinDate = 'all'; // 특정 일자 클릭 시 'YYYY-MM-DD', 미선택 시 'all' (선택 월 전체)
@@ -1725,7 +1754,10 @@ function simulateAuthRole(mode) {
     });
     applyAuthUi();
     restorePendingDraftIfLogged();
-    showToast('[권한 확인] 일반회원(김민수님) 로그인 상태입니다. 동행 모집·합류 신청 및 [내 활동] 관리함이 활성화됩니다.');
+    if (curOpenJoinId && document.getElementById('joinDetailModal')?.classList.contains('open')) {
+      openJoinDetailModal(curOpenJoinId);
+    }
+    showToast('[권한 확인] 일반회원(김민수님) 로그인 상태입니다. 동행 상세 프로필·사전 Q&A·합류 신청 잠금이 해제되었습니다.');
   } else if (mode === 'partner') {
     AUTH_STATE = Object.assign(AUTH_STATE, {
       role: 'partner',
@@ -1735,6 +1767,9 @@ function simulateAuthRole(mode) {
       partnerName: '노라투어 (NORA TOUR)'
     });
     applyAuthUi();
+    if (curOpenJoinId && document.getElementById('joinDetailModal')?.classList.contains('open')) {
+      openJoinDetailModal(curOpenJoinId);
+    }
     showToast('[권한 확인] 입점 파트너(노라투어) 세션이 적용되었습니다. 상단에 파트너사 센터가 활성화됩니다.');
   } else if (mode === 'master') {
     AUTH_STATE = Object.assign(AUTH_STATE, {
@@ -1745,6 +1780,9 @@ function simulateAuthRole(mode) {
       partnerName: '부럽 몽골원정대 (직영)'
     });
     applyAuthUi();
+    if (curOpenJoinId && document.getElementById('joinDetailModal')?.classList.contains('open')) {
+      openJoinDetailModal(curOpenJoinId);
+    }
     showToast('[권한 확인] 부럽 마스터 관리자 세션이 적용되었습니다. 전체 파트너 대행 및 입점 심사 관리가 활성화됩니다.');
   } else {
     AUTH_STATE = Object.assign(AUTH_STATE, {
@@ -1755,7 +1793,10 @@ function simulateAuthRole(mode) {
       partnerName: ''
     });
     applyAuthUi();
-    showToast('[권한 확인] 미로그인 고객 화면입니다. 상단 [로그인 · 3초 가입] 버튼이 노출됩니다.');
+    if (curOpenJoinId && document.getElementById('joinDetailModal')?.classList.contains('open')) {
+      openJoinDetailModal(curOpenJoinId);
+    }
+    showToast('[권한 확인] 미로그인 고객 화면입니다. 동행 상세 하단 소프트 블러 가입 게이트(안1)가 적용됩니다.');
   }
 }
 
@@ -1868,11 +1909,16 @@ function restorePendingDraftIfLogged() {
     if (!draft || !draft.kind) return;
 
     if (draft.kind === 'companion') {
+      if (typeof populateCompanionProductSelect === 'function') populateCompanionProductSelect(draft.pcode || '');
       const setV = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+      setV('cwPrefixTag', draft.prefixTag);
       setV('cwStartDate', draft.sdate);
       setV('cwRegion', draft.regionKey);
       setV('cwDuration', draft.durationKey);
+      setV('cwHostAge', draft.hostAge);
+      setV('cwHostGender', draft.hostGender);
       setV('cwSeats', draft.curCnt);
+      setV('cwLinkedPcode', draft.pcode);
       setV('cwTitle', draft.title);
       setV('cwTags', draft.tags);
       setV('cwAgePref', draft.agePref);
@@ -1880,6 +1926,9 @@ function restorePendingDraftIfLogged() {
       setV('cwFlightPref', draft.flightPref);
       openModal('companionWriteModal');
       showToast('로그인 완료! 작성하시던 동행 모집글을 복원했습니다. [등록하기]를 눌러 완료하세요.');
+    } else if (draft.kind === 'view_join' && draft.joinId) {
+      openJoinDetailModal(draft.joinId);
+      showToast('3초 가입·로그인 완료! 참여 모험가 프로필과 사전 Q&A·합류 신청 잠금이 해제되었습니다.');
     } else if (draft.kind === 'apply_seat' && draft.joinId) {
       openJoinDetailModal(draft.joinId, draft);
       showToast('로그인 완료! 신청하시던 동행·조인 내용을 불러왔습니다.');
@@ -2023,9 +2072,11 @@ function switchCustomerMode(mode, btnEl) {
   showEl('sec-companion', curCustomerMode === 'home' || curCustomerMode === 'join');
   showEl('sec-join', curCustomerMode === 'home' || curCustomerMode === 'join');
   showEl('sec-open-group', curCustomerMode === 'home' || curCustomerMode === 'join');
+  showEl('midTrustBanner1', curCustomerMode === 'home');
   showEl('sec-store', curCustomerMode === 'home' || curCustomerMode === 'store');
   showEl('sec-rfq', curCustomerMode === 'partner');
   showEl('sec-partners', curCustomerMode === 'home' || curCustomerMode === 'partner');
+  showEl('midTrustBanner2', curCustomerMode === 'home');
   showEl('sec-showcase', curCustomerMode === 'home');
   showEl('sec-magazine', curCustomerMode === 'home');
   showEl('sec-bottom-helper', curCustomerMode === 'home' || curCustomerMode === 'partner');
@@ -2547,6 +2598,8 @@ function resetQuickFinder() {
   curJoinDate = 'all';
   confirmOnlyFilter = false;
   calSubFilters = { partner: 'all', status: 'all' };
+  curCompanionPrefix = 'all';
+  document.querySelectorAll('#companionPrefixRow .ts-prefix-pill').forEach((b, idx) => b.classList.toggle('active', idx === 0));
   globalKeyword = '';
   storeVisibleCount = 16;
   const gInput = document.getElementById('globalSearchInput');
@@ -2636,9 +2689,12 @@ function renderStoreProducts() {
     const wished = isWished(wishKey);
     const hasDiscount = Boolean(p.originPrice && p.discount);
     const partnerShort = String(p.sub || '').split('·')[0].trim() || '부럽 공식 파트너';
-    const badgeLabel = p.styleKey === '원정대' ? '원정대' : (p.styleKey === '조인' ? '조인가능' : (p.tag.includes('공항') ? '공항픽업' : '공식투어'));
+    const badgeLabel = p.styleKey === '원정대' ? '1인출발확정' : (p.styleKey === '조인' ? '조인·단독' : (p.tag.includes('공항') ? '공항단독픽업' : 'MOKTA인증'));
     const regionMap = { 고비: '고비사막', 중부: '중부·온천', 홉스골: '홉스골', 테를지: '테를지·근교' };
     const regionChip = regionMap[p.regionKey] || '몽골';
+    const specChip = p.tag.includes('공항')
+      ? '단독차량'
+      : (p.styleKey === '원정대' ? 'USIM·특식포함' : ((p.title.includes('샤워') || p.title.includes('온천')) ? '온수샤워캠프' : '노쇼핑·노옵션'));
 
     return `
       <article class="ts-store-card" onclick="openProductPreviewModal('${p.pcode}')">
@@ -2649,12 +2705,13 @@ function renderStoreProducts() {
             <i class="${wished ? 'xi-heart' : 'xi-heart-o'}"></i>
           </button>
         </div>
-        <div class="ts-store-partner">${partnerShort}</div>
+        <div class="ts-store-partner"><i class="xi-shield-checked" style="color:#0284c7;"></i> ${partnerShort}</div>
         <h4 class="ts-store-title">${p.title}</h4>
         <div class="ts-store-tags-row">
           <div class="ts-store-pills">
             <span class="ts-pill-gray">${p.durationKey}</span>
             <span class="ts-pill-sky">${regionChip}</span>
+            <span class="ts-pill-gray">${specChip}</span>
           </div>
           ${Number(p.reviews) > 0 ? `<span class="ts-store-star"><i class="xi-star"></i> ${p.rating} <em>(${p.reviews})</em></span>` : ''}
         </div>
@@ -2685,8 +2742,114 @@ function renderStoreProducts() {
   }
 }
 
-function openProductPreviewModal(pcode) {
+function buildProductRichSpec(prod) {
+  const baseNum = parsePriceNumber(prod.price) || 990000;
+  const isPickup = prod.pcode === 'I3885-I4036-S5377' || String(prod.title || '').includes('공항');
+  const isExp = prod.styleKey === '원정대' || prod.pid === 'boolub';
+
+  const tierPrices = isPickup
+    ? {
+        p2: '9,600원 (2인 1/N)',
+        p3: '6,400원 (3인 1/N)',
+        p4: '4,800원 (4인 1/N)',
+        p5: '차량당 19,200원',
+        p6: '단독 밴 별도선택'
+      }
+    : {
+        p2: formatKrwString(Math.round((baseNum * 1.32) / 1000) * 1000),
+        p3: formatKrwString(Math.round((baseNum * 1.14) / 1000) * 1000),
+        p4: formatKrwString(baseNum),
+        p5: formatKrwString(Math.round((baseNum * 0.91) / 1000) * 1000),
+        p6: formatKrwString(Math.round((baseNum * 0.84) / 1000) * 1000)
+      };
+
+  const specs6 = isPickup
+    ? [
+        { label: '배정 차량', val: '전용 세단 · 승합 단독차량' },
+        { label: '운행 시간', val: '24시간 새벽·심야 항공편 대응' },
+        { label: '최소 인원', val: '1인 단독 탑승 ~ 4인 동승 가능' },
+        { label: '피켓 미팅', val: '칭기스칸 국제공항 입국장 네임보드' },
+        { label: '추가 요금', val: '톨비·유류비 포함 (숨은 비용 0원)' },
+        { label: '안전 보증', val: 'WIT 공식 운영 · 부럽 에스크로' }
+      ]
+    : [
+        { label: '배정 차량', val: isExp ? '원정대 전용 스타렉스·푸르공' : '연식 검증 스타렉스 · 오프로드 푸르공' },
+        { label: '숙소 · 샤워', val: prod.regionKey === '중부' ? '온천 리조트 & 정식 여행자 게르' : '온수 샤워 정식 투어리스트 캠프' },
+        { label: '출발 인원', val: isExp ? '1인 신청 즉시 100% 출발확정' : '오픈조인 최대 6인 / 단독 2인~출발' },
+        { label: '가이드 · 식사', val: isExp ? '한국어 전담 가이드 · 특식 3회 포함' : '한국어 능통 베테랑 가이드 · 현지 특식' },
+        { label: '3無 공정여행', val: '노쇼핑 · 노강매옵션 · 정찰제 보장' },
+        { label: '결제 · 환불', val: '부럽 에스크로 대금보호 · 미확정 100% 환불' }
+      ];
+
+  let days = [];
+  if (isPickup) {
+    days = [
+      { day: 'STEP 1 · 항공편 도착 및 입국심사', desc: '칭기스칸 신국제공항 도착 후 수하물 수령 → 입국장 게이트 앞 본인 영문/국문 성함 피켓을 든 전담 기사와 미팅합니다.' },
+      { day: 'STEP 2 · 울란바토르 시내 호텔 안심 이동', desc: '쾌적한 단독 배정 차량으로 울란바토르 시내 지정 호텔·게스트하우스 정문까지 약 50~60분 안전하게 이동합니다.' }
+    ];
+  } else if (prod.regionKey === '고비') {
+    days = [
+      { day: 'Day 1 · 울란바토르 → 차강소브라가 대협곡', desc: '전담 한국어 가이드 미팅 후 남부 출발 · 붉은 단애 절경 차강소브라가 트레킹 및 일몰 감상 · 여행자 게르 캠프 숙박 & 별밤 관측' },
+      { day: 'Day 2 · 차강소브라가 → 욜링암 얼음계곡', desc: '고비 구르반 사이항 국립공원 진입 · 독수리 계곡 욜링암 트레킹 및 승마 체험 · 정통 양고기 허르헉 특식 & 온수 샤워 캠프' },
+      { day: 'Day 3 · 홍고린엘스 노래하는 모래언덕', desc: '고비사막 하이라이트 홍고린엘스 사구 등반 · 모래썰매 & 쌍봉낙타 라이딩 · 모닥불 캠프파이어 및 은하수 인생스냅 촬영' },
+      { day: 'Day 4 · 바양작 불타는 절벽 & 초원 성좌', desc: '공룡 화석 발굴지 바양작 붉은 절벽 노을 감상 · 끝없는 초원 오프로드 드라이브 · 캠프 만찬 및 휴식' },
+      { day: 'Day 5 · 울란바토르 복귀 · 시내 투어 및 귀국', desc: '울란바토르 복귀 후 수흐바타르 광장 · 국영백화점 · 고비 캐시미어 아울렛 자유 일정 후 공항 샌딩' }
+    ];
+  } else if (prod.regionKey === '홉스골') {
+    days = [
+      { day: 'Day 1 · 울란바토르 → 북부 에르데네트/무릉', desc: '북부 청정 산림지대로 이동 · 초원 전망대 경유 및 현지 정식 레스토랑 중식 · 북부 게르 캠프 숙박' },
+      { day: 'Day 2~3 · 몽골의 푸른 진주 홉스골 호수 1열 힐링', desc: '홉스골 호숫가 레이크뷰 캠프 체크인 · 소원바위 보트 유람 · 호숫가 숲길 승마 트레킹 · 통나무 장작불 & 은하수 감상' },
+      { day: 'Day 4 · 차탕족 순록 유목민 문화체험 & 온천/협곡', desc: '북부 순록 유목 문화 체험 및 촐로트 협곡·천연 온천수 족욕 힐링 · 정통 현지 특식 만찬' },
+      { day: 'Day 5~6 · 어기호수 경유 울란바토르 복귀 및 공항 샌딩', desc: '울란바토르 시내 복귀 후 자이승 전망대 및 캐시미어·기념품 자유 시간 후 공항 안전 샌딩' }
+    ];
+  } else if (prod.durationKey === '2박3일') {
+    days = [
+      { day: 'Day 1 · 울란바토르 → 칭기스칸 마동상 → 테를지 국립공원', desc: '거대 칭기스칸 기마상 전망대 관람 → 거북바위 & 아리야발 사원 명상 트레킹 → 초원 승마 체험 및 온수 게르 캠프 바비큐' },
+      { day: 'Day 2 · 초원 유목민 체험 & 별밤 캠프파이어', desc: '유목민 전통 가옥 방문 및 수테차 시음 · 톨강변 산책 · 밤하늘 쏟아지는 별자리 감상 및 캠프파이어' },
+      { day: 'Day 3 · 울란바토르 시내 핵심 투어 → 공항 샌딩', desc: '수흐바타르 광장 · 자이승 승전탑 · 국영백화점 쇼핑 후 항공편 시간에 맞춰 공항 단독 샌딩' }
+    ];
+  } else {
+    days = [
+      { day: 'Day 1 · 울란바토르 → 엘승타사라이 미니사막', desc: '가이드 미팅 후 중부 이동 · 초원 속 사막 엘승타사라이 낙타 체험 및 모래썰매 · 여행자 게르 캠프 숙박' },
+      { day: 'Day 2 · 고대 수도 하르호린 → 쳉헤르 노천온천 힐링', desc: '에르데네조 사원 관람 후 해발 1,860m 천연 유황 쳉헤르 노천온천 리조트 도착 · 별빛 아래 야외 온천욕 힐링' },
+      { day: 'Day 3 · 어기호수 / 테를지 국립공원 자연 트레킹', desc: '드넓은 호수 산책 및 거북바위·아리야발 사원 탐방 · 허르헉/삼겹살 특식 파티 및 은하수 감상' },
+      { day: 'Day 4 · 울란바토르 시내 투어 및 공항 샌딩', desc: '울란바토르 복귀 후 국영백화점·기념품 코스 관람 및 출국 항공편 맞춤 공항 샌딩' }
+    ];
+  }
+
+  const includes = isPickup
+    ? ['칭기스칸 국제공항 ↔ 울란바토르 시내 호텔 단독 차량', '베테랑 전담 기사님 & 입국장 피켓 미팅', '도로 통행료 · 유류비 · 주차비 전액 포함']
+    : [
+        '전 일정 전용 차량 · 베테랑 기사 · 유류비/도로비 일체',
+        '한국어 능통 전담 가이드 및 정식 여행자 게르 캠프 숙박',
+        isExp ? '전 일정 식사 + 특식 3회 + 몽골 데이터 USIM 무료 증정' : '일정표상 전 식사(특식 포함) 및 국립공원 입장료·체험비',
+        'MOKTA × 부럽 에스크로 결제 대금 보호 및 안전 케어'
+      ];
+
+  const excludes = isPickup
+    ? ['한국 ↔ 울란바토르 왕복 국제선 항공권', '시내 외곽(테를지 등) 이동 시 사전 문의']
+    : [
+        '한국 ↔ 울란바토르 왕복 국제선 항공권',
+        '개인 여행자보험 및 개인 기호품(주류·간식 등)',
+        isExp ? '현지 추가 강매 옵션·기사 가이드 팁 일절 없음(0원)' : '사전 안내 외 개인 선택 체험비'
+      ];
+
+  const matchingJoins = JOIN_ITEMS.filter(j => !j.bbsUrl && (j.pcode === prod.pcode || (!isPickup && j.regionKey === prod.regionKey))).slice(0, 3);
+
+  return { isPickup, isExp, tierPrices, specs6, days, includes, excludes, matchingJoins };
+}
+
+function toggleProductDayAcc(btnEl) {
+  const item = btnEl?.closest('.ts-day-acc-item');
+  if (item) item.classList.toggle('open');
+}
+
+function openProductPreviewModal(pcode, mode = null) {
   const prod = DIRECT_PRODUCTS.find(x => x.pcode === pcode) || DIRECT_PRODUCTS[0];
+  if (mode) curProdDetailMode = mode;
+  else curProdDetailMode = (prod.styleKey === '단독' && prod.pcode !== 'I3885-I4036-S5377') ? 'private' : 'open';
+
+  const spec = buildProductRichSpec(prod);
   const liveUrl = `https://www.boolub.com/?pn=product.view&pcode=${prod.pcode}`;
   const partnerUrl = prod.pid === 'boolub'
     ? 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition'
@@ -2695,13 +2858,76 @@ function openProductPreviewModal(pcode) {
 
   const titleEl = document.getElementById('prodModalTitle');
   const bodyEl = document.getElementById('prodModalBody');
-  if (titleEl) titleEl.textContent = '부럽 공식 판매 투어 상세 및 예약 안내';
+  if (titleEl) titleEl.textContent = 'MOKTA × 부럽 공식 인증 투어 올인원 상세 시트';
 
   if (bodyEl) {
+    const modeSectionHtml = curProdDetailMode === 'open'
+      ? `
+        <div style="padding:14px 16px; border-radius:12px; background:#f8fbff; border:1px solid #dbeafe;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+            <strong style="font-size:13.5px; color:#0f172a;"><i class="xi-users" style="color:#0284c7;"></i> 현재 합류 가능한 오픈조인 출발팀 (${spec.matchingJoins.length}팀)</strong>
+            <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="closeModal('productPreviewModal'); openCompanionModalForProduct('${prod.pcode}')">
+              <i class="xi-pen-o"></i> 내 날짜로 이 상품 동행 모집하기
+            </button>
+          </div>
+          ${spec.matchingJoins.length ? `
+            <div style="display:grid; gap:8px;">
+              ${spec.matchingJoins.map(j => {
+                const rem = Math.max(0, j.max - j.filled);
+                return `
+                  <div style="padding:10px 12px; border-radius:10px; background:#fff; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div>
+                      <span style="font-size:11.5px; font-weight:800; color:#0284c7;">${j.dateStr}</span>
+                      <strong style="display:block; font-size:13px; color:#0f172a; margin-top:1px;">${j.title}</strong>
+                      <span style="font-size:11.5px; color:#64748b;">현재 참여: ${j.seats.filter(s => s !== '빈좌석').join(' · ')} (잔여 ${rem}석)</span>
+                    </div>
+                    <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="closeModal('productPreviewModal'); openJoinDetailModal('${j.id}')">
+                      빈 좌석 합류 (${j.curPrice})
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          ` : `
+            <div style="font-size:12.5px; color:#475569;">원하시는 출발일로 첫 동행 모집글을 올리면 공식 파트너사가 우선 배차를 도와드립니다.</div>
+          `}
+        </div>
+      `
+      : `
+        <div style="padding:14px 16px; border-radius:12px; background:#f8fafc; border:1px solid #e2e8f0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <strong style="font-size:13.5px; color:#0f172a;"><i class="xi-car" style="color:#0284c7;"></i> 우리 일행끼리 프라이빗 단독 출발 · 인원별 1인 예상 단가표</strong>
+            <span style="font-size:11.5px; font-weight:700; color:#0284c7;">모일수록 1인 부담금이 내려갑니다!</span>
+          </div>
+          <table class="ts-tier-price-table">
+            <thead>
+              <tr>
+                <th>2인 단독</th>
+                <th>3인 단독</th>
+                <th>4인 단독 (인기)</th>
+                <th>5인 단독</th>
+                <th>6인 단독 (최저가)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${spec.tierPrices.p2}</td>
+                <td>${spec.tierPrices.p3}</td>
+                <td class="is-best">${spec.tierPrices.p4}</td>
+                <td>${spec.tierPrices.p5}</td>
+                <td class="is-best">${spec.tierPrices.p6}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:11.5px; color:#64748b; margin-top:7px;">* 위 단가표는 ${prod.price} 기준 인원별 예상 견적이며, 성수기 숙소 업그레이드 여부에 따라 부럽 상세페이지 또는 1:1 견적에서 최종 확정됩니다.</p>
+        </div>
+      `;
+
     bodyEl.innerHTML = `
-      <div style="display:grid; grid-template-columns:1fr 1.15fr; gap:18px; align-items:start;">
-        <div style="border-radius:12px; overflow:hidden; aspect-ratio:4/3; background:var(--bl-gray-100);">
+      <div style="display:grid; grid-template-columns:0.95fr 1.05fr; gap:18px; align-items:start;">
+        <div style="border-radius:14px; overflow:hidden; aspect-ratio:4/3; background:var(--bl-gray-100); position:relative;">
           <img src="${prod.img}" alt="${prod.title}" style="width:100%; height:100%; object-fit:cover;" />
+          <span class="bl-mokta-tag" style="position:absolute; left:10px; top:10px; background:rgba(15,23,42,0.84); color:#7dd3fc;">MOKTA × 부럽 에스크로 보증</span>
         </div>
         <div>
           <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
@@ -2711,10 +2937,10 @@ function openProductPreviewModal(pcode) {
           <h3 style="font-size:18px; font-weight:800; color:var(--bl-gray-900); line-height:1.38;">${prod.title}</h3>
           <div style="margin-top:6px; font-size:13px; color:var(--bl-gray-500);">${prod.sub} · <i class="xi-star" style="color:var(--bl-star);"></i> <strong style="color:var(--bl-gray-900);">${prod.rating}</strong> (후기 ${prod.reviews}건)</div>
 
-          <div style="margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--bl-point-bg); border:1px solid var(--bl-point-line); display:flex; justify-content:space-between; align-items:center;">
+          <div style="margin-top:12px; padding:12px 14px; border-radius:10px; background:var(--bl-point-bg); border:1px solid var(--bl-point-line); display:flex; justify-content:space-between; align-items:center;">
             <div>
               ${hasDiscount ? `<div style="font-size:11.5px; color:var(--bl-gray-500); text-decoration:line-through;">정가 ${prod.originPrice}</div>` : ''}
-              <div style="font-size:12px; font-weight:700; color:var(--bl-point-text);">${hasDiscount ? '부럽 직영 할인 특가' : '부럽 공식 판매가 (에스크로 보호)'}</div>
+              <div style="font-size:12px; font-weight:700; color:var(--bl-point-text);">${hasDiscount ? '부럽 직영 할인 특가' : '부럽 공식 에스크로 판매가'}</div>
             </div>
             <div style="text-align:right;">
               ${hasDiscount ? `<span style="font-size:16px; font-weight:800; color:var(--bl-point-text); margin-right:4px;">${prod.discount}</span>` : ''}
@@ -2722,40 +2948,92 @@ function openProductPreviewModal(pcode) {
             </div>
           </div>
 
-          <ul style="margin-top:12px; display:grid; gap:6px; font-size:13px; color:var(--bl-gray-700);">
+          <ul style="margin-top:10px; display:grid; gap:5px; font-size:12.5px; color:var(--bl-gray-700);">
             ${(prod.highlights || []).map(h => `<li><i class="xi-check-min" style="color:var(--bl-point-dark); font-weight:700;"></i> ${h}</li>`).join('')}
           </ul>
         </div>
       </div>
 
-      <div style="margin-top:18px; padding:14px 16px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200);">
-        <div style="font-size:13px; font-weight:800; color:var(--bl-gray-900); margin-bottom:8px;">
-          <i class="xi-compass-o" style="color:var(--bl-point-dark);"></i> 출국 전 부럽에서 함께 확인하면 좋은 공항픽업 &amp; 매거진
+      <!-- 트립소다 + 러브몽골 통합: 오픈조인 ↔ 프라이빗 단독 단가표 즉시 전환 -->
+      <div class="ts-prod-mode-switch">
+        <button type="button" class="ts-prod-mode-btn ${curProdDetailMode === 'open' ? 'active' : ''}" onclick="openProductPreviewModal('${prod.pcode}', 'open')">
+          🚐 오픈조인 합류 · 동행 모집 (1/N)
+        </button>
+        <button type="button" class="ts-prod-mode-btn ${curProdDetailMode === 'private' ? 'active' : ''}" onclick="openProductPreviewModal('${prod.pcode}', 'private')">
+          👨‍👩‍👧‍👦 우리 일행 단독 출발 (2~6인 요금표)
+        </button>
+      </div>
+
+      ${modeSectionHtml}
+
+      <!-- 6대 핵심 스펙 요약 그리드 -->
+      <div class="ts-spec6-grid">
+        ${spec.specs6.map(s => `
+          <div class="ts-spec6-item">
+            <span>${s.label}</span>
+            <strong>${s.val}</strong>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- 일자별 핵심 동선 요약 아코디언 -->
+      <div style="margin-top:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:13.5px; color:#0f172a;"><i class="xi-map-o" style="color:#0284c7;"></i> 일자별 핵심 코스 미리보기 (클릭 시 펼쳐보기)</strong>
+          <span style="font-size:11.5px; color:#64748b;">현지 기상 상황에 따라 안전 최우선 동선 운영</span>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <a href="https://www.boolub.com/?pn=product.view&pcode=I3885-I4036-S5377" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
-            <span><strong>울란바토르 공항 단독픽업</strong> (19,200원)</span>
-            <span style="color:var(--bl-point-text); font-weight:700;">함께보기 <i class="xi-external-link"></i></span>
-          </a>
-          <a href="https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1428" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
-            <span><strong>[매거진] 완벽한 몽골여행 준비물</strong></span>
-            <span style="color:var(--bl-point-text); font-weight:700;">읽어보기 <i class="xi-external-link"></i></span>
-          </a>
+        <div class="ts-day-acc-list">
+          ${spec.days.map((d, idx) => `
+            <div class="ts-day-acc-item ${idx === 0 ? 'open' : ''}">
+              <button type="button" class="ts-day-acc-head" onclick="toggleProductDayAcc(this)">
+                <span>${d.day}</span>
+                <i class="xi-angle-down-min"></i>
+              </button>
+              <div class="ts-day-acc-body">${d.desc}</div>
+            </div>
+          `).join('')}
         </div>
       </div>
 
-      <div style="margin-top:18px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+      <!-- 포함 사항 (O) / 불포함 사항 (X) 명확 비교 -->
+      <div class="ts-inc-exc-grid">
+        <div style="padding:12px 14px; border-radius:11px; background:#f0fdf4; border:1px solid #bbf7d0;">
+          <strong style="font-size:12.5px; color:#166534; display:block; margin-bottom:6px;">⭕ 포함 사항 (안심 보장)</strong>
+          <ul style="display:grid; gap:4px; font-size:12px; color:#14532d;">
+            ${spec.includes.map(x => `<li>· ${x}</li>`).join('')}
+          </ul>
+        </div>
+        <div style="padding:12px 14px; border-radius:11px; background:#fff7ed; border:1px solid #fed7aa;">
+          <strong style="font-size:12.5px; color:#9a3412; display:block; margin-bottom:6px;">❌ 불포함 · 체크 사항</strong>
+          <ul style="display:grid; gap:4px; font-size:12px; color:#7c2d12;">
+            ${spec.excludes.map(x => `<li>· ${x}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; padding:12px 14px; border-radius:12px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200); display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button type="button" onclick="openProductPreviewModal('I3885-I4036-S5377')" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px; text-align:left;">
+          <span><strong>🚕 울란바토르 공항 단독픽업</strong> (19,200원)</span>
+          <span style="color:var(--bl-point-text); font-weight:700;">상세보기 →</span>
+        </button>
+        <a href="https://www.boolub.com/?pn=board.view&_menu=cityguide&_uid=1428" target="_blank" rel="noopener" style="padding:9px 12px; background:#fff; border-radius:8px; border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; font-size:12.5px;">
+          <span><strong>📖 몽골 출국 전 필수 준비물 가이드</strong></span>
+          <span style="color:var(--bl-point-text); font-weight:700;">읽기 <i class="xi-external-link"></i></span>
+        </a>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
         <button type="button" class="bl-btn bl-btn-outline" onclick="copyMoktaShareLink('${prod.title.replace(/'/g, '')}')">
           <i class="xi-share-alt-o"></i> 동행에게 공유
         </button>
-        <a href="${partnerUrl}" target="_blank" rel="noopener" class="bl-btn bl-btn-outline">
-          파트너사 전체상품 보기
-        </a>
+        <button type="button" class="bl-btn bl-btn-outline" onclick="closeModal('productPreviewModal'); openCompanionModalForProduct('${prod.pcode}')">
+          <i class="xi-users"></i> 이 상품 동행모집
+        </button>
         <button type="button" class="bl-btn bl-btn-soft" onclick="closeModal('productPreviewModal'); prefillRfqFromCourse('${prod.title.replace(/'/g, '')}')">
-          이 코스로 일행 맞춤견적 문의
+          우리 일행 1:1 견적문의
         </button>
         <a href="${liveUrl}" target="_blank" rel="noopener" class="bl-btn bl-btn-point">
-          부럽 본 사이트에서 일정·예약하기 <i class="xi-external-link"></i>
+          부럽 에스크로 안전결제 · 예약하기 <i class="xi-external-link"></i>
         </a>
       </div>
     `;
@@ -2847,13 +3125,135 @@ function selectCalendarDate(dateIso) {
   renderJoinCards();
 }
 
-function openCompanionModalForDate(dateIso) {
+const PREFIX_META_MAP = {
+  '무조건출발확정': { key: '무조건출발확정', label: '🔥 무조건출발확정', cls: 'pfx-confirm' },
+  '투어사확정': { key: '투어사확정', label: '🚐 투어사·상품확정', cls: 'pfx-tour' },
+  '항공권발권완료': { key: '항공권발권완료', label: '✈️ 항공권발권완료', cls: 'pfx-flight' },
+  '동행미확정': { key: '동행미확정', label: '💬 일정·투어조율중', cls: 'pfx-tune' },
+  '공항픽업쉐어': { key: '공항픽업쉐어', label: '🚕 공항픽업·부분동행', cls: 'pfx-taxi' }
+};
+
+function resolveJoinPrefixMeta(j) {
+  if (j && j.prefixTag && PREFIX_META_MAP[j.prefixTag]) {
+    return PREFIX_META_MAP[j.prefixTag];
+  }
+  const titleStr = String(j?.title || '');
+  if (titleStr.includes('공항') || titleStr.includes('픽업')) return PREFIX_META_MAP['공항픽업쉐어'];
+  if (j?.statusCls !== 'amber' || j?.styleKey === '원정대' || String(j?.statusBadge || '').includes('확정')) {
+    return PREFIX_META_MAP['무조건출발확정'];
+  }
+  if (j?.pcode && !j?.bbsUrl) return PREFIX_META_MAP['투어사확정'];
+  const idTail = String(j?.id || '').slice(-1);
+  if (['2', '5', '9'].includes(idTail)) return PREFIX_META_MAP['항공권발권완료'];
+  return PREFIX_META_MAP['동행미확정'];
+}
+
+function resolveJoinMemberSlots(item) {
+  const maxCnt = Math.max(2, Number(item?.max || 6));
+  const filledCnt = Math.min(maxCnt, Math.max(1, Number(item?.filled || 2)));
+  const rawSlots = Array.isArray(item?.memberSlots) ? item.memberSlots : [];
+  const sampleAges = ['20대', '20대', '30대', '30대', '20대', '40대'];
+  const sampleGenders = ['여성', '여성', '남성', '여성', '남성', '남성'];
+  const out = [];
+
+  for (let i = 0; i < maxCnt; i++) {
+    if (i < filledCnt) {
+      const ex = rawSlots[i] || {};
+      const seatTxt = String(item?.seats?.[i] || '');
+      let age = ex.age || sampleAges[i % sampleAges.length];
+      let gender = ex.gender || sampleGenders[i % sampleGenders.length];
+      if (seatTxt.includes('20대')) age = '20대';
+      else if (seatTxt.includes('30대')) age = '30대';
+      else if (seatTxt.includes('40대')) age = '40대';
+      if (seatTxt.includes('남')) gender = '남성';
+      else if (seatTxt.includes('여')) gender = '여성';
+
+      const role = i === 0 ? '방장' : (ex.role || '동행확정');
+      const nick = ex.nick || (seatTxt && seatTxt !== '빈좌석' ? seatTxt.replace(/\(방장\)/g, '') : `모험가#${i + 1}`);
+      const flight = ex.flight || (i === 0 ? '항공권완료' : '일정확정');
+      out.push({ filled: true, role, nick, age, gender, flight });
+    } else {
+      out.push({ filled: false, role: '빈좌석', nick: '합류 가능', age: '-', gender: '-', flight: '모집중' });
+    }
+  }
+  return out;
+}
+
+function ensureDefaultJoinComments(item) {
+  if (!item) return [];
+  if (!Array.isArray(item.comments)) {
+    const isPickup = String(item.pcode || '') === 'I3885-I4036-S5377';
+    item.comments = isPickup
+      ? [
+          { id: 'c_def1', writer: '박*영', text: '저도 같은 날 새벽 칭기스칸 공항 도착인데 캐리어 24인치 1개 있습니다! 1명 합류 가능할까요?', rdate: '오늘 09:15' },
+          { id: 'c_def2', writer: '방장', text: '네 환영합니다! WIT 공식 단독차량 예약해두어서 편하게 같이 시내 들어가요 :)', rdate: '오늘 09:42' }
+        ]
+      : [
+          { id: 'c_def1', writer: '김*현', text: '안녕하세요! 20대 후반 비흡연 직장인인데 연결해두신 투어 상품 일정 그대로 진행 예정이신가요?', rdate: '어제 21:10' },
+          { id: 'c_def2', writer: '방장', text: '네 맞습니다! 부럽 에스크로 결제로 총무 송금 없이 각자 안전결제할 예정이라 부담 없이 신청 주세요 :)', rdate: '어제 21:34' }
+        ];
+  }
+  return item.comments;
+}
+
+function populateCompanionProductSelect(defaultPcode = '') {
+  const sel = document.getElementById('cwLinkedPcode');
+  if (!sel) return;
+  const topChoices = DIRECT_PRODUCTS.slice(0, 30);
+  sel.innerHTML = [
+    `<option value="">투어 상품 미정 · 동행원들과 상의 후 선택</option>`,
+    ...topChoices.map(p => `<option value="${p.pcode}">[${p.durationKey}·${p.regionKey}] ${p.title} (${p.price})</option>`)
+  ].join('');
+  if (defaultPcode && topChoices.some(p => p.pcode === defaultPcode)) {
+    sel.value = defaultPcode;
+  } else if (defaultPcode) {
+    const extra = DIRECT_PRODUCTS.find(p => p.pcode === defaultPcode);
+    if (extra) {
+      sel.insertAdjacentHTML('afterbegin', `<option value="${extra.pcode}" selected>[${extra.durationKey}·${extra.regionKey}] ${extra.title} (${extra.price})</option>`);
+      sel.value = extra.pcode;
+    }
+  } else {
+    sel.value = 'C3954-E9344-H0474';
+  }
+}
+
+function toggleCwQuickTag(btnEl) {
+  if (!btnEl) return;
+  btnEl.classList.toggle('selected');
+  const activeTags = Array.from(document.querySelectorAll('#cwQuickTagRow .bl-perk-chip-btn.selected'))
+    .map(b => b.textContent.replace('#', '').trim())
+    .filter(Boolean);
+  const input = document.getElementById('cwTags');
+  if (input) {
+    input.value = [...activeTags, '매너 동행 환영합니다'].join(' · ');
+  }
+}
+
+function openCompanionModalForDate(dateIso, prefillPcode = '') {
   const targetDate = (dateIso && /^\d{4}-\d{2}-\d{2}$/.test(dateIso))
     ? dateIso
     : (curJoinDate !== 'all' ? curJoinDate : `${curCalYear}-${String(curCalMonth || 8).padStart(2, '0')}-15`);
   const dateInput = document.getElementById('cwStartDate');
   if (dateInput) dateInput.value = targetDate;
+  populateCompanionProductSelect(prefillPcode);
+  if (prefillPcode) {
+    const prod = DIRECT_PRODUCTS.find(p => p.pcode === prefillPcode);
+    if (prod) {
+      const pfxEl = document.getElementById('cwPrefixTag');
+      const regEl = document.getElementById('cwRegion');
+      const durEl = document.getElementById('cwDuration');
+      const titEl = document.getElementById('cwTitle');
+      if (pfxEl) pfxEl.value = prod.pcode === 'I3885-I4036-S5377' ? '공항픽업쉐어' : '투어사확정';
+      if (regEl && prod.regionKey) regEl.value = prod.regionKey;
+      if (durEl && prod.durationKey) durEl.value = prod.durationKey;
+      if (titEl) titEl.value = `${prod.title.replace(/^\[몽골\]\s*/, '')} 같이 가실 동행분 구해요!`;
+    }
+  }
   openModal('companionWriteModal');
+}
+
+function openCompanionModalForProduct(pcode) {
+  openCompanionModalForDate('', pcode);
 }
 
 function filterJoinByDate(dateKey) {
@@ -3084,7 +3484,9 @@ function renderOpenGroupCards() {
     const isRecruit = j.statusCls === 'amber';
     const depTxt = formatShortDepartureLabel(j.dateKey, j.dateStr);
     const shortAgency = String(j.agency || '').split('(')[0].trim();
-    const topBadge = j.styleKey === '원정대' ? '원정대' : '오픈조인';
+    const topBadge = j.styleKey === '원정대' ? '1인출발확정' : '오픈조인';
+    const slots = resolveJoinMemberSlots(j).filter(s => s.filled);
+    const demoSummary = slots.slice(0, 2).map(s => `${s.age}${s.gender.slice(0, 1)}`).join('·');
 
     return `
       <article class="ts-og-card" onclick="openJoinDetailModal('${j.id}')">
@@ -3094,14 +3496,14 @@ function renderOpenGroupCards() {
           <button type="button" class="bl-card-wish ${wished ? 'active' : ''}" onclick="toggleWishItem('${wishKey}', event)" title="찜 보관함 담기">
             <i class="${wished ? 'xi-heart' : 'xi-heart-o'}"></i>
           </button>
-          <div class="ts-og-date-scrim">${depTxt}</div>
+          <div class="ts-og-date-scrim">${depTxt} · ${demoSummary} 합류중</div>
         </div>
         <div class="ts-og-meta">${j.durationKey} · ${j.regionKey} · ${shortAgency}</div>
         <h4 class="ts-og-title">${j.title}</h4>
         <div class="ts-og-foot">
           <div class="ts-og-status-left">
             <span class="ts-pax-pill"><i class="xi-user-o"></i> ${j.filled}/${j.max}</span>
-            <span class="ts-confirm-pill ${isRecruit ? 'is-recruit' : ''}">${isRecruit ? '모집중' : '확정'}</span>
+            <span class="ts-confirm-pill ${isRecruit ? 'is-recruit' : ''}">${isRecruit ? '모집중' : '출발확정'}</span>
           </div>
           ${renderAvatarStack(j.filled)}
         </div>
@@ -3110,7 +3512,15 @@ function renderOpenGroupCards() {
   }).join('');
 }
 
-/* 1번 독립 섹션: 함께 떠날 동행을 찾고 있어요 (칩 필터 + 즉시 합류신청 연동) */
+/* 1번 독립 섹션: 함께 떠날 동행을 찾고 있어요 (5대 말머리 + 지역 칩 + 투어상품 임베드 연동) */
+function filterCompanionPrefix(pfx, btnEl) {
+  curCompanionPrefix = pfx || 'all';
+  companionVisibleCount = 5;
+  document.querySelectorAll('#companionPrefixRow .ts-prefix-pill').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  renderCommunityFeed();
+}
+
 function filterCompanionFeed(cat, btnEl) {
   curCompanionFilter = cat || 'all';
   companionVisibleCount = 5;
@@ -3129,11 +3539,16 @@ function renderCommunityFeed() {
   const footEl = document.getElementById('companionMoreWrap');
   const totalChipEl = document.getElementById('chipCompanionTotal');
 
-  const allCommunity = JOIN_ITEMS.filter(j => Boolean(j.bbsUrl) || j.statusCls === 'amber' || j.hostType === 'member');
-  if (totalChipEl) totalChipEl.textContent = String(allCommunity.length);
+  const allCommunity = curCompanionPrefix === '무조건출발확정'
+    ? JOIN_ITEMS.filter(j => resolveJoinPrefixMeta(j).key === '무조건출발확정')
+    : JOIN_ITEMS.filter(j => Boolean(j.bbsUrl) || j.statusCls === 'amber' || j.hostType === 'member' || j.prefixTag === '공항픽업쉐어');
+
+  const allCompanionBaseCount = JOIN_ITEMS.filter(j => Boolean(j.bbsUrl) || j.statusCls === 'amber' || j.hostType === 'member' || j.prefixTag === '공항픽업쉐어').length;
+  if (totalChipEl) totalChipEl.textContent = String(allCompanionBaseCount);
   if (!listEl) return;
 
   const feedItems = allCommunity.filter(j => {
+    if (curCompanionPrefix !== 'all' && resolveJoinPrefixMeta(j).key !== curCompanionPrefix) return false;
     if (curCompanionFilter !== 'all' && j.regionKey !== curCompanionFilter) return false;
     if (curCustomerMode === 'join') {
       const iso = normalizeJoinDateIso(j.dateKey, j.dateStr);
@@ -3156,8 +3571,8 @@ function renderCommunityFeed() {
   if (!visible.length) {
     listEl.innerHTML = `
       <div style="padding:28px 12px; text-align:center; color:#8b95a1;">
-        <strong style="display:block; font-size:14.5px; color:#191f28; margin-bottom:6px;">선택하신 지역의 동행 모집글이 아직 없어요</strong>
-        <p style="font-size:12.5px; margin-bottom:12px;">첫 번째 방장이 되어 원하는 일정으로 동행을 모집해 보세요!</p>
+        <strong style="display:block; font-size:14.5px; color:#191f28; margin-bottom:6px;">선택하신 상태·지역의 동행 모집글이 아직 없어요</strong>
+        <p style="font-size:12.5px; margin-bottom:12px;">첫 번째 방장이 되어 원하는 진행 상태 말머리와 투어 상품을 연결해 올려보세요!</p>
         <button type="button" class="bl-btn bl-btn-point bl-btn-sm" onclick="openCompanionModalForDate()">+ 새 동행 모집글 쓰기</button>
       </div>
     `;
@@ -3166,21 +3581,34 @@ function renderCommunityFeed() {
   }
 
   listEl.innerHTML = visible.map(j => {
+    const pfx = resolveJoinPrefixMeta(j);
+    const linkedProd = j.pcode ? DIRECT_PRODUCTS.find(p => p.pcode === j.pcode) : null;
+    const cmts = ensureDefaultJoinComments(j);
+    const slots = resolveJoinMemberSlots(j).filter(s => s.filled);
+    const slotPreview = slots.slice(0, 2).map(s => `${s.age}·${s.gender}`).join(', ');
     const authorName = String(j.agency || '').includes('·')
       ? String(j.agency).split('·').pop().trim()
       : String(j.agency || '여행자').split('(')[0].trim();
     const avaChar = authorName.slice(0, 1) || '동';
     const remSeats = Math.max(0, Number(j.max || 6) - Number(j.filled || 2));
+
     return `
       <article class="ts-comp-row" onclick="openJoinDetailModal('${j.id}')">
         <div class="ts-comp-left">
           <div class="ts-comp-tags">
+            <span class="ts-prefix-badge ${pfx.cls}">${pfx.label}</span>
             <span class="ts-comp-tag"># ${j.regionKey}</span>
             <span class="ts-comp-tag"># ${j.durationKey}</span>
             <span class="ts-comp-tag"># 현재 ${j.filled}/${j.max}명 (${remSeats > 0 ? `${remSeats}자리 모집` : '모집마감'})</span>
+            ${j.bumpedAt ? `<span class="ts-comp-tag" style="color:#0284c7; font-weight:800;">⚡ 방금 끌올</span>` : ''}
           </div>
           <h5 class="ts-comp-title">${j.title}</h5>
-          <div class="ts-comp-meta">
+          ${linkedProd ? `
+            <div class="ts-comp-linked-pill" onclick="event.stopPropagation(); openProductPreviewModal('${linkedProd.pcode}')">
+              <i class="xi-compass-o"></i> 연결된 희망투어: ${linkedProd.title.slice(0, 34)}${linkedProd.title.length > 34 ? '…' : ''} · <strong>${linkedProd.price}</strong>
+            </div>
+          ` : ''}
+          <div class="ts-comp-meta" style="margin-top:6px;">
             <span class="ts-comp-author">
               <span class="ts-comp-ava">${avaChar}</span>
               ${authorName} <i class="xi-check-circle" style="color:#0ca678;"></i>
@@ -3188,12 +3616,14 @@ function renderCommunityFeed() {
             <span>·</span>
             <span><i class="xi-calendar"></i> ${j.dateStr}</span>
             <span>·</span>
-            <span>${j.tags}</span>
+            <span>참여중: ${slotPreview}</span>
+            <span>·</span>
+            <span style="color:#0284c7; font-weight:700;"><i class="xi-message-o"></i> Q&amp;A ${cmts.length}</span>
           </div>
         </div>
         <div class="ts-comp-right">
           <img src="${j.img}" alt="${j.title}" class="ts-comp-thumb" loading="lazy" />
-          <span class="ts-comp-apply-pill">${remSeats > 0 ? '합류신청 →' : '마감됨'}</span>
+          <span class="ts-comp-apply-pill">${remSeats > 0 ? '상세·합류 →' : '마감됨'}</span>
         </div>
       </article>
     `;
@@ -3202,7 +3632,7 @@ function renderCommunityFeed() {
   if (footEl) {
     const moreBtnHtml = feedItems.length > visible.length
       ? `<button type="button" class="ts-cal-viewall-btn" onclick="loadMoreCompanionFeed()">동행 모집글 더보기 (${visible.length}/${feedItems.length}) <i class="xi-angle-down-min"></i></button>`
-      : `<span style="font-size:12.5px; color:#8b95a1;">클릭하면 인원 현황 확인 및 간편 동행·합류 신청이 가능합니다</span>`;
+      : `<span style="font-size:12.5px; color:#8b95a1;">클릭하면 연결된 부럽 투어카드·참여자 프로필·사전 Q&amp;A 확인 및 즉시 합류 신청이 가능합니다</span>`;
     footEl.innerHTML = `
       ${moreBtnHtml}
       <a href="https://www.boolub.com/?pn=board.list&amp;_menu=community&amp;searchMode=Y&amp;searchWord=%EB%8F%99%ED%96%89" target="_blank" rel="noopener" class="bl-more-link">
@@ -3252,9 +3682,105 @@ function setSimPax(pax, btnEl) {
   if (u) u.textContent = info.diff;
 }
 
+function unlockJoinDetailViaAuth(joinId, method = 'modal') {
+  savePendingDraft({ kind: 'view_join', joinId: String(joinId) });
+  if (method === 'kakao') {
+    startSnsAuth('kakao');
+    return;
+  }
+  if (method === 'naver') {
+    startSnsAuth('naver');
+    return;
+  }
+  closeModal('joinDetailModal');
+  openAuthQuickModal('동행 참여자 프로필 & 사전 Q&A 열람', { kind: 'view_join', joinId: String(joinId) });
+}
+
+async function submitJoinComment(joinId) {
+  const item = JOIN_ITEMS.find(x => String(x.id) === String(joinId));
+  if (!item) return;
+  const input = document.getElementById('joinCmtInput');
+  const text = (input?.value || '').trim();
+  if (!text) {
+    showToast('방장·파트너에게 궁금한 질문이나 동행 인사말을 입력해 주세요.');
+    input?.focus();
+    return;
+  }
+  if (!isMemberLoggedIn()) {
+    unlockJoinDetailViaAuth(joinId, 'modal');
+    return;
+  }
+
+  let savedCmt = {
+    id: 'c_' + Date.now(),
+    writer: AUTH_STATE.userName ? `${AUTH_STATE.userName.slice(0, 1)}*${AUTH_STATE.userName.slice(-1)}` : '모험가',
+    text,
+    rdate: '방금 전'
+  };
+
+  if (API_BASE) {
+    const res = await moktaApiCall('ajax.mokta.join.pro.php', {
+      _mode: 'add_comment',
+      join_key: String(joinId),
+      content: text
+    });
+    if (res && !res.ok) {
+      if (res.requireLogin) {
+        unlockJoinDetailViaAuth(joinId, 'modal');
+        return;
+      }
+      showToast(res.message || '댓글 등록 중 오류가 발생했습니다.');
+      return;
+    }
+    if (res && res.comment) savedCmt = res.comment;
+  }
+
+  const cmts = ensureDefaultJoinComments(item);
+  cmts.push(savedCmt);
+  renderCommunityFeed();
+  openJoinDetailModal(joinId);
+  showToast('사전 질문·소통 댓글이 등록되었습니다!');
+}
+
+async function bumpJoinPost(joinId) {
+  const idx = JOIN_ITEMS.findIndex(x => String(x.id) === String(joinId));
+  if (idx === -1) return;
+  const item = JOIN_ITEMS[idx];
+
+  if (!isMemberLoggedIn()) {
+    unlockJoinDetailViaAuth(joinId, 'modal');
+    return;
+  }
+
+  if (API_BASE && /^\d+$/.test(String(joinId))) {
+    const res = await moktaApiCall('ajax.mokta.join.pro.php', {
+      _mode: 'bump_join',
+      join_id: String(joinId)
+    });
+    if (res && !res.ok) {
+      showToast(res.message || '끌어올리기 처리 중 권한을 확인해 주세요.');
+      return;
+    }
+  }
+
+  item.bumpedAt = '방금 전';
+  JOIN_ITEMS.splice(idx, 1);
+  JOIN_ITEMS.unshift(item);
+  renderCommunityFeed();
+  renderOpenGroupCards();
+  renderMyActivityPane();
+  if (document.getElementById('joinDetailModal')?.classList.contains('open')) {
+    openJoinDetailModal(joinId);
+  }
+  showToast('⚡ 모집글이 동행 피드 최상단으로 끌어올려졌습니다!');
+}
+
 function openJoinDetailModal(joinId, draftRestore = null) {
   const item = JOIN_ITEMS.find(x => String(x.id) === String(joinId)) || JOIN_ITEMS[0];
+  curOpenJoinId = String(item.id);
   const body = document.getElementById('joinModalBody');
+  const pfx = resolveJoinPrefixMeta(item);
+  const linkedProd = (item.pcode && DIRECT_PRODUCTS.find(p => p.pcode === item.pcode)) || DIRECT_PRODUCTS[0];
   const prodLink = item.pcode
     ? `https://www.boolub.com/?pn=product.view&pcode=${item.pcode}`
     : 'https://www.boolub.com/?pn=pages.view&type=pages&data=mgexpedition';
@@ -3263,82 +3789,224 @@ function openJoinDetailModal(joinId, draftRestore = null) {
   const defaultContact = draftRestore?.contact || '';
   const defaultMemo = draftRestore?.memo || '일정과 코스가 딱 맞아서 합류 희망합니다! 항공권 및 세부 일정 조율 가능해요.';
   const defaultPax = Number(draftRestore?.pax || 1);
+  const defaultAge = draftRestore?.ageGroup || '20대';
+  const defaultGender = draftRestore?.gender || '여성';
+  const defaultFlight = draftRestore?.flightYn || '항공권완료';
+
+  const slots = resolveJoinMemberSlots(item);
+  const cmts = ensureDefaultJoinComments(item);
+  const isGuestLocked = !isMemberLoggedIn();
+  const canBump = isMemberLoggedIn() && (
+    AUTH_STATE.role === 'master' ||
+    AUTH_STATE.role === 'partner' ||
+    String(item.hostInid || '') === String(AUTH_STATE.userId || '') ||
+    !AUTH_STATE.isLiveCms
+  );
 
   if (body) {
     body.innerHTML = `
+      <!-- [상단 공개 영역 — 비로그인 고객에게도 100% 선명하게 노출] -->
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-        <span class="bl-mokta-tag">${item.agency} · ${item.statusBadge}</span>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:13px; font-weight:700; color:var(--bl-gray-700);"><i class="xi-calendar"></i> ${item.dateStr}</span>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span class="ts-prefix-badge ${pfx.cls}">${pfx.label}</span>
+          <span class="bl-mokta-tag"><i class="xi-shield-checked"></i> ${item.agency}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:12.5px; font-weight:800; color:var(--bl-gray-700);"><i class="xi-calendar"></i> ${item.dateStr}</span>
+          ${canBump ? `
+            <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" style="height:28px; padding:0 9px; font-size:11.5px;" onclick="bumpJoinPost('${item.id}')">
+              ⚡ 상단 끌올
+            </button>
+          ` : ''}
           <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" style="height:28px; padding:0 9px; font-size:11.5px;" onclick="copyJoinDeepLink('${item.id}')">
             <i class="xi-share-alt-o"></i> 링크공유
           </button>
         </div>
       </div>
-      <h3 style="font-size:18px; font-weight:800; color:var(--bl-gray-900); margin-bottom:6px;">${item.title}</h3>
-      <div style="font-size:12.5px; color:#6b7684; margin-bottom:14px;">선호·특징: ${item.tags || '성별·연령 무관 · 매너 동행 환영'}</div>
 
-      <div style="padding:14px; border-radius:12px; background:#f7f8fa; margin-bottom:14px;">
-        <div style="font-size:13px; font-weight:700; margin-bottom:8px;">실시간 차량 탑승 현황 (${item.filled}명 확정 / ${item.max}인 정원 · 잔여 ${rem}석)</div>
-        <div class="bl-seat-pills">
-          ${item.seats.map(s => `<span class="bl-seat ${s === '빈좌석' ? 'open' : 'filled'}" style="padding:8px 4px; font-size:12px;">${s}</span>`).join('')}
-        </div>
-        <p style="font-size:12px; color:var(--bl-gray-500); margin-top:10px;">
-          · 총무에게 현금을 송금할 필요 없이 부럽 안심결제로 본인 몫만 카드 결제합니다.<br/>
-          · 추가 인원 합류로 6인 마감 시, 먼저 결제하신 분들도 전원 <strong>${item.fullPrice}</strong> 기준으로 차액이 자동 환급됩니다.
-        </p>
-      </div>
+      <h3 style="font-size:18.5px; font-weight:800; color:var(--bl-gray-900); margin-bottom:10px; line-height:1.38;">${item.title}</h3>
 
-      ${rem > 0 ? `
-        <div class="ts-apply-seat-box">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-            <strong style="font-size:14px; font-weight:800; color:#0f172a;"><i class="xi-check-circle" style="color:#0284c7;"></i> 이 일정에 바로 동행 · 합류 신청하기</strong>
-            <span style="font-size:11.5px; color:#0284c7; font-weight:700;">신청 즉시 방장·담당 파트너에게 전달됩니다</span>
-          </div>
-          <div class="ts-apply-grid">
-            <div>
-              <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">합류 인원</label>
-              <select class="bl-select" id="jaPaxSelect" style="height:38px;">
-                ${paxChoices.map(n => `<option value="${n}" ${n === defaultPax ? 'selected' : ''}>${n}명 합류 신청</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">연락받을 휴대폰 또는 카카오톡 ID *</label>
-              <input type="text" class="bl-input" id="jaContactInput" style="height:38px;" placeholder="예: 010-1234-5678 / 카톡ID" value="${defaultContact}" />
+      <!-- 트립소다 벤치마킹 핵심: 게시글 내 연결된 부럽 검증 투어 상품 카드 임베드 -->
+      ${linkedProd ? `
+        <div class="ts-linked-tour-card" onclick="closeModal('joinDetailModal'); openProductPreviewModal('${linkedProd.pcode}')">
+          <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+            <img src="${linkedProd.img}" alt="${linkedProd.title}" style="width:62px; height:62px; border-radius:10px; object-fit:cover; flex-shrink:0;" />
+            <div style="min-width:0;">
+              <span style="font-size:11px; font-weight:800; color:#0284c7; display:block;"><i class="xi-link"></i> 이 동행팀이 선택한 MOKTA × 부럽 공식 검증 투어</span>
+              <strong style="display:block; font-size:13.8px; color:#0f172a; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${linkedProd.title}</strong>
+              <span style="font-size:12px; color:#475569;">${linkedProd.durationKey} · ★${linkedProd.rating} · 총무 송금 없이 부럽에서 각자 안전결제</span>
             </div>
           </div>
-          <div style="margin-top:8px;">
-            <input type="text" class="bl-input" id="jaMemoInput" style="height:38px;" placeholder="간단 자기소개 (연령대·성별·항공권 발권 여부 등)" value="${defaultMemo}" />
+          <div style="text-align:right; flex-shrink:0;">
+            <strong style="display:block; font-size:15px; font-weight:800; color:#0284c7;">${linkedProd.price}</strong>
+            <span style="font-size:11.5px; font-weight:700; color:#334155;">코스·단가표 보기 →</span>
           </div>
         </div>
-      ` : `
-        <div style="padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c; font-size:13px; font-weight:700; margin-bottom:14px; text-align:center;">
-          해당 팀은 전 좌석 모집이 마감되었습니다. 동일 코스로 새 동행글을 올리거나 투어 상품을 확인해보세요!
-        </div>
-      `}
+      ` : ''}
 
-      <!-- 1/N 자동할인 가이드 -->
-      <div style="padding:13px 14px; border-radius:12px; background:#f4fafe; border:1px solid #d9effb; margin-bottom:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:13px; color:#191f28;">인원별 1/N 자동할인 시뮬레이션 (고비 4박5일 예시)</strong>
-          <span style="font-size:11px; font-weight:700; color:#0284c7;">각자 카드결제 · 차액환급</span>
-        </div>
-        <div class="bl-pax-tabs" style="margin-bottom:8px;">
-          <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3명</button>
-          <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4명</button>
-          <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5명</button>
-          <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6명 마감</button>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:6px;">
-          <span style="font-size:12px; font-weight:700; color:#0284c7;" id="simDescLabel">5명 합류 시 전원 1인 부담금</span>
-          <div>
-            <strong style="font-size:16px; font-weight:800; color:#191f28;" id="simKrwText">820,000원</strong>
-            <span style="font-size:11.5px; color:#6b7684;" id="simUsdText">(3인 대비 29만 원 절약)</span>
+      <!-- 차량 좌석 요약 & 1/N 자동할인 가이드 (비로그인 공개) -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+        <div style="padding:12px 14px; border-radius:12px; background:#f8fafc; border:1px solid #e2e8f0;">
+          <div style="font-size:12.5px; font-weight:800; color:#0f172a;">실시간 좌석 현황 (${item.filled}/${item.max}명 확정)</div>
+          <div style="font-size:12px; color:#0284c7; font-weight:700; margin-top:3px;">
+            ${rem > 0 ? `현재 잔여 ${rem}석 합류 가능 · 미확정 시 100% 환불 보증` : '전 좌석 모집 마감 완료'}
           </div>
+          <div style="font-size:11.5px; color:#64748b; margin-top:4px;">현재 기준가 <b>${item.curPrice}</b> / 마감 최저가 <b>${item.fullPrice}</b></div>
+        </div>
+        <div style="padding:12px 14px; border-radius:12px; background:#f4fafe; border:1px solid #d9effb;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <strong style="font-size:12px; color:#191f28;">인원별 1/N 자동인하 시뮬레이션</strong>
+            <span style="font-size:11px; font-weight:800; color:#0284c7;" id="simKrwText">820,000원</span>
+          </div>
+          <div class="bl-pax-tabs">
+            <button type="button" class="bl-pax-tab" onclick="setSimPax(3, this)">3명</button>
+            <button type="button" class="bl-pax-tab" onclick="setSimPax(4, this)">4명</button>
+            <button type="button" class="bl-pax-tab active" onclick="setSimPax(5, this)">5명</button>
+            <button type="button" class="bl-pax-tab" onclick="setSimPax(6, this)">6명</button>
+          </div>
+          <div style="font-size:11px; color:#475569; margin-top:4px;"><span id="simDescLabel">5명 합류 시 전원 1인 부담금</span> <span id="simUsdText">(29만 원 절약)</span></div>
         </div>
       </div>
 
-      <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <!-- [안 1 핵심] 비로그인 고객 소프트 블러 3초 가입 게이트 (로그인 시 즉시 투명 해제) -->
+      <div class="ts-soft-blur-wrap">
+        <div class="ts-soft-blur-inner ${isGuestLocked ? 'is-blurred' : ''}">
+          <!-- 1) 참여 모험가 연령·성별·항공권 프로필 명단 -->
+          <div style="padding:13px 14px; border-radius:12px; background:#ffffff; border:1px solid #e2e8f0; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <strong style="font-size:13.5px; font-weight:800; color:#0f172a;"><i class="xi-users" style="color:#0284c7;"></i> 현재 함께하는 모험가 프로필 명단 (${item.filled}/${item.max}명)</strong>
+              <span style="font-size:11.5px; color:#64748b;">선호·성향: ${item.tags || '비흡연 · 매너 동행 환영'}</span>
+            </div>
+            <div class="ts-roster-grid">
+              ${slots.map((s, idx) => s.filled ? `
+                <div class="ts-roster-slot">
+                  <span class="ts-roster-ava ${s.gender === '여성' ? 'is-f' : ''}">${s.age.slice(0, 2)}${s.gender.slice(0, 1)}</span>
+                  <div style="min-width:0;">
+                    <strong style="display:block; font-size:12px; color:#0f172a;">${s.nick} <span style="color:#0284c7;">(${s.role})</span></strong>
+                    <span style="font-size:11px; color:#64748b;">${s.age} · ${s.gender} · ${s.flight}</span>
+                  </div>
+                </div>
+              ` : `
+                <div class="ts-roster-slot is-open">
+                  <span class="ts-roster-ava" style="background:#f1f5f9; color:#94a3b8;">+${idx + 1}</span>
+                  <div>
+                    <strong style="display:block; font-size:12px; color:#64748b;">빈 좌석 (${idx + 1}번)</strong>
+                    <span style="font-size:11px;">지금 합류 가능</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- 2) 사전 Q&A 질문·소통 댓글창 -->
+          <div class="ts-qa-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong style="font-size:13px; font-weight:800; color:#0f172a;"><i class="xi-message-o" style="color:#0284c7;"></i> 합류 전 방장·파트너에게 사전 질문하기 (${cmts.length})</strong>
+              <span style="font-size:11px; color:#64748b;">항공편 시간대 · 캐리어 크기 · 코스 조율</span>
+            </div>
+            <div class="ts-qa-list" id="joinCmtList">
+              ${cmts.map(c => `
+                <div class="ts-qa-row">
+                  <div style="display:flex; justify-content:space-between; font-size:11.5px; margin-bottom:2px;">
+                    <strong style="color:#0f172a;">${c.writer}</strong>
+                    <span style="color:#94a3b8;">${c.rdate || ''}</span>
+                  </div>
+                  <div>${c.text}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div style="display:grid; grid-template-columns:1fr auto; gap:8px;">
+              <input type="text" class="bl-input" id="joinCmtInput" style="height:36px; font-size:12.5px;" placeholder="궁금한 점(항공편 도착시간, 숙소 등급 등)을 편하게 남겨보세요!" />
+              <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" style="height:36px;" onclick="submitJoinComment('${item.id}')">질문 등록</button>
+            </div>
+          </div>
+
+          <!-- 3) 내 프로필 선택형 안심 합류 신청 폼 -->
+          ${rem > 0 ? `
+            <div class="ts-apply-seat-box">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                <strong style="font-size:14px; font-weight:800; color:#0f172a;"><i class="xi-check-circle" style="color:#0284c7;"></i> 이 일정에 바로 동행 · 안심 합류 신청하기</strong>
+                <span style="font-size:11.5px; color:#0284c7; font-weight:700;">신청 즉시 방장·담당 공식 파트너에게 전달됩니다</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; margin-top:10px;">
+                <div>
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">합류 인원</label>
+                  <select class="bl-select" id="jaPaxSelect" style="height:36px; font-size:12.5px;">
+                    ${paxChoices.map(n => `<option value="${n}" ${n === defaultPax ? 'selected' : ''}>${n}명 합류</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">내 연령대</label>
+                  <select class="bl-select" id="jaAgeSelect" style="height:36px; font-size:12.5px;">
+                    <option value="20대" ${defaultAge === '20대' ? 'selected' : ''}>20대</option>
+                    <option value="30대" ${defaultAge === '30대' ? 'selected' : ''}>30대</option>
+                    <option value="40대" ${defaultAge === '40대' ? 'selected' : ''}>40대</option>
+                    <option value="50대+" ${defaultAge === '50대+' ? 'selected' : ''}>50대+</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">내 성별</label>
+                  <select class="bl-select" id="jaGenderSelect" style="height:36px; font-size:12.5px;">
+                    <option value="여성" ${defaultGender === '여성' ? 'selected' : ''}>여성</option>
+                    <option value="남성" ${defaultGender === '남성' ? 'selected' : ''}>남성</option>
+                    <option value="혼성일행" ${defaultGender === '혼성일행' ? 'selected' : ''}>혼성 일행</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:#334155; margin-bottom:3px;">항공권 상태</label>
+                  <select class="bl-select" id="jaFlightSelect" style="height:36px; font-size:12.5px;">
+                    <option value="항공권완료" ${defaultFlight === '항공권완료' ? 'selected' : ''}>발권 완료</option>
+                    <option value="예매예정" ${defaultFlight === '예매예정' ? 'selected' : ''}>예매 예정</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:0.42fr 0.58fr; gap:8px; margin-top:8px;">
+                <input type="text" class="bl-input" id="jaContactInput" style="height:38px;" placeholder="휴대폰 또는 카카오톡 ID 필수 입력 *" value="${defaultContact}" />
+                <input type="text" class="bl-input" id="jaMemoInput" style="height:38px;" placeholder="간단 동행 인사말 (비흡연, 선호 스타일 등)" value="${defaultMemo}" />
+              </div>
+            </div>
+          ` : `
+            <div style="padding:14px; border-radius:12px; background:#fef2f2; color:#b91c1c; font-size:13px; font-weight:700; margin-bottom:14px; text-align:center;">
+              해당 팀은 전 좌석 모집이 마감되었습니다. 동일 코스로 새 동행글을 올리거나 투어 상품을 확인해보세요!
+            </div>
+          `}
+        </div>
+
+        ${isGuestLocked ? `
+          <div class="ts-soft-blur-overlay">
+            <span class="bl-mokta-tag" style="margin-bottom:6px;"><i class="xi-lock-o"></i> MOKTA × 부럽 안심 동행 보호 (안 1)</span>
+            <strong style="font-size:16.5px; font-weight:800; color:#0f172a; line-height:1.4;">
+              3초 무료 가입하고 참여 모험가 프로필 · 사전 Q&amp;A · 합류 신청을 바로 여세요!
+            </strong>
+            <p style="font-size:12.5px; color:#475569; margin:5px 0 14px; max-width:480px; line-height:1.5;">
+              무허가 브로커 유입 방지를 위해 참여자 연령·성별 명단과 소통 댓글창은 인증 회원에게만 투명하게 공개됩니다. 가입 즉시 지금 보고 계신 창이 그대로 열립니다.
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; max-width:520px;">
+              <button type="button" class="ts-sns-btn is-kakao" style="flex:1; min-width:190px; height:42px; font-size:13px;" onclick="unlockJoinDetailViaAuth('${item.id}', 'kakao')">
+                <i class="xi-kakaotalk"></i> 카카오로 3초 만에 열기
+              </button>
+              <button type="button" class="ts-sns-btn is-naver" style="flex:1; min-width:190px; height:42px; font-size:13px;" onclick="unlockJoinDetailViaAuth('${item.id}', 'naver')">
+                <span class="ts-naver-n">N</span> 네이버로 3초 만에 열기
+              </button>
+            </div>
+            <button type="button" style="margin-top:9px; font-size:12.5px; font-weight:700; color:#0284c7; text-decoration:underline;" onclick="unlockJoinDetailViaAuth('${item.id}', 'modal')">
+              부럽 아이디 로그인 · 이메일 일반 가입으로 열기 →
+            </button>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- 공항 단독픽업 1/N 동승 크로스셀 배너 -->
+      <div style="padding:10px 14px; border-radius:10px; background:#f0f9ff; border:1px solid #bae6fd; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+        <span style="font-size:12px; color:#0c4a6e;">
+          <strong>🚕 심야·새벽 도착 꿀팁:</strong> 같은 날 도착하는 동행과 <strong>부럽 공항 단독픽업(편도 19,200원)</strong>을 함께 타면 1인 약 4,800원!
+        </span>
+        <button type="button" style="font-size:12px; font-weight:800; color:#0284c7;" onclick="closeModal('joinDetailModal'); openProductPreviewModal('I3885-I4036-S5377')">
+          공항 단독픽업 보기 →
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
         <div>
           <span style="font-size:12px; color:var(--bl-gray-500);">현재 기준 1인 요금</span>
           <strong style="display:block; font-size:20px; font-weight:800; color:var(--bl-gray-900);">${item.curPrice}</strong>
@@ -3350,13 +4018,17 @@ function openJoinDetailModal(joinId, draftRestore = null) {
             </a>
           ` : ''}
           <a href="${prodLink}" target="_blank" rel="noopener" class="bl-btn bl-btn-outline">
-            투어 상품 보기 <i class="xi-external-link"></i>
+            부럽 본 상품 보기 <i class="xi-external-link"></i>
           </a>
-          ${rem > 0 ? `
-            <button type="button" class="bl-btn bl-btn-point" onclick="confirmJoinSeat('${item.id}')">
-              합류·동행 신청하기
+          ${rem > 0 ? (isGuestLocked ? `
+            <button type="button" class="bl-btn bl-btn-point" onclick="unlockJoinDetailViaAuth('${item.id}', 'modal')">
+              3초 가입 후 합류 신청하기
             </button>
-          ` : ''}
+          ` : `
+            <button type="button" class="bl-btn bl-btn-point" onclick="confirmJoinSeat('${item.id}')">
+              합류·동행 신청 완료하기
+            </button>
+          `) : ''}
         </div>
       </div>
     `;
@@ -3367,6 +4039,9 @@ function openJoinDetailModal(joinId, draftRestore = null) {
 async function confirmJoinSeat(joinId) {
   const item = JOIN_ITEMS.find(x => String(x.id) === String(joinId));
   const pax = Math.max(1, parseInt(document.getElementById('jaPaxSelect')?.value || '1', 10));
+  const ageGroup = document.getElementById('jaAgeSelect')?.value || '20대';
+  const gender = document.getElementById('jaGenderSelect')?.value || '여성';
+  const flightYn = document.getElementById('jaFlightSelect')?.value || '항공권완료';
   const contact = (document.getElementById('jaContactInput')?.value || '').trim();
   const memo = (document.getElementById('jaMemoInput')?.value || '').trim();
 
@@ -3382,6 +4057,9 @@ async function confirmJoinSeat(joinId) {
       kind: 'apply_seat',
       joinId,
       pax,
+      ageGroup,
+      gender,
+      flightYn,
       contact,
       memo
     });
@@ -3394,13 +4072,16 @@ async function confirmJoinSeat(joinId) {
       _mode: 'apply_seat',
       join_id: joinId,
       pax,
+      age_group: ageGroup,
+      gender,
+      flight_yn: flightYn,
       contact,
       memo
     });
     if (res && !res.ok) {
       if (res.requireLogin) {
         closeModal('joinDetailModal');
-        openAuthQuickModal('동행·오픈조인 합류 신청', { kind: 'apply_seat', joinId, pax, contact, memo });
+        openAuthQuickModal('동행·오픈조인 합류 신청', { kind: 'apply_seat', joinId, pax, ageGroup, gender, flightYn, contact, memo });
         return;
       }
       showToast(res.message || '합류 신청 처리 중 오류가 발생했습니다.');
@@ -3409,12 +4090,22 @@ async function confirmJoinSeat(joinId) {
     if (res && res.applyId) applyId = res.applyId;
   }
 
-  const applicantLabel = AUTH_STATE.userName ? `${AUTH_STATE.userName.slice(0, 1)}*${AUTH_STATE.userName.slice(-1)}` : '신규합류';
+  const applicantLabel = AUTH_STATE.userName ? `${AUTH_STATE.userName.slice(0, 1)}*${AUTH_STATE.userName.slice(-1)}` : `${ageGroup}${gender.slice(0, 1)}`;
   if (item && item.filled < item.max) {
     const addCnt = Math.min(pax, item.max - item.filled);
+    if (!Array.isArray(item.memberSlots)) {
+      item.memberSlots = resolveJoinMemberSlots(item).filter(s => s.filled);
+    }
     for (let k = 0; k < addCnt; k++) {
       const openIdx = item.seats.indexOf('빈좌석');
       if (openIdx !== -1) item.seats[openIdx] = applicantLabel;
+      item.memberSlots.push({
+        role: '합류신청',
+        nick: applicantLabel,
+        age: ageGroup,
+        gender,
+        flight: flightYn
+      });
     }
     item.filled = Math.min(item.max, item.filled + addCnt);
     item.subBadge = item.filled >= item.max ? '모집마감' : `${item.max - item.filled}자리 남음`;
@@ -3427,9 +4118,12 @@ async function confirmJoinSeat(joinId) {
     pid: item?.pid || 'anoratour',
     applicantId: AUTH_STATE.userId || 'guest_demo',
     applicantName: AUTH_STATE.userName || '김*수',
+    ageGroup,
+    gender,
+    flightYn,
     contact,
     pax,
-    memo,
+    memo: `[${ageGroup}·${gender}·${flightYn}] ${memo}`,
     status: 'pending',
     rdate: '방금 전 신청'
   };
@@ -3441,14 +4135,18 @@ async function confirmJoinSeat(joinId) {
   renderJoinCards();
   if (typeof refreshPartnerConsoleAll === 'function') refreshPartnerConsoleAll();
   closeModal('joinDetailModal');
-  showToast(`합류 신청(${pax}명)이 완료되었습니다! 상단 [내 활동]에서 진행 상태를 확인하실 수 있습니다.`);
+  showToast(`합류 신청(${pax}명 · ${ageGroup} ${gender})이 완료되었습니다! 상단 [내 활동]에서 확인하실 수 있습니다.`);
 }
 
 async function submitCompanionPost() {
+  const prefixTag = document.getElementById('cwPrefixTag')?.value || '항공권발권완료';
   const sdate = document.getElementById('cwStartDate')?.value || '2026-08-15';
   const regionKey = document.getElementById('cwRegion')?.value || '고비';
   const durationKey = document.getElementById('cwDuration')?.value || '4박5일';
+  const hostAge = document.getElementById('cwHostAge')?.value || '30대';
+  const hostGender = document.getElementById('cwHostGender')?.value || '여성';
   const curCnt = parseInt(document.getElementById('cwSeats')?.value || '2', 10);
+  const linkedPcode = document.getElementById('cwLinkedPcode')?.value || '';
   const title = (document.getElementById('cwTitle')?.value || '').trim() || '같이 가실 몽골 동행 구해요!';
   const rawMemoTag = (document.getElementById('cwTags')?.value || '').trim();
   const agePref = document.getElementById('cwAgePref')?.value || '2030 또래';
@@ -3463,9 +4161,13 @@ async function submitCompanionPost() {
     closeModal('companionWriteModal');
     openAuthQuickModal('동행 모집글 등록', {
       kind: 'companion',
+      prefixTag,
       sdate,
       regionKey,
       durationKey,
+      hostAge,
+      hostGender,
+      pcode: linkedPcode,
       curCnt: String(curCnt),
       title,
       tags: rawMemoTag,
@@ -3480,6 +4182,10 @@ async function submitCompanionPost() {
   if (API_BASE) {
     const res = await moktaApiCall('ajax.mokta.join.pro.php', {
       _mode: 'add_member_join',
+      prefix_tag: prefixTag,
+      pcode: linkedPcode,
+      host_age: hostAge,
+      host_gender: hostGender,
       sdate,
       region_key: regionKey,
       duration_key: durationKey,
@@ -3497,7 +4203,7 @@ async function submitCompanionPost() {
       if (res.requireLogin) {
         closeModal('companionWriteModal');
         openAuthQuickModal('동행 모집글 등록', {
-          kind: 'companion', sdate, regionKey, durationKey, curCnt: String(curCnt), title, tags: rawMemoTag, agePref, genderPref, flightPref
+          kind: 'companion', prefixTag, sdate, regionKey, durationKey, hostAge, hostGender, pcode: linkedPcode, curCnt: String(curCnt), title, tags: rawMemoTag, agePref, genderPref, flightPref
         });
         return;
       }
@@ -3508,33 +4214,44 @@ async function submitCompanionPost() {
   }
 
   const hostLabel = AUTH_STATE.userName ? `${AUTH_STATE.userName.slice(0, 1)}*${AUTH_STATE.userName.slice(-1)}` : '방장(나)';
-  const seats = Array.from({ length: 6 }, (_, i) => (i < curCnt ? (i === 0 ? `${hostLabel}(방장)` : `동행${i + 1}`) : '빈좌석'));
+  const seats = Array.from({ length: 6 }, (_, i) => (i < curCnt ? (i === 0 ? `${hostAge}${hostGender.slice(0, 1)}(방장)` : `동행${i + 1}`) : '빈좌석'));
+  const memberSlots = Array.from({ length: curCnt }, (_, i) => ({
+    role: i === 0 ? '방장' : '동행확정',
+    nick: i === 0 ? hostLabel : `동행#${i + 1}`,
+    age: hostAge,
+    gender: hostGender,
+    flight: flightPref.includes('완료') ? '항공권완료' : '예매예정'
+  }));
+  const linkedProd = linkedPcode ? DIRECT_PRODUCTS.find(p => p.pcode === linkedPcode) : null;
   const assetPrefix = (typeof window !== 'undefined' && window.BOOLUB_MOKTA_ASSET_BASE)
     ? window.BOOLUB_MOKTA_ASSET_BASE.replace(/\/$/, '')
     : '.';
 
   JOIN_ITEMS.unshift({
     id: newId,
+    prefixTag,
     hostType: 'member',
     hostInid: AUTH_STATE.userId || 'demo_host',
-    pid: '',
+    pid: linkedProd?.pid || '',
     dateKey: sdate,
     dateStr,
     regionKey,
     durationKey,
     styleKey: '조인',
-    statusBadge: '신규 동행모집',
-    statusCls: 'amber',
+    statusBadge: PREFIX_META_MAP[prefixTag]?.label || '신규 동행모집',
+    statusCls: prefixTag === '무조건출발확정' ? 'sky' : 'amber',
     subBadge: `${6 - curCnt}자리 모집중`,
     subCls: 'sky',
     agency: wantPartnerMatch === 'Y' ? `여행자 동행모집 · ${hostLabel} (파트너 매칭희망)` : `여행자 동행모집 · ${hostLabel}`,
-    pcode: 'C3954-E9344-H0474',
+    pcode: linkedPcode || 'C3954-E9344-H0474',
     title,
-    img: `${assetPrefix}/images/companion_team_hands.jpg`,
+    img: linkedProd?.img || `${assetPrefix}/images/companion_team_hands.jpg`,
     filled: curCnt,
     max: 6,
     seats,
-    curPrice: '1/N 동행매칭',
+    memberSlots,
+    comments: [],
+    curPrice: linkedProd?.price || '1/N 동행매칭',
     fullPrice: '790,000원~',
     tags: combinedTags
   });
@@ -3546,13 +4263,15 @@ async function submitCompanionPost() {
   }
   curJoinDate = sdate;
   curCompanionFilter = 'all';
+  curCompanionPrefix = 'all';
+  document.querySelectorAll('#companionPrefixRow .ts-prefix-pill').forEach((b, idx) => b.classList.toggle('active', idx === 0));
   updateMyActivityHeaderBadge();
   renderJoinCalendar();
   renderJoinCards();
   if (typeof refreshPartnerConsoleAll === 'function') refreshPartnerConsoleAll();
   closeModal('companionWriteModal');
   scrollToSection('sec-companion');
-  showToast('동행 모집글이 1번 동행 피드와 월간 캘린더에 동시에 등록되었습니다!');
+  showToast('동행 모집글(말머리·연결상품 포함)이 동행 피드와 월간 캘린더에 등록되었습니다!');
 }
 
 /* ================= 로그인 고객 전용: 내 동행 · 조인 · 맞춤견적 관리함 ================= */
@@ -3617,6 +4336,7 @@ function renderMyActivityPane() {
               <strong style="font-size:15px; color:#191f28;">${j.title}</strong>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding-top:6px; border-top:1px solid #f1f5f9;">
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="bumpJoinPost('${j.id}')">⚡ 상단 끌올</button>
                   <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="manageJoinSchedule('${j.id}', 'dec_pax')">인원 -1</button>
                   <button type="button" class="bl-btn bl-btn-outline bl-btn-sm" onclick="manageJoinSchedule('${j.id}', 'inc_pax')">인원 +1</button>
                   <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="manageJoinSchedule('${j.id}', '${isFull ? 'reopen' : 'close_full'}')">${isFull ? '재오픈' : '모집마감'}</button>
@@ -3940,24 +4660,112 @@ async function submitCustomerWizard() {
   showToast('맞춤견적 요청이 등록되었습니다! 파트너사 견적이 도착하면 알림톡 및 [내 활동]에서 확인 가능합니다.');
 }
 
-function openQuoteCompareModal(rfqId) {
-  const item = RFQ_ITEMS.find(x => x.id === rfqId) || RFQ_ITEMS[0];
+function openQuoteCompareModal(rfqId, viewMode = null) {
+  const item = RFQ_ITEMS.find(x => String(x.id) === String(rfqId)) || RFQ_ITEMS[0];
+  if (viewMode) curQuoteViewMode = viewMode;
   const titleEl = document.getElementById('qCompTitle');
   const bodyEl = document.getElementById('qCompBody');
-  if (titleEl) titleEl.textContent = `도착한 공식 파트너 맞춤 비교견적 (${item.quotes.length}건)`;
+  if (titleEl) titleEl.textContent = `도착한 공식 파트너 맞춤 비교견적 (${item.quotes.length}건 · 1:1 스펙 비교)`;
 
   if (bodyEl) {
-    bodyEl.innerHTML = `
-      <div style="margin-bottom:16px; padding:12px 16px; border-radius:10px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200);">
-        <div style="font-size:12px; color:var(--bl-point-text); font-weight:700;">${item.dates} · ${item.paxType}</div>
-        <strong style="font-size:15px; color:var(--bl-gray-900);">${item.title}</strong>
-      </div>
+    const quotes = item.quotes || [];
+    const defaultGuarantees = ['노쇼핑·노옵션 100%', '온수샤워 캠프 보장', '연식보증 전용차량', '부럽 에스크로 보호'];
 
+    const matrixHtml = `
+      <div class="ts-quote-matrix-wrap">
+        <table class="ts-quote-matrix-table">
+          <thead>
+            <tr>
+              <th>비교 항목</th>
+              ${quotes.map(q => `
+                <th style="background:#fafcff;">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <img src="${q.logo || './images/mokta_logo.png'}" alt="${q.agency}" style="width:26px; height:26px; border-radius:50%; object-fit:contain; border:1px solid #e2e8f0; background:#fff;" />
+                    <div>
+                      <strong style="display:block; font-size:13px; color:#0f172a;">${q.agency}</strong>
+                      <span style="font-size:11px; color:#0284c7; font-weight:700;">${q.badge}</span>
+                    </div>
+                  </div>
+                </th>
+              `).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>4인 출발 (1인당)</th>
+              ${quotes.map(q => `<td style="font-weight:800; font-size:14px; color:#0f172a;">${q.price4}</td>`).join('')}
+            </tr>
+            <tr>
+              <th>6인 마감 (최저가)</th>
+              ${quotes.map(q => `<td style="font-weight:800; font-size:14px; color:#0284c7; background:#f8fbff;">${q.price6}</td>`).join('')}
+            </tr>
+            <tr>
+              <th>배정 차량 스펙</th>
+              ${quotes.map(q => `
+                <td>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <img src="${q.vehImg}" alt="차량" style="width:44px; height:32px; border-radius:6px; object-fit:cover; flex-shrink:0;" />
+                    <span style="font-size:12px; font-weight:700; color:#334155;">${q.veh}</span>
+                  </div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              <th>숙소 · 샤워 기준</th>
+              ${quotes.map(q => `
+                <td>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <img src="${q.gerImg}" alt="숙소" style="width:44px; height:32px; border-radius:6px; object-fit:cover; flex-shrink:0;" />
+                    <span style="font-size:12px; font-weight:700; color:#334155;">${q.ger}</span>
+                  </div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              <th>안심 보장 약속</th>
+              ${quotes.map(q => {
+                const guars = (Array.isArray(q.guarantees) && q.guarantees.length) ? q.guarantees : defaultGuarantees;
+                return `
+                  <td>
+                    <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                      ${guars.map(g => `<span class="ts-pill-sky" style="font-size:11px;">✓ ${g}</span>`).join('')}
+                    </div>
+                  </td>
+                `;
+              }).join('')}
+            </tr>
+            <tr>
+              <th>매니저 코멘트</th>
+              ${quotes.map(q => `<td style="font-size:12px; color:#475569; line-height:1.48;">"${q.comment}"</td>`).join('')}
+            </tr>
+            <tr>
+              <th>상담 · 안전결제</th>
+              ${quotes.map(q => {
+                const prodUrl = q.pcode
+                  ? `https://www.boolub.com/?pn=product.view&pcode=${q.pcode}`
+                  : `https://www.boolub.com/?pn=partner.view&pid=${q.pid || 'anoratour'}`;
+                return `
+                  <td>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                      <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="closeModal('quoteCompareModal'); showToast('${q.agency} 전담 매니저와의 안심 채팅방이 개설되었습니다.')">1:1 조율</button>
+                      <a href="${prodUrl}" target="_blank" rel="noopener" class="bl-btn bl-btn-point bl-btn-sm">부럽 에스크로 예약 ↗</a>
+                    </div>
+                  </td>
+                `;
+              }).join('')}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    const cardsHtml = `
       <div class="bl-quote-compare-grid">
-        ${item.quotes.map(q => {
+        ${quotes.map(q => {
           const prodUrl = q.pcode
             ? `https://www.boolub.com/?pn=product.view&pcode=${q.pcode}`
             : `https://www.boolub.com/?pn=partner.view&pid=${q.pid || 'anoratour'}`;
+          const guars = (Array.isArray(q.guarantees) && q.guarantees.length) ? q.guarantees : defaultGuarantees;
           return `
             <div class="bl-qcard">
               <div>
@@ -3973,7 +4781,10 @@ function openQuoteCompareModal(rfqId) {
                       <span style="font-size:11px; color:var(--bl-point-text); font-weight:700;">${q.badge}</span>
                     </div>
                   </div>
-                  <div style="font-size:12.5px; color:var(--bl-gray-700); margin-top:8px; display:grid; gap:3px;">
+                  <div style="display:flex; gap:4px; flex-wrap:wrap; margin:6px 0;">
+                    ${guars.slice(0, 3).map(g => `<span class="ts-pill-sky" style="font-size:10.5px;">✓ ${g}</span>`).join('')}
+                  </div>
+                  <div style="font-size:12.5px; color:var(--bl-gray-700); margin-top:6px; display:grid; gap:3px;">
                     <div><strong>· 차량:</strong> ${q.veh}</div>
                     <div><strong>· 숙소:</strong> ${q.ger}</div>
                   </div>
@@ -4000,6 +4811,25 @@ function openQuoteCompareModal(rfqId) {
           `;
         }).join('')}
       </div>
+    `;
+
+    bodyEl.innerHTML = `
+      <div style="margin-bottom:12px; padding:12px 16px; border-radius:10px; background:var(--bl-gray-50); border:1px solid var(--bl-gray-200); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div style="font-size:12px; color:var(--bl-point-text); font-weight:700;">${item.dates} · ${item.paxType}</div>
+          <strong style="font-size:15px; color:var(--bl-gray-900);">${item.title}</strong>
+        </div>
+        <div style="display:inline-flex; background:#e2e8f0; padding:3px; border-radius:9px; gap:4px;">
+          <button type="button" class="bl-btn bl-btn-sm" style="height:30px; background:${curQuoteViewMode === 'matrix' ? '#fff' : 'transparent'}; color:#0f172a;" onclick="openQuoteCompareModal('${item.id}', 'matrix')">
+            📊 한눈에 1:1 비교표
+          </button>
+          <button type="button" class="bl-btn bl-btn-sm" style="height:30px; background:${curQuoteViewMode === 'cards' ? '#fff' : 'transparent'}; color:#0f172a;" onclick="openQuoteCompareModal('${item.id}', 'cards')">
+            📸 차량·숙소 크게보기
+          </button>
+        </div>
+      </div>
+
+      ${curQuoteViewMode === 'matrix' ? matrixHtml : cardsHtml}
     `;
   }
   openModal('quoteCompareModal');
@@ -4326,6 +5156,14 @@ function openAgencyHomeModal(agId, initialTab = 'about') {
 
       ${perksHtml}
 
+      <!-- MOKTA × 부럽 4대 공식 검증 인장 -->
+      <div class="ts-mokta-4seals">
+        <div class="ts-seal-box"><i class="xi-shield-checked"></i> 관광부 · MOKTA 정식인가</div>
+        <div class="ts-seal-box"><i class="xi-credit-card"></i> 부럽 에스크로 대금보호</div>
+        <div class="ts-seal-box"><i class="xi-car"></i> 차량 연식 · 온수캠프 보증</div>
+        <div class="ts-seal-box"><i class="xi-call"></i> 한·몽 2중 비상케어 핫라인</div>
+      </div>
+
       <!-- 3단 미니홈 전용 탭 -->
       <div class="bl-mh-tabs">
         <button type="button" class="bl-mh-tab ${initialTab === 'about' ? 'active' : ''}" onclick="switchAgencyMinihomeTab('about', this)">
@@ -4384,10 +5222,13 @@ function openAgencyHomeModal(agId, initialTab = 'about') {
                     <span style="font-size:12px; color:var(--bl-gray-500);">별점 ★${p.rating} (${p.reviews}) · ${p.durationKey}</span>
                   </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
                   <strong style="font-size:16px; color:var(--bl-point-text);">${p.price}</strong>
+                  <button type="button" class="bl-btn bl-btn-soft bl-btn-sm" onclick="closeModal('agencyHomeModal'); openProductPreviewModal('${p.pcode}')">
+                    상세·요금표
+                  </button>
                   <a href="https://www.boolub.com/?pn=product.view&pcode=${p.pcode}" target="_blank" rel="noopener" class="bl-btn bl-btn-point bl-btn-sm">
-                    일정·예약 <i class="xi-external-link"></i>
+                    바로예약 <i class="xi-external-link"></i>
                   </a>
                 </div>
               </div>
@@ -5126,6 +5967,9 @@ async function sendPartnerQuoteLive() {
   const veh = document.getElementById('pVehName')?.value || '신형 스타렉스 4WD';
   const ger = document.getElementById('pGerName')?.value || '온수 샤워 정식 캠프';
   const comment = document.getElementById('pComment')?.value || '정성껏 모시겠습니다.';
+  const guarantees = Array.from(document.querySelectorAll('#pGuaranteePicker .bl-perk-chip-btn.selected'))
+    .map(b => b.getAttribute('data-guar'))
+    .filter(Boolean);
 
   if (API_BASE) {
     const res = await moktaApiCall('ajax.mokta.bid.pro.php', {
@@ -5140,6 +5984,7 @@ async function sendPartnerQuoteLive() {
       ger_name: ger,
       veh_img: selectedBidPhoto.veh,
       ger_img: selectedBidPhoto.ger,
+      guarantees_json: JSON.stringify(guarantees),
       comment
     });
     if (res && !res.ok) {
@@ -5160,6 +6005,7 @@ async function sendPartnerQuoteLive() {
     ger,
     vehImg: selectedBidPhoto.veh,
     gerImg: selectedBidPhoto.ger,
+    guarantees,
     comment
   });
 
@@ -5595,6 +6441,7 @@ async function hydrateFromLiveBackend() {
     renderShowcase();
     renderMagazines();
     renderRfqBoard();
+    populateCompanionProductSelect();
     populatePartnerRfqSelect();
     refreshPartnerConsoleAll();
     restorePendingDraftIfLogged();

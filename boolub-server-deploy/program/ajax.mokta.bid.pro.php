@@ -46,11 +46,14 @@ $upGer  = mokta_upload_image('ger_file');
 $vehImg = $upVeh !== '' ? $upVeh : (!empty($_POST['veh_img']) ? trim($_POST['veh_img']) : '/customized/mokta/images/vehicle_fleet.jpg');
 $gerImg = $upGer !== '' ? $upGer : (!empty($_POST['ger_img']) ? trim($_POST['ger_img']) : '/customized/mokta/images/ger_interior.jpg');
 
+mokta_ensure_col('smart_mokta_bid', 'mb_guarantees_json', "`mb_guarantees_json` TEXT NULL");
+$rawGuarantees = !empty($_POST['guarantees_json']) ? trim((string)$_POST['guarantees_json']) : '["전 일정 온수샤워 캠프","노팁·노옵션 추가금 0원","공항 무료 단독픽업","연식보증 전용차량"]';
+
 $insSql = sprintf(
     "INSERT INTO smart_mokta_bid
-        (mb_mr_uid, mb_pid, mb_agency, mb_logo, mb_badge, mb_pcode, mb_price4, mb_price6, mb_veh_name, mb_ger_name, mb_veh_img, mb_ger_img, mb_comment, mb_rdate)
+        (mb_mr_uid, mb_pid, mb_agency, mb_logo, mb_badge, mb_pcode, mb_price4, mb_price6, mb_veh_name, mb_ger_name, mb_veh_img, mb_ger_img, mb_comment, mb_guarantees_json, mb_rdate)
      VALUES
-        (%d, '%s', '%s', '%s', '공식 입점파트너 실사견적', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW())",
+        (%d, '%s', '%s', '%s', '공식 입점파트너 실사견적', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW())",
     $rfqId,
     $escPid,
     mokta_esc($agency),
@@ -62,7 +65,8 @@ $insSql = sprintf(
     mokta_esc($gerName),
     mokta_esc($vehImg),
     mokta_esc($gerImg),
-    mokta_esc($comment)
+    mokta_esc($comment),
+    mokta_esc($rawGuarantees)
 );
 
 if (!mokta_q_exec($insSql)) {
