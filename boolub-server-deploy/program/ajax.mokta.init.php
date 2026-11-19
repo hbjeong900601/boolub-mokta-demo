@@ -9,6 +9,20 @@
  */
 include_once(dirname(__FILE__) . '/mokta.inc.php');
 
+if (isset($_REQUEST['_mode']) && $_REQUEST['_mode'] === 'mokta_logout') {
+    mokta_perform_logout();
+    mokta_json(array(
+        'ok'   => true,
+        'auth' => array(
+            'role'        => 'guest',
+            'userId'      => '',
+            'userName'    => '',
+            'partnerId'   => '',
+            'partnerName' => ''
+        )
+    ));
+}
+
 $auth = mokta_resolve_auth();
 
 function mokta_resolve_prod_img($raw) {
@@ -229,7 +243,7 @@ foreach ($prodRows as $idx => $p) {
         $pct = round((1 - ($priceNum / $screenNum)) * 100);
         if ($pct > 0) {
             $discountStr = $pct . '%';
-            $originStr = number_format($screenNum) . '원';
+            $originStr = od_number_format($screenNum) . '원';
         }
     }
 
@@ -258,11 +272,11 @@ foreach ($prodRows as $idx => $p) {
         'tag'         => $tag,
         'sub'         => $subRaw !== '' ? ($partnerLabel . ' · ' . $subRaw) : ($partnerLabel . ' 공식 판매 상품'),
         'title'       => $title,
-        'rating'      => number_format($revAvg, 2),
+        'rating'      => od_number_format($revAvg, 2),
         'reviews'     => $revCnt,
         'discount'    => $discountStr,
         'originPrice' => $originStr,
-        'price'       => number_format($priceNum) . '원',
+        'price'       => od_number_format($priceNum) . '원',
         'img'         => $imgUrl,
         'highlights'  => $highlights
     );
@@ -286,7 +300,7 @@ foreach ($prodRows as $idx => $p) {
     $partnerAgg[$pid]['prodCount']++;
     $partnerAgg[$pid]['revSum'] += $revCnt;
     $partnerAgg[$pid]['revWeighted'] += ($revAvg * max(1, $revCnt));
-    if (count($partnerAgg[$pid]['photos']) < 6 && !in_array($imgUrl, $partnerAgg[$pid]['photos'], true)) {
+    if (od_count($partnerAgg[$pid]['photos']) < 6 && !od_in_array($imgUrl, $partnerAgg[$pid]['photos'], true)) {
         $partnerAgg[$pid]['photos'][] = $imgUrl;
     }
 }
@@ -332,9 +346,9 @@ foreach ($profRows as $pr) {
 }
 
 /* 실제 입점 파트너 목록 구성 (smart_company + smart_product 실데이터 100%) */
-$orderedPids = array_keys($partnerStaticMeta);
-foreach (array_keys($partnerAgg) as $extraPid) {
-    if (!in_array($extraPid, $orderedPids, true)) {
+$orderedPids = od_array_keys($partnerStaticMeta);
+foreach (od_array_keys($partnerAgg) as $extraPid) {
+    if (!od_in_array($extraPid, $orderedPids, true)) {
         $orderedPids[] = $extraPid;
     }
 }
@@ -364,7 +378,7 @@ foreach ($orderedPids as $pid) {
     $agSeq++;
 
     $avgRating = $agg['revSum'] > 0
-        ? number_format(min(5.0, $agg['revWeighted'] / max(1, $agg['revSum'])), 2)
+        ? od_number_format(min(5.0, $agg['revWeighted'] / max(1, $agg['revSum'])), 2)
         : '5.00';
 
     $realDesc = $agg['intro'] !== '' ? $agg['intro'] : $sm['fallbackDesc'];
@@ -764,7 +778,7 @@ foreach ($bbsJoinRows as $bj) {
         'memberSlots' => $bbsSlots,
         'curPrice'    => '동행모집 게시글',
         'fullPrice'   => '1/N 조인상담',
-        'tags'        => '부럽 실제 동행찾기 · 조회 ' . number_format((int)$bj['b_hit']) . '회',
+        'tags'        => '부럽 실제 동행찾기 · 조회 ' . od_number_format((int)$bj['b_hit']) . '회',
         'comments'    => isset($cmtByJoin[$bbsKey]) ? $cmtByJoin[$bbsKey] : array(),
         'bbsUrl'      => 'https://www.boolub.com/?pn=board.view&_menu=community&_uid=' . (int)$bj['b_uid']
     );
@@ -823,7 +837,7 @@ foreach ($realRevRows as $rv) {
         'pcode'    => $pcode,
         'prodName' => $prodName,
         'price'    => $priceTxt,
-        'badge'    => '실제후기 · 조회 ' . number_format((int)$rv['b_hit']),
+        'badge'    => '실제후기 · 조회 ' . od_number_format((int)$rv['b_hit']),
         'title'    => $rvTitle,
         'img'      => $rvImg,
         'tip'      => $rvSummary !== '' ? $rvSummary : (mokta_mask_name($rv['b_writer']) . ' 고객님이 부럽 커뮤니티에 직접 남겨주신 실제 몽골 여행 후기입니다.'),

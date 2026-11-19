@@ -69,7 +69,7 @@ for ($i = 1; $i <= 3; $i++) {
         array_unshift($photosArr, $upGal);
     }
 }
-$photosArr = array_slice(array_values(array_filter($photosArr)), 0, 6);
+$photosArr = array_slice(od_array_values(od_array_filter($photosArr)), 0, 6);
 
 $perksJson  = json_encode($perksArr, JSON_UNESCAPED_UNICODE);
 $photosJson = json_encode($photosArr, JSON_UNESCAPED_UNICODE);

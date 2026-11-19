@@ -39,4 +39,4 @@ if (!$MOKTA_PUBLIC_OPEN && $moktaAuth['role'] !== 'partner' && $moktaAuth['role'
   window.BOOLUB_MOKTA_API_BASE   = '/program';
   window.BOOLUB_MOKTA_AUTH       = <?php echo json_encode($moktaAuth, JSON_UNESCAPED_UNICODE); ?>;
 </script>
-<script src="/customized/mokta/mokta.js?v=bl_mokta_22"></script>
+<script src="/customized/mokta/mokta.js?v=bl_mokta_23_<?php echo @filemtime($_SERVER['DOCUMENT_ROOT'] . '/customized/mokta/mokta.js'); ?>"></script>

@@ -134,10 +134,46 @@ function mokta_verify_subadmin_cookie() {
     return $cpId;
 }
 
+function mokta_perform_logout() {
+    global $system;
+    $cookieDomain = '.' . str_replace('www.', '', reset(explode(':', $system['host'] ?? 'boolub.com')));
+    if (function_exists('samesiteCookie')) {
+        samesiteCookie('AuthIndividualMember', '', time() - 3600, '/', $cookieDomain);
+        samesiteCookie('AuthIndividualMemberV2', '', time() - 3600, '/', $cookieDomain);
+        samesiteCookie('mokta_logged_out', '1', time() + 86400 * 30, '/', $cookieDomain);
+    }
+    @setcookie('AuthIndividualMember', '', time() - 3600, '/');
+    @setcookie('AuthIndividualMemberV2', '', time() - 3600, '/');
+    @setcookie('mokta_logged_out', '1', time() + 86400 * 30, '/');
+    $_COOKIE['mokta_logged_out'] = '1';
+    if (function_exists('UserLogout')) {
+        UserLogout();
+    }
+}
+
 function mokta_resolve_auth() {
-    global $mem_info;
+    global $mem_info, $system;
 
     $isLoggedMember = (function_exists('is_login') && is_login() && !empty($mem_info['in_id']));
+    if (!empty($_COOKIE['mokta_logged_out'])) {
+        if ($isLoggedMember) {
+            // 새로 회원 로그인한 경우 로그아웃 플래그 자동 해제
+            $cookieDomain = '.' . str_replace('www.', '', reset(explode(':', $system['host'] ?? 'boolub.com')));
+            if (function_exists('samesiteCookie')) {
+                samesiteCookie('mokta_logged_out', '', time() - 3600, '/', $cookieDomain);
+            }
+            @setcookie('mokta_logged_out', '', time() - 3600, '/');
+            unset($_COOKIE['mokta_logged_out']);
+        } else {
+            return array(
+                'role'        => 'guest',
+                'userId'      => '',
+                'userName'    => '',
+                'partnerId'   => '',
+                'partnerName' => ''
+            );
+        }
+    }
     $memberId   = $isLoggedMember ? trim((string)$mem_info['in_id']) : '';
     $memberName = $isLoggedMember ? trim((string)($mem_info['in_name'] ?? $memberId)) : '';
 

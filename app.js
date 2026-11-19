@@ -1868,6 +1868,7 @@ function applyAuthUi() {
 }
 
 function simulateAuthRole(mode) {
+  if (mode !== 'guest') clearMoktaLogoutCookie();
   if (mode === 'member') {
     AUTH_STATE = Object.assign(AUTH_STATE, {
       role: 'member',
@@ -1933,6 +1934,7 @@ function savePendingDraft(draftObj) {
 }
 
 function openAuthQuickModal(pendingReason = '', draftObj = null) {
+  clearMoktaLogoutCookie();
   rememberReturnCookie();
   const rurlInput = document.getElementById('quickLoginRurlInput');
   if (rurlInput) rurlInput.value = getReturnPathRaw();
@@ -1954,6 +1956,7 @@ function openAuthQuickModal(pendingReason = '', draftObj = null) {
 }
 
 function startSnsAuth(provider) {
+  clearMoktaLogoutCookie();
   rememberReturnCookie();
   if (!AUTH_STATE.isLiveCms) {
     closeModal('authQuickModal');
@@ -1968,6 +1971,7 @@ function startSnsAuth(provider) {
 }
 
 function goDirectJoinPage() {
+  clearMoktaLogoutCookie();
   rememberReturnCookie();
   if (!AUTH_STATE.isLiveCms) {
     closeModal('authQuickModal');
@@ -2014,13 +2018,47 @@ function handleQuickLoginSubmit(ev) {
   return true;
 }
 
-function logoutMoktaMember() {
+function clearMoktaLogoutCookie() {
+  try {
+    document.cookie = 'mokta_logged_out=; path=/; max-age=0';
+    const host = window.location.hostname.replace(/^www\./i, '');
+    if (host) {
+      document.cookie = `mokta_logged_out=; path=/; domain=.${host}; max-age=0`;
+    }
+  } catch (_) {}
+}
+
+async function logoutMoktaMember() {
   closeModal('myActivityModal');
-  if (!AUTH_STATE.isLiveCms) {
-    simulateAuthRole('guest');
-    return;
+  closeModal('mobQuickDrawerModal');
+  try {
+    document.cookie = 'mokta_logged_out=1; path=/; max-age=2592000';
+    const host = window.location.hostname.replace(/^www\./i, '');
+    if (host) {
+      document.cookie = `mokta_logged_out=1; path=/; domain=.${host}; max-age=2592000`;
+    }
+  } catch (_) {}
+
+  if (AUTH_STATE.isLiveCms && API_BASE) {
+    try {
+      await moktaApiCall('ajax.mokta.init.php', { _mode: 'mokta_logout' });
+    } catch (_) {}
   }
-  window.location.href = `/program/member.login.pro.php?_mode=logout&_rurl=${getReturnUrlEncoded()}`;
+
+  AUTH_STATE = Object.assign(AUTH_STATE, {
+    role: 'guest',
+    userId: '',
+    userName: '',
+    partnerId: '',
+    partnerName: ''
+  });
+  MY_APPLIES = [];
+  RECEIVED_APPLIES = [];
+  applyAuthUi();
+  if (curOpenJoinId && document.getElementById('joinDetailModal')?.classList.contains('open')) {
+    openJoinDetailModal(curOpenJoinId);
+  }
+  showToast('로그아웃되었습니다.');
 }
 
 function restorePendingDraftIfLogged() {

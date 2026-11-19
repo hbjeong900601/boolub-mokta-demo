@@ -161,7 +161,7 @@ if ($mode === 'add_member_join') {
     $rawMemoTag  = !empty($_POST['tags']) ? trim((string)$_POST['tags']) : '비흡연 · 사진 촬영 좋아하는 분 환영';
     $wantMatch   = (isset($_POST['want_partner_match']) && $_POST['want_partner_match'] === 'N') ? '자유동행 모집' : '파트너 차량매칭 환영';
 
-    $combinedTags = implode(' · ', array_filter(array($agePref, $genderPref, $flightPref, $rawMemoTag)));
+    $combinedTags = implode(' · ', od_array_filter(array($agePref, $genderPref, $flightPref, $rawMemoTag)));
     $maskedHost   = mokta_mask_name($auth['userName'] ?: '여행자');
     $hostAgency   = $wantMatch . ' · ' . $maskedHost;
 
@@ -185,7 +185,7 @@ if ($mode === 'add_member_join') {
     $imgUrl = isset($regionImgMap[$regionKey]) ? $regionImgMap[$regionKey] : '/customized/mokta/images/companion_team_hands.jpg';
 
     $prodRow = mokta_q_one("SELECT p_name, p_price, p_img_list_square FROM smart_product WHERE p_code = '" . mokta_esc($linkedPcode) . "' LIMIT 1");
-    $curPriceTxt = !empty($prodRow['p_price']) ? number_format((int)$prodRow['p_price']) . '원' : '1/N 동행매칭';
+    $curPriceTxt = !empty($prodRow['p_price']) ? od_number_format((int)$prodRow['p_price']) . '원' : '1/N 동행매칭';
     if (!empty($prodRow['p_img_list_square'])) {
         $rawImg = trim((string)$prodRow['p_img_list_square']);
         $imgUrl = (strpos($rawImg, 'http') === 0) ? $rawImg : 'https://files.boolub.com/upfiles/product/' . ltrim($rawImg, '/');
@@ -456,7 +456,7 @@ if ($mode === 'update_apply_status') {
     }
     $jaUid  = (int)($_POST['apply_id'] ?? 0);
     $status = trim((string)($_POST['status'] ?? 'confirmed'));
-    if (!in_array($status, array('pending', 'confirmed', 'cancelled'), true)) {
+    if (!od_in_array($status, array('pending', 'confirmed', 'cancelled'), true)) {
         $status = 'confirmed';
     }
     $apRow = mokta_q_one("SELECT * FROM smart_mokta_join_apply WHERE ja_uid = {$jaUid} LIMIT 1");
